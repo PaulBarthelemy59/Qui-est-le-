@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>QUI EST LE PLUS — ?</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.4.7/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d14;
+    --cream: #f5f0e8;
+    --yellow: #ffe135;
+    --pink: #ff3c78;
+    --blue: #3ce8ff;
+    --green: #39f58a;
+    --purple: #7c3aed;
+    --panel: #16101f;
+    --panel2: #1e1530;
+    --border: 3px solid var(--ink);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--ink);
+    color: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  .screen {
+    width: 100%;
+    max-width: 960px;
+    animation: fadeIn 0.4s ease;
+  }
+  .screen.hidden { display: none !important; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── LOGO / HEADER ─── */
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 6rem);
+    letter-spacing: 4px;
+    line-height: 1;
+    color: var(--yellow);
+    text-shadow: 5px 5px 0 var(--ink), -2px -2px 0 var(--pink);
+    margin-bottom: 4px;
+  }
+  .logo-sub {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+
+  /* ─── CARD PANEL ─── */
+  .card {
+    background: var(--panel);
+    border: 3px solid #fff1;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 #fff1;
+    text-align: center;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--yellow);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    padding: 14px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 900;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.08s, box-shadow 0.08s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 6px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .btn:hover { background: #fff7c0; }
+  .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+  .btn.pink { background: var(--pink); color: #fff; }
+  .btn.pink:hover { background: #ff6699; }
+  .btn.blue { background: var(--blue); color: var(--ink); }
+  .btn.green { background: var(--green); color: var(--ink); }
+  .btn.ghost { background: transparent; color: var(--cream); border-color: #fff3; box-shadow: 4px 4px 0 #fff1; }
+  .btn.ghost:hover { background: #fff1; }
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  /* ─── LOBBY SCREEN ─── */
+  .qr-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  #qrcode {
+    background: #fff;
+    padding: 14px;
+    border-radius: 16px;
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .room-code {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 6px;
+    color: var(--blue);
+    background: var(--panel2);
+    padding: 6px 20px;
+    border-radius: 10px;
+    border: 2px solid var(--blue);
+    margin-top: 6px;
+  }
+  .url-hint {
+    font-size: 0.85rem;
+    color: #aaa;
+    word-break: break-all;
+    max-width: 360px;
+    margin-top: 4px;
+  }
+
+  .players-lobby {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 20px 0;
+    min-height: 60px;
+  }
+  .lobby-chip {
+    background: var(--panel2);
+    border: 2px solid #fff2;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .lobby-chip.ready { border-color: var(--green); color: var(--green); }
+  .chip-dot { width: 10px; height: 10px; background: var(--green); border-radius: 50%; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+  @keyframes popIn {
+    from { opacity:0; transform: scale(0.5); }
+    to { opacity:1; transform: scale(1); }
+  }
+
+  .status-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .status-tag.yellow { background: var(--yellow); color: var(--ink); }
+  .status-tag.pink { background: var(--pink); color: #fff; }
+  .status-tag.blue { background: var(--blue); color: var(--ink); }
+
+  /* ─── GAME SCREEN ─── */
+  .adjective-box {
+    background: linear-gradient(135deg, #1e0a3c, #2d0f52);
+    border: 3px solid var(--pink);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .adjective-box::before {
+    content: '?';
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: var(--pink);
+    opacity: 0.08;
+    line-height: 1;
+  }
+  .adj-label {
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .adj-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    letter-spacing: 2px;
+    color: var(--cream);
+    line-height: 1.15;
+  }
+
+  .vote-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .vote-bar-track {
+    flex: 1;
+    height: 12px;
+    background: #fff1;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .vote-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .vote-count-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* ─── PLAYER GRID ─── */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .player-card {
+    background: var(--panel2);
+    border: 2px solid #fff1;
+    border-radius: 16px;
+    padding: 20px 12px;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .player-card::after {
+    content: attr(data-emoji);
+    position: absolute;
+    top: -5px;
+    right: 6px;
+    font-size: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .player-card.voted {
+    border-color: var(--blue);
+    background: #0e2030;
+  }
+  .player-card.voted::after { opacity: 1; }
+
+  .pc-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 10px;
+    border: 3px solid #fff2;
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+  .pc-name {
+    font-weight: 900;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pc-score {
+    display: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin-top: 8px;
+  }
+  .pc-bar {
+    display: none;
+    height: 8px;
+    background: #fff1;
+    border-radius: 99px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .pc-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Reveal animations */
+  .player-card.revealed {
+    border-color: var(--yellow);
+    background: #221800;
+    animation: revealPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .player-card.winner {
+    border-color: var(--pink);
+    background: #2d0020;
+    animation: winnerPulse 0.6s ease infinite alternate;
+    z-index: 10;
+  }
+  @keyframes revealPop {
+    0% { transform: scale(0.9); }
+    60% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  @keyframes winnerPulse {
+    from { transform: scale(1.04); box-shadow: 0 0 20px var(--pink)44; }
+    to { transform: scale(1.1); box-shadow: 0 0 40px var(--pink)88, 0 0 80px var(--pink)22; }
+  }
+
+  .confetti-burst {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ─── ROUND SCORE ─── */
+  .round-total-score {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 16px 0;
+  }
+  .score-chip {
+    background: var(--panel2);
+    border: 2px solid #fff2;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-chip .pts { color: var(--yellow); font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px; }
+
+  /* ─── MOBILE / PLAYER SCREEN ─── */
+  .mobile-card {
+    background: var(--panel);
+    border: 2px solid #fff1;
+    border-radius: 20px;
+    padding: 28px 20px;
+    max-width: 440px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  }
+  .mobile-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+  .mobile-input {
+    width: 100%;
+    background: var(--panel2);
+    border: 2px solid #fff2;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--cream);
+    outline: none;
+    text-align: center;
+    transition: border-color 0.2s;
+    margin-bottom: 14px;
+  }
+  .mobile-input:focus { border-color: var(--yellow); }
+  .mobile-input::placeholder { color: #666; }
+
+  .vote-question {
+    background: linear-gradient(135deg, #1a0830, #2b0f4e);
+    border: 2px solid var(--pink);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--cream);
+  }
+  .vote-question span {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .mobile-vote-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .vote-btn {
+    background: var(--panel2);
+    border: 2px solid #fff2;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.2s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    text-align: left;
+  }
+  .vote-btn:hover { border-color: var(--yellow); background: #231500; }
+  .vote-btn:active { transform: scale(0.97); }
+  .vote-btn.self-disabled { opacity: 0.3; pointer-events: none; }
+  .vote-btn .vb-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  .vote-btn .vb-name {
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .big-emoji { font-size: 4rem; margin-bottom: 12px; animation: bounce 0.5s ease infinite alternate; }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-8px); }
+  }
+
+  .wait-dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+  @keyframes dots {
+    0% { content: ''; }
+    33% { content: '.'; }
+    66% { content: '..'; }
+    100% { content: '...'; }
+  }
+
+  /* ─── SCOREBOARD ─── */
+  .scoreboard-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .sb-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--panel2);
+    border: 2px solid #fff1;
+    border-radius: 14px;
+    padding: 12px 16px;
+    animation: slideIn 0.4s ease;
+  }
+  .sb-row.top1 { border-color: var(--yellow); background: #1e1500; }
+  .sb-row.top2 { border-color: #b0b0b0; }
+  .sb-row.top3 { border-color: #a05020; }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateX(-20px); }
+    to { opacity:1; transform: translateX(0); }
+  }
+  .sb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 1px; width: 28px; text-align: center; }
+  .sb-name { flex: 1; font-weight: 900; font-size: 1.05rem; text-transform: uppercase; }
+  .sb-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--yellow); letter-spacing: 2px; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 1rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .divider { border: none; border-top: 1px solid #fff1; margin: 20px 0; }
+
+  /* ─── ROUND BADGE ─── */
+  .round-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel2);
+    border: 2px solid #fff2;
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #aaa;
+  }
+  .round-badge span { color: var(--cream); font-size: 1rem; }
+
+  .actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    .card { padding: 20px 16px; }
+    .results-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: HOST LANDING
+═══════════════════════════════════════════════════════ -->
+<div id="screen-host-landing" class="screen">
+  <div class="card" style="text-align:center;">
+    <div class="logo">QUI EST LE PLUS</div>
+    <div class="logo-sub">Le jeu qui révèle tout 👀</div>
+
+    <p style="color:#aaa; margin-bottom:24px; font-size:1rem;">Tu vas ouvrir un salon. Tes amis scannent le QR code et votent depuis leur téléphone.</p>
+
+    <button class="btn" onclick="hostStartLobby()">🎮 Ouvrir le Salon</button>
+    <div style="margin-top:16px; color:#666; font-size:0.85rem;">Connexion en P2P – aucun serveur requis</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: HOST LOBBY
+═══════════════════════════════════════════════════════ -->
+<div id="screen-host-lobby" class="screen hidden">
+  <div class="card">
+    <div class="logo" style="font-size:2.8rem;">SALON</div>
+
+    <div class="qr-wrap">
+      <div id="qrcode"></div>
+      <div class="room-code" id="room-code-display">...</div>
+      <div class="url-hint" id="url-hint-display"></div>
+    </div>
+
+    <div id="lobby-status" class="status-tag yellow">0 joueur connecté</div>
+    <div class="players-lobby" id="lobby-chips"></div>
+
+    <hr class="divider">
+    <button class="btn pink" id="btn-launch" onclick="hostLaunchGame()" disabled>🚀 Lancer la Partie</button>
+    <div style="font-size:0.85rem; color:#666; margin-top:8px;">Min. 2 joueurs</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: HOST GAME
+═══════════════════════════════════════════════════════ -->
+<div id="screen-host-game" class="screen hidden">
+  <div class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:8px;">
+      <div class="logo" style="font-size:2rem; margin-bottom:0;">QUI EST LE PLUS</div>
+      <div class="round-badge">Manche <span id="round-num">1</span> / <span id="round-total">10</span></div>
+    </div>
+
+    <div class="adjective-box">
+      <div class="adj-label">Qui est le plus...</div>
+      <div class="adj-text" id="host-adj-text">...</div>
+    </div>
+
+    <div class="vote-bar-wrap">
+      <div class="vote-bar-track"><div class="vote-bar-fill" id="vote-bar"></div></div>
+      <div class="vote-count-label" id="vote-count-label">0 / 0</div>
+    </div>
+
+    <div class="results-grid" id="results-grid"></div>
+
+    <div class="actions-row">
+      <button class="btn" id="btn-reveal" onclick="hostReveal()">💥 Révéler les Votes</button>
+      <button class="btn pink hidden" id="btn-next" onclick="hostNextRound()">Manche Suivante ➡</button>
+      <button class="btn ghost hidden" id="btn-scores" onclick="hostShowScores()">🏆 Scores</button>
+      <button class="btn ghost hidden" id="btn-endgame-final" onclick="hostShowFinalScores()">🎉 Fin du jeu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: HOST SCOREBOARD
+═══════════════════════════════════════════════════════ -->
+<div id="screen-host-scores" class="screen hidden">
+  <div class="card">
+    <div class="logo" style="font-size:2.5rem;">🏆 SCORES</div>
+    <ul class="scoreboard-list" id="host-scoreboard"></ul>
+    <div class="actions-row">
+      <button class="btn pink" id="btn-continue-game" onclick="hostContinueFromScores()">Continuer ➡</button>
+      <button class="btn ghost hidden" id="btn-restart" onclick="hostRestart()">🔄 Rejouer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: PLAYER JOIN
+═══════════════════════════════════════════════════════ -->
+<div id="screen-player-join" class="screen hidden">
+  <div class="mobile-card">
+    <div class="mobile-title">REJOINDRE</div>
+    <p style="color:#aaa; margin-bottom:20px; font-size:0.95rem;">Connexion au salon de ton pote…</p>
+    <input type="text" id="player-name-input" class="mobile-input" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off">
+    <button class="btn" style="width:100%;" onclick="playerJoin()">Rejoindre 🚀</button>
+    <div id="connect-status" style="margin-top:12px; color:#888; font-size:0.85rem;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: PLAYER WAIT
+═══════════════════════════════════════════════════════ -->
+<div id="screen-player-wait" class="screen hidden">
+  <div class="mobile-card">
+    <div class="big-emoji">👀</div>
+    <div class="mobile-title" id="player-name-display">...</div>
+    <p style="color:var(--yellow); font-size:1.1rem; font-weight:700;">Tu es dans le salon !</p>
+    <p style="color:#aaa; margin-top:8px; font-size:0.95rem;">Regarde le grand écran<span class="wait-dots"></span></p>
+    <div id="player-wait-list" style="margin-top:20px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: PLAYER VOTE
+═══════════════════════════════════════════════════════ -->
+<div id="screen-player-vote" class="screen hidden">
+  <div class="mobile-card">
+    <div class="vote-question">
+      <span>Qui est le plus...</span>
+      <span id="vote-adj-text" style="font-size:1.15rem; letter-spacing:0; color:var(--cream); font-style:italic;">...</span>
+    </div>
+    <div class="mobile-vote-grid" id="vote-buttons"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: PLAYER VOTED
+═══════════════════════════════════════════════════════ -->
+<div id="screen-player-voted" class="screen hidden">
+  <div class="mobile-card">
+    <div class="big-emoji">🤫</div>
+    <div class="mobile-title">VOTÉ !</div>
+    <p style="color:var(--pink); font-weight:700; font-size:1.1rem;">Vote enregistré</p>
+    <p style="color:#aaa; margin-top:10px;">Attends les autres<span class="wait-dots"></span></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: PLAYER SCORES
+═══════════════════════════════════════════════════════ -->
+<div id="screen-player-scores" class="screen hidden">
+  <div class="mobile-card">
+    <div class="mobile-title">🏆 SCORES</div>
+    <ul class="scoreboard-list" id="player-scoreboard"></ul>
+    <p style="color:#aaa; font-size:0.9rem; margin-top:12px;" id="player-score-hint">Prochaine manche en cours<span class="wait-dots"></span></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCREEN: GAME OVER
+═══════════════════════════════════════════════════════ -->
+<div id="screen-gameover" class="screen hidden">
+  <div class="mobile-card" style="max-width:960px;">
+    <div class="big-emoji">🎊</div>
+    <div class="mobile-title" style="font-size:3rem;">FIN DU JEU</div>
+    <ul class="scoreboard-list" id="final-scoreboard"></ul>
+    <button class="btn pink" onclick="location.reload()" style="margin-top:16px;">🔄 Rejouer</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  BANQUE DE QUESTIONS
+// ════════════════════════════════════════════════════════════
+const ALL_QUESTIONS = [
+  "Radin quand c'est son tour de payer",
+  "Susceptible quand on le vanne",
+  "Mauvais perdant sur un jeu de société",
+  "Capable d'arriver en retard à son propre mariage",
+  "Gaffeur qui lâche des secrets sans faire exprès",
+  "Flambeur qui n'a plus une thune le 5 du mois",
+  "Susceptible d'oublier ses clés à l'intérieur",
+  "Prêt à survivre le plus longtemps sur une île déserte",
+  "Râleur dès le matin sans café",
+  "Gros mytho quand il raconte une anecdote",
+  "Accro à son téléphone même au ciné",
+  "Capable de manger seul toute une pizza sans rien dire",
+  "Dramatique pour une simple égratignure",
+  "Toujours en retard mais jamais gêné",
+  "Trop à l'aise pour demander une faveur",
+  "Capable de rater un rendez-vous et d'oublier qu'il avait rendez-vous",
+  "Charmeur quand il veut quelque chose",
+  "Malin pour s'éclipser quand il y a la vaisselle à faire",
+  "Nostalgique qui ramène tout à « avant c'était mieux »",
+  "Convaincu d'avoir toujours raison",
+  "Capable de roter en public sans une once de honte",
+  "Le plus probable à pleurer devant un film Disney",
+  "Celui qui parle le plus fort dans un resto",
+  "Accro aux compliments mais jamais satisfait",
+  "Capable de zapper une soirée pour regarder une série"
+];
+
+const AVATAR_COLORS = [
+  '#ff3c78','#3ce8ff','#ffe135','#39f58a','#ff7c3a',
+  '#b57bff','#ff4db8','#00d4aa','#ffab00','#4dabff'
+];
+
+// ════════════════════════════════════════════════════════════
+//  UTILITAIRES
+// ════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  const el = document.getElementById(id);
+  el.classList.remove('hidden');
+  el.classList.remove('anim-reset');
+  void el.offsetWidth;
+}
+
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function avatarColor(name) {
+  let h = 0;
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0xffffffff;
+  return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length];
+}
+
+function initials(name) {
+  return name.substring(0, 2).toUpperCase();
+}
+
+function renderScoreboard(containerId, scores, endGame = false) {
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  sorted.forEach(([name, pts], i) => {
+    const li = document.createElement('li');
+    li.className = 'sb-row ' + (['top1','top2','top3'][i] || '');
+    li.style.animationDelay = `${i * 0.08}s`;
+    const medals = ['🥇','🥈','🥉'];
+    li.innerHTML = `
+      <div class="sb-rank">${medals[i] || (i+1)}</div>
+      <div class="pc-avatar" style="background:${avatarColor(name)}; font-size:1rem;">${initials(name)}</div>
+      <div class="sb-name">${name}</div>
+      <div class="sb-pts">${pts} pts</div>
+    `;
+    el.appendChild(li);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════
+let peer = null;
+let isHost = false;
+
+// HOST STATE
+let hostConnections = {};   // peerId → { name, conn }
+let hostScores = {};        // name → total points
+let hostVotes = {};         // name → vote count this round
+let hostWhoVoted = new Set();
+let hostQuestions = [];
+let hostCurrentQ = -1;
+let hostMaxRounds = 10;
+
+// PLAYER STATE
+let playerName = '';
+let playerConn = null;
+let playerList = [];
+
+// URL param
+const urlParams = new URLSearchParams(window.location.search);
+const roomParam = urlParams.get('room');
+
+window.onload = () => {
+  if (roomParam) {
+    showScreen('screen-player-join');
+  } else {
+    showScreen('screen-host-landing');
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+//  HOST — LOBBY
+// ════════════════════════════════════════════════════════════
+function hostStartLobby() {
+  const btn = event.target;
+  btn.textContent = '⏳ Connexion…';
+  btn.disabled = true;
+
+  peer = new Peer(undefined, { debug: 0 });
+
+  peer.on('open', (id) => {
+    isHost = true;
+    showScreen('screen-host-lobby');
+
+    const playerUrl = window.location.href.split('?')[0] + '?room=' + id;
+    document.getElementById('room-code-display').textContent = id.substring(0, 8).toUpperCase();
+    document.getElementById('url-hint-display').textContent = playerUrl;
+
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: playerUrl,
+      width: 200, height: 200,
+      colorDark: '#0d0d14', colorLight: '#ffffff',
+    });
+  });
+
+  peer.on('error', (err) => {
+    showToast('❌ Erreur de connexion : ' + err.message);
+    btn.textContent = '🎮 Ouvrir le Salon';
+    btn.disabled = false;
+  });
+
+  peer.on('connection', (conn) => {
+    conn.on('open', () => {
+      // do nothing until JOIN
+    });
+
+    conn.on('data', (data) => {
+      if (data.type === 'JOIN') {
+        const name = data.name.trim().substring(0, 12);
+        if (hostConnections[conn.peer]) return; // already joined
+        if (Object.values(hostConnections).some(p => p.name === name)) {
+          conn.send({ type: 'NAME_TAKEN' });
+          return;
+        }
+        hostConnections[conn.peer] = { name, conn };
+        hostScores[name] = 0;
+        hostUpdateLobby();
+        // Broadcast updated list to everyone
+        hostBroadcast({
+          type: 'LOBBY_UPDATE',
+          players: Object.values(hostConnections).map(p => p.name)
+        });
+        showToast(`${name} a rejoint ! 🎉`);
+      }
+
+      if (data.type === 'SUBMIT_VOTE') {
+        if (hostWhoVoted.has(conn.peer)) return;
+        const voter = hostConnections[conn.peer]?.name;
+        const target = data.target;
+        if (!voter || !hostVotes.hasOwnProperty(target)) return;
+        hostWhoVoted.add(conn.peer);
+        hostVotes[target]++;
+        hostUpdateVoteProgress();
+      }
+    });
+
+    conn.on('close', () => {
+      const info = hostConnections[conn.peer];
+      if (info) {
+        showToast(`${info.name} a quitté`);
+        delete hostConnections[conn.peer];
+        hostUpdateLobby();
+        hostBroadcast({
+          type: 'LOBBY_UPDATE',
+          players: Object.values(hostConnections).map(p => p.name)
+        });
+      }
+    });
+
+    conn.on('error', () => {
+      delete hostConnections[conn.peer];
+      hostUpdateLobby();
+    });
+  });
+}
+
+function hostBroadcast(msg) {
+  Object.values(hostConnections).forEach(p => {
+    try { p.conn.send(msg); } catch(e) {}
+  });
+}
+
+function hostUpdateLobby() {
+  const players = Object.values(hostConnections).map(p => p.name);
+  const count = players.length;
+
+  document.getElementById('lobby-status').textContent =
+    count === 0 ? '0 joueur connecté' :
+    count === 1 ? '1 joueur connecté' :
+    `${count} joueurs connectés`;
+
+  document.getElementById('btn-launch').disabled = count < 2;
+
+  const chips = document.getElementById('lobby-chips');
+  chips.innerHTML = '';
+  players.forEach(name => {
+    const chip = document.createElement('div');
+    chip.className = 'lobby-chip ready';
+    chip.innerHTML = `<span class="chip-dot"></span><span style="color:${avatarColor(name)}">${name}</span>`;
+    chips.appendChild(chip);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  HOST — GAME
+// ════════════════════════════════════════════════════════════
+function hostLaunchGame() {
+  hostQuestions = shuffle(ALL_QUESTIONS).slice(0, hostMaxRounds);
+  hostCurrentQ = -1;
+  showScreen('screen-host-game');
+  document.getElementById('round-total').textContent = hostMaxRounds;
+  hostNextRound();
+}
+
+function hostNextRound() {
+  hostCurrentQ++;
+
+  if (hostCurrentQ >= hostMaxRounds) {
+    hostShowFinalScores();
+    return;
+  }
+
+  hostWhoVoted.clear();
+  hostVotes = {};
+  Object.values(hostConnections).forEach(p => hostVotes[p.name] = 0);
+
+  const q = hostQuestions[hostCurrentQ];
+  document.getElementById('host-adj-text').textContent = q.toUpperCase();
+  document.getElementById('round-num').textContent = hostCurrentQ + 1;
+
+  // Reset buttons
+  document.getElementById('btn-reveal').classList.remove('hidden');
+  document.getElementById('btn-next').classList.add('hidden');
+  document.getElementById('btn-scores').classList.add('hidden');
+  document.getElementById('btn-endgame-final').classList.add('hidden');
+
+  hostBuildGrid();
+  hostUpdateVoteProgress();
+
+  hostBroadcast({
+    type: 'START_ROUND',
+    adjective: q,
+    players: Object.values(hostConnections).map(p => p.name)
+  });
+}
+
+function hostBuildGrid() {
+  const grid = document.getElementById('results-grid');
+  grid.innerHTML = '';
+  Object.keys(hostVotes).forEach(name => {
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    card.id = `hcard-${CSS.escape(name)}`;
+    card.setAttribute('data-emoji', '✅');
+    const color = avatarColor(name);
+    card.innerHTML = `
+      <div class="pc-avatar" style="background:${color};">${initials(name)}</div>
+      <div class="pc-name">${name}</div>
+      <div class="pc-score" id="hscore-${CSS.escape(name)}">0</div>
+      <div class="pc-bar" id="hbar-${CSS.escape(name)}">
+        <div class="pc-bar-fill" id="hbarfill-${CSS.escape(name)}" style="background:${color};"></div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function hostUpdateVoteProgress() {
+  const total = Object.keys(hostConnections).length;
+  const done = hostWhoVoted.size;
+  const pct = total > 0 ? (done / total) * 100 : 0;
+
+  document.getElementById('vote-bar').style.width = pct + '%';
+  document.getElementById('vote-count-label').textContent = `${done} / ${total} votes`;
+
+  // Mark cards of players who have voted
+  hostWhoVoted.forEach(peerId => {
+    const p = hostConnections[peerId];
+    if (!p) return;
+    const card = document.getElementById(`hcard-${CSS.escape(p.name)}`);
+    if (card && !card.classList.contains('voted')) {
+      card.classList.add('voted');
+    }
+  });
+}
+
+function hostReveal() {
+  document.getElementById('btn-reveal').classList.add('hidden');
+
+  const names = Object.keys(hostVotes);
+  const maxVotes = Math.max(...Object.values(hostVotes));
+  const winners = maxVotes > 0 ? names.filter(n => hostVotes[n] === maxVotes) : [];
+
+  // Update scores
+  winners.forEach(w => { hostScores[w] = (hostScores[w] || 0) + Math.ceil(names.length / winners.length); });
+
+  // Reveal one by one
+  names.forEach((name, idx) => {
+    setTimeout(() => {
+      const card = document.getElementById(`hcard-${CSS.escape(name)}`);
+      const scoreEl = document.getElementById(`hscore-${CSS.escape(name)}`);
+      const barEl = document.getElementById(`hbar-${CSS.escape(name)}`);
+      const barFill = document.getElementById(`hbarfill-${CSS.escape(name)}`);
+
+      if (!card) return;
+      card.classList.remove('voted');
+      card.classList.add('revealed');
+      scoreEl.textContent = `${hostVotes[name]} vote${hostVotes[name] !== 1 ? 's' : ''}`;
+      scoreEl.style.display = 'block';
+      barEl.style.display = 'block';
+
+      setTimeout(() => {
+        barFill.style.width = maxVotes > 0 ? (hostVotes[name] / maxVotes * 100) + '%' : '0%';
+      }, 100);
+
+      // Winner reveal after last card
+      if (idx === names.length - 1) {
+        setTimeout(() => {
+          winners.forEach(w => {
+            const wc = document.getElementById(`hcard-${CSS.escape(w)}`);
+            if (wc) { wc.classList.remove('revealed'); wc.classList.add('winner'); }
+          });
+          if (winners.length > 0) {
+            const wNames = winners.join(' & ');
+            showToast(`👑 ${wNames} remporte(nt) des points !`);
+          }
+          document.getElementById('btn-next').classList.remove('hidden');
+          document.getElementById('btn-scores').classList.remove('hidden');
+          if (hostCurrentQ >= hostMaxRounds - 1) {
+            document.getElementById('btn-endgame-final').classList.remove('hidden');
+            document.getElementById('btn-next').classList.add('hidden');
+          }
+        }, 600);
+      }
+    }, idx * 700);
+  });
+
+  hostBroadcast({ type: 'ROUND_ENDED', scores: hostScores });
+}
+
+function hostShowScores() {
+  renderScoreboard('host-scoreboard', hostScores);
+  const isFinal = hostCurrentQ >= hostMaxRounds - 1;
+  document.getElementById('btn-continue-game').classList.toggle('hidden', isFinal);
+  document.getElementById('btn-restart').classList.toggle('hidden', !isFinal);
+  showScreen('screen-host-scores');
+}
+
+function hostContinueFromScores() {
+  showScreen('screen-host-game');
+  if (hostCurrentQ < hostMaxRounds - 1) hostNextRound();
+}
+
+function hostShowFinalScores() {
+  renderScoreboard('final-scoreboard', hostScores, true);
+  hostBroadcast({ type: 'GAME_OVER', scores: hostScores });
+  showScreen('screen-gameover');
+}
+
+function hostRestart() {
+  location.reload();
+}
+
+// ════════════════════════════════════════════════════════════
+//  PLAYER — JOIN
+// ════════════════════════════════════════════════════════════
+function playerJoin() {
+  const nameRaw = document.getElementById('player-name-input').value.trim();
+  if (!nameRaw) { showToast('✏️ Entre ton prénom !'); return; }
+  playerName = nameRaw.substring(0, 12);
+
+  const statusEl = document.getElementById('connect-status');
+  statusEl.textContent = '🔄 Connexion en cours…';
+
+  peer = new Peer(undefined, { debug: 0 });
+
+  peer.on('error', (err) => {
+    statusEl.textContent = '❌ Erreur : ' + err.message;
+  });
+
+  peer.on('open', () => {
+    playerConn = peer.connect(roomParam, { reliable: true });
+
+    playerConn.on('error', () => {
+      statusEl.textContent = '❌ Impossible de rejoindre le salon.';
+    });
+
+    playerConn.on('open', () => {
+      playerConn.send({ type: 'JOIN', name: playerName });
+    });
+
+    playerConn.on('data', (data) => {
+      if (data.type === 'NAME_TAKEN') {
+        statusEl.textContent = '❌ Ce prénom est déjà pris !';
+        return;
+      }
+      if (data.type === 'LOBBY_UPDATE') {
+        playerList = data.players;
+        document.getElementById('player-name-display').textContent = playerName.toUpperCase();
+        // update wait screen list
+        const wl = document.getElementById('player-wait-list');
+        wl.innerHTML = playerList.map(n =>
+          `<div class="lobby-chip" style="color:${avatarColor(n)};">${n}</div>`
+        ).join('');
+        showScreen('screen-player-wait');
+      }
+      if (data.type === 'START_ROUND') {
+        playerList = data.players;
+        playerShowVote(data.adjective);
+      }
+      if (data.type === 'ROUND_ENDED') {
+        const scores = data.scores;
+        renderScoreboard('player-scoreboard', scores);
+        document.getElementById('player-score-hint').innerHTML =
+          'Prochaine manche en cours<span class="wait-dots"></span>';
+        showScreen('screen-player-scores');
+      }
+      if (data.type === 'GAME_OVER') {
+        renderScoreboard('final-scoreboard', data.scores, true);
+        document.getElementById('player-score-hint').textContent = '🎉 Fin du jeu !';
+        showScreen('screen-gameover');
+      }
+    });
+
+    playerConn.on('close', () => {
+      showToast('🔌 Connexion perdue avec l\'hôte');
+    });
+  });
+}
+
+function playerShowVote(adjective) {
+  document.getElementById('vote-adj-text').textContent = adjective;
+  const container = document.getElementById('vote-buttons');
+  container.innerHTML = '';
+
+  playerList.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'vote-btn' + (name === playerName ? ' self-disabled' : '');
+    const color = avatarColor(name);
+    btn.innerHTML = `
+      <div class="vb-avatar" style="background:${color};">${initials(name)}</div>
+      <div class="vb-name">${name}${name === playerName ? ' (toi)' : ''}</div>
+    `;
+    if (name !== playerName) {
+      btn.onclick = () => {
+        playerConn.send({ type: 'SUBMIT_VOTE', target: name });
+        showScreen('screen-player-voted');
+      };
+    }
+    container.appendChild(btn);
+  });
+
+  showScreen('screen-player-vote');
+}
+
+// ════════════════════════════════════════════════════════════
+//  KEYBOARD — Enter to submit name
+// ════════════════════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const playerJoinScreen = document.getElementById('screen-player-join');
+    if (!playerJoinScreen.classList.contains('hidden')) {
+      playerJoin();
+    }
+  }
+});
+</script>
+</body>
+</html>
