@@ -118,7 +118,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .reveal-theatre{position:fixed;top:0;left:0;right:0;bottom:0;
   /* iOS Safari safe area */
   padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
-  z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;
+  z-index:500;display:none;flex-direction:column;align-items:center;justify-content:flex-start;
   -webkit-overflow-scrolling:touch;overflow-y:auto;
   background:#0a0018;
   transition:background 2s ease;
@@ -385,43 +385,43 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 /* ═══ SCORE PIN (live scoreboard) ═══ */
 .score-pin{
   position:fixed;
-  top:0;left:50%;
-  transform:translateX(-50%);
+  bottom:max(20px,calc(env(safe-area-inset-bottom)+16px));
+  left:12px;
   z-index:800;
-  display:none; /* shown only when game started */
+  display:none;
 }
 .score-pin-tab{
-  background:var(--pu);
-  color:#fff;
-  border:none;
-  padding:6px 18px 8px;
-  border-radius:0 0 16px 16px;
-  font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:900;
+  background:var(--pu);color:#fff;
+  border:3px solid var(--pu-d);
+  padding:10px 16px;
+  border-radius:50px;
+  font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:900;
   cursor:pointer;display:flex;align-items:center;gap:6px;
-  box-shadow:0 4px 14px rgba(0,0,0,.35);
+  box-shadow:0 5px 0 var(--pu-d);
   -webkit-tap-highlight-color:transparent;user-select:none;
-  letter-spacing:.5px;
-  transition:background .15s;
 }
-.score-pin-tab:hover{background:var(--pu-l);}
+.score-pin-tab:active{transform:translateY(4px);box-shadow:0 1px 0 var(--pu-d);}
 .score-pin-tab .spt-count{
   background:var(--ye);color:var(--tx);
   border-radius:50px;padding:1px 8px;
   font-size:.75rem;font-weight:900;
 }
 .score-panel{
-  position:absolute;top:calc(100% + 4px);left:50%;
-  transform:translateX(-50%);
+  position:fixed;
+  bottom:max(80px,calc(env(safe-area-inset-bottom)+76px));
+  left:8px;
   opacity:0;pointer-events:none;
-  transition:transform .25s cubic-bezier(.175,.885,.32,1.275), opacity .2s ease;
-  width:min(92vw,380px);
-  max-height:70vh;
+  transition:opacity .2s ease, transform .25s ease;
+  transform:translateY(10px);
+  width:min(92vw,340px);
+  max-height:60vh;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
+  z-index:799;
 }
 .score-panel.open{
-  transform:translateX(-50%) translateY(4px);
   opacity:1;pointer-events:all;
+  transform:translateY(0);
 }
 .score-panel-inner{
   background:rgba(255,255,255,.97);
@@ -589,6 +589,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   color:var(--ye);
   text-shadow:4px 4px 0 var(--ye-d),0 0 30px rgba(251,191,36,.5);
 }
+.land-slogan{font-family:'Baloo 2',cursive;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;color:rgba(255,255,255,.85);text-align:center;line-height:1.3;margin-bottom:4px;}
 .land-tagline{
   font-family:'Baloo 2',cursive;
   font-size:clamp(.95rem,2.5vw,1.25rem);
@@ -873,30 +874,9 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 </div>
 
 
-<!-- 💬 TRASHTALK CHAT — always visible floating panel -->
-<div class="chat-fab game-only" id="chat-fab" onclick="toggleChat()" title="Trashtalk 🔥">
-  💬
-  <div class="chat-badge" id="chat-badge"></div>
-</div>
-<div class="chat-panel" id="chat-panel">
-  <div class="chat-header">
-    <div>
-      <div class="chat-header-title">💬 TRASHTALK</div>
-      <div class="chat-header-sub">Anonyme — personne sait qui tu es 👀</div>
-    </div>
-    <button class="chat-close" onclick="toggleChat()">✕</button>
-  </div>
-  <div class="chat-anon-tag" id="chat-anon-tag">Tu es : <strong id="chat-my-nick">...</strong></div>
-  <div class="chat-msgs" id="chat-msgs">
-    <div style="text-align:center;color:var(--pu-l);font-size:.8rem;font-weight:700;padding:10px;">Le chat est vide pour l'instant… Sois le premier à clasher quelqu'un 🎤</div>
-  </div>
-  <div class="chat-input-row">
-    <input type="text" id="chat-inp" class="chat-inp" placeholder="Balance un truc…" maxlength="120" autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="chat-send" onclick="sendChat()">➤</button>
-  </div>
-</div>
+<!-- chat removed -->
 <!-- 😂 EMOJI REACTION BAR -->
-<div class="emoji-toggle game-only" id="emoji-toggle" onclick="toggleEmojiBar()" title="Réactions">😄</div>
+
 <div class="emoji-bar hidden-bar" id="emoji-bar">
   <button class="emoji-btn" onclick="sendFloatEmoji('😂')">😂</button>
   <button class="emoji-btn" onclick="sendFloatEmoji('💀')">💀</button>
@@ -947,13 +927,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
       <div class="land-tagline">Imaginé &amp; développé par Paul Barth</div>
     </div>
 
-    <!-- Feature pills -->
-    <div class="land-pills">
-      <div class="land-pill">📱 Téléphones uniquement</div>
-      <div class="land-pill">🕵️ Votes anonymes</div>
-      <div class="land-pill">🎰 Roue des pénitences</div>
-      <div class="land-pill">💬 Chat trashtalk</div>
-    </div>
+    <div class="land-slogan">On commence sobre, on finit bourré.<br><span style="font-size:.85em;opacity:.7;">Pas d'échappatoire.</span></div>
 
     <!-- CTA card -->
     <div class="land-cta-card">
@@ -964,23 +938,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
       <button class="btn land-join-btn" onclick="gotoCodeEntry()">🔑 Rejoindre avec un code</button>
     </div>
 
-    <!-- How it works strip -->
-    <div class="land-steps">
-      <div class="land-step">
-        <div class="land-step-num">1</div>
-        <div class="land-step-txt">L'hôte ouvre<br>le salon</div>
-      </div>
-      <div class="land-step-arrow">→</div>
-      <div class="land-step">
-        <div class="land-step-num">2</div>
-        <div class="land-step-txt">Tout le monde<br>scanne le QR</div>
-      </div>
-      <div class="land-step-arrow">→</div>
-      <div class="land-step">
-        <div class="land-step-num">3</div>
-        <div class="land-step-txt">Votez &amp;<br>révélez !</div>
-      </div>
-    </div>
+
   </div>
 </div>
 
@@ -1098,7 +1056,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
         <span id="php">📷</span><img id="phprev" src="" style="display:none;" alt="">
       </div>
       <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>  <!-- no forced camera on iOS -->
-      <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends ou choisis une photo de toi — c'est mieux, merci pupute 📸</div>
+      <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends toi en photo, c'est obligatoire pour le jeu mon coco 📸</div>
       <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
       <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="onboardStep1()">Continuer →</button>
     </div>
@@ -1138,7 +1096,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
         <div class="rule-item">🕵️ Chaque vote est <b>anonyme</b>. Pas la peine de débattre ou de vous justifier, vous êtes sains et saufs — c'est une safe place ;)</div>
         <div class="rule-item">🍺 C'est un <b>JEU</b>. Ne soyez pas frustrés si on vous vote comme ayant la pire hygiène de l'équipe, l'idée c'est de rigoler et de boire, restez souples.</div>
         <div class="rule-item">🔊 <b>Activez le son</b> de votre téléphone.</div>
-        <div class="rule-item">💬 Le chat Trashtalk est anonyme. <b>AUCUNE modération</b> ne sera faite dans ce dangereux espace.</div>
+
         <div class="rule-item">📵 Ne laissez pas votre téléphone <b>tomber en veille</b>, ça risque de vous déconnecter.</div>
       </div>
       <div style="font-size:.95rem;font-weight:800;color:var(--pu-d);text-align:center;margin:14px 0 10px;font-style:italic;">On commence sobres, on finit bourré. Pas d'échappatoire.</div>
@@ -1204,7 +1162,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
         <div class="death-wheel-title">☠️ LA ROUE ABSOLUE DE LA MORT</div>
         <div class="death-wheel-sub" id="go-death-who"></div>
       </div>
-      <div class="wheel-wrap" style="margin:0 auto;">
+      <div id="death-wheel-wrap" class="wheel-wrap" style="margin:0 auto;">
         <div class="wheel-ptr"></div>
         <canvas id="death-wcanvas"></canvas>
       </div>
@@ -1218,13 +1176,27 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 <!-- REVEAL THEATRE (full-screen, fixed) -->
 <div id="rev-theatre" class="reveal-theatre phase-suspense">
   <div class="spotlight"></div>
-  <div class="rev-adj-lbl" style="position:relative;z-index:2;font-size:.65rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;">Qui est le plus...</div>
-  <div class="rev-adj" id="rev-adj-txt"></div>
+  <div style="position:relative;z-index:2;text-align:center;margin-bottom:8px;">
+    <div style="display:inline-block;background:var(--pu);color:var(--ye);font-family:'Baloo 2',cursive;font-size:clamp(1rem,4vw,1.8rem);font-weight:900;padding:5px 20px 7px;border-radius:12px 14px 10px 12px/10px 12px 14px 12px;transform:rotate(-1deg);box-shadow:3px 3px 0 var(--pu-d);letter-spacing:1px;">QUI EST LA <span style="color:var(--ye);">+</span></div>
+    <div class="rev-adj" id="rev-adj-txt" style="margin-top:8px;"></div>
+  </div>
   <!-- Mystery card (shown first) -->
-  <div id="rev-mystery" class="q-card" style="position:relative;"><div id="slot-reel" style="display:none;"></div><div class="q-mark" id="q-mark-el">?</div></div>
+  <!-- SLOT MACHINE + mystery card -->
+  <div id="rev-mystery" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <!-- Lever -->
+    <div id="slot-lever-wrap" style="display:none;align-items:center;gap:10px;margin-bottom:4px;">
+      <div style="font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:900;color:var(--pu-l);letter-spacing:2px;">APPUIE ICI</div>
+      <button id="slot-lever-btn" onclick="triggerSlot()" style="background:var(--pk);color:#fff;border:3px solid #900040;border-radius:50px;padding:10px 24px;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;cursor:pointer;box-shadow:0 5px 0 #900040;-webkit-tap-highlight-color:transparent;">🎰 LANCER</button>
+    </div>
+    <div class="q-card" style="position:relative;">
+      <div id="slot-reel" style="display:none;"></div>
+      <!-- Q mark always overlaid -->
+      <div id="q-mark-el" class="q-mark" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:5;background:linear-gradient(160deg,#3b0764,#5b21b6);border-radius:18px;">?</div>
+    </div>
+  </div>
   <div class="suspense-hint" id="suspense-hint">Qui est-ce ?</div>
   <!-- Winner card(s) (hidden until reveal) -->
-  <div id="rev-winners-wrap" style="display:none;flex-direction:row;flex-wrap:wrap;gap:16px;justify-content:center;position:relative;z-index:2;"></div>
+  <div id="rev-winners-wrap" style="display:none;flex-direction:row;flex-wrap:wrap;gap:10px;justify-content:center;position:relative;z-index:2;width:100%;max-width:100vw;overflow:hidden;"></div>
   <!-- Winner video clips (shown below cards) -->
   <div id="rev-clip-wrap" class="rev-clip-wrap" style="display:none;"></div>
   <div id="rev-winner-lbl" class="rev-winner-lbl" style="display:none;"></div>
@@ -1300,6 +1272,26 @@ const ANON_ANIMALS = [
   "🐯 Tigre","🦈 Requin","🦚 Paon","🐊 Croco","🦉 Hibou",
   "🐧 Pingouin","🦩 Flamant","🐺 Hyène","🦇 Chauve-Souris","🐢 Tortue"
 ];
+
+const WHEEL_FUN = {
+  "1 gorgée":            "Une petite pour la route 🥂",
+  "Cul sec 🔥":          "Arrière-gorge, tu connais la chanson 🫡",
+  "3 gorgées":           "Compte pas tes calories ce soir 🍷",
+  "Donne 4 gorgées":     "Partage c'est aimer, mais là t'es pas sympa 😈",
+  "Cul rouge 🍑":        "Sans commentaire. On t'avait prévenu 🍑",
+  "2 gorgées":           "Deux petites, tranquille 😌",
+  "Cul sec pour toi":    "Pour toi. Bon courage mon grand 🫠",
+  "Cul sec pour moi":    "Auto-punition, respect 🤝",
+  // Death wheel
+  "Cul sec pour tout le monde": "Tout le monde boit. Pas d'exception. 🥂",
+  "Le perdant offre le shot":   "T'as pas le choix, passe à la caisse 💸",
+  "Tous en jugement":           "Le groupe décide de ton sort 🧑‍⚖️",
+  "Strip-tease obligatoire":    "Et on applaudit 👏",
+  "Vérité ou défi collectif":   "La démocratie dans toute sa splendeur 🗳️",
+  "Cul sec pour deux":          "Désigne ta victime avec sagesse 👉",
+  "Le champion ouvre bouteille": "Tu paies l'apéro, champion 🍾",
+  "Règle maison":               "À l'hôte de décider. Ça va être cruel.",
+};
 // ctx.arc draws CW from `start` angle. 0 = 3 o'clock (right).
 // Pointer is fixed at TOP = -PI/2.
 // Segment under pointer at wheel angle A:
@@ -1393,13 +1385,13 @@ function handlePhoto(e){
   const file=e.target.files[0];if(!file)return;
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
-    // Crop to square from center, then resize — better quality on iPhone
-    const c=document.createElement('canvas');
+    // Center-crop square, resize to 200x200 at 90% quality
     const SRC=Math.min(img.width,img.height);
     const OX=(img.width-SRC)/2,OY=(img.height-SRC)/2;
-    c.width=160;c.height=160;
-    c.getContext('2d').drawImage(img,OX,OY,SRC,SRC,0,0,160,160);
-    pPhoto=c.toDataURL('image/jpeg',.85);
+    const c=document.createElement('canvas');
+    c.width=200;c.height=200;
+    c.getContext('2d').drawImage(img,OX,OY,SRC,SRC,0,0,200,200);
+    pPhoto=c.toDataURL('image/jpeg',.9);
     URL.revokeObjectURL(url);
     $('php').style.display='none';
     const p=$('phprev');p.src=pPhoto;p.style.display='block';
@@ -1542,6 +1534,10 @@ function handleHConn(conn){
     if(data.type==='EMOJI_REACT'){
       hBcast({type:'EMOJI_REACT',emoji:data.emoji});
       spawnFloatEmoji(data.emoji);
+      return;
+    }
+    if(data.type==='DEATH_SPIN'){
+      hBcast({type:'DEATH_SPIN',angle:data.angle});
       return;
     }
     if(data.type==='DEATH_WHEEL_RESULT'){
@@ -1724,6 +1720,19 @@ function hostLaunchFromConfig(){
 // Keep old hostLaunch as alias just in case
 function hostLaunch(){hostLaunchFromConfig();}
 
+
+function openConfigDuringGame(){
+  // Show a simplified inline panel for managing remaining rounds
+  const existing=$('mid-game-config');
+  if(existing){existing.style.display=existing.style.display==='none'?'block':'none';return;}
+  const panel=document.createElement('div');
+  panel.id='mid-game-config';
+  panel.style.cssText='margin-top:14px;background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:12px;text-align:left;';
+  panel.innerHTML='<div style="font-size:.72rem;letter-spacing:3px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:8px;">📋 Manches restantes — clique 🗑️ pour supprimer</div><div id="mgc-list"></div>';
+  const emergencyBox=document.querySelector('.emergency-box');
+  if(emergencyBox) emergencyBox.appendChild(panel);
+  updateRemainingRounds();
+}
 function hostEndGameNow(){
   if(!confirm('Terminer la partie maintenant et afficher le classement final ?')) return;
   hQi=MAX_ROUNDS; // Force end
@@ -1862,7 +1871,11 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
     li.className='sb-row '+(cls[i]||'');li.style.animationDelay=i*.08+'s';
     const ph=photos[name]||'';
     const pe=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
-    const myTags=(tagMap[name]||[]).map(t=>`<span class="sb-win-tag">${escHtml(t)}</span>`).join('');
+    const allTags=tagMap[name]||[];
+    const visibleTags=allTags.slice(0,2);
+    const hiddenTags=allTags.slice(2);
+    const myTags=visibleTags.map(t=>`<span class="sb-win-tag">${escHtml(t)}</span>`).join('')
+      +(hiddenTags.length>0?`<span class="sb-win-tag sb-tag-more" onclick="this.parentElement.querySelectorAll('.sb-tag-hidden').forEach(e=>e.style.display='inline');this.style.display='none';">+${hiddenTags.length} de plus</span>`+''+hiddenTags.map(t=>`<span class="sb-win-tag sb-tag-hidden" style="display:none;">${escHtml(t)}</span>`).join(''):'');
     li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${pe}
       <div style="flex:1;min-width:0;">
         <div class="sb-name">${name}</div>
@@ -1952,6 +1965,14 @@ function handlePData(data){
       appendChatMsg(data.nick,data.msg);
       if(!chatOpen){chatUnread++;updateChatBadge();}
       break;
+    case 'DEATH_SPIN':
+      // Spectators see death wheel spinning
+      if(!dIsSpinner){
+        const dov=$('go-death-wheel-section');
+        if(dov) dov.style.display='block';
+        drawDeathWheel(data.angle);
+      }
+      break;
     case 'DEATH_WHEEL_RESULT':
       // Spectators see the death wheel result
       const dr=$('death-result');
@@ -1982,7 +2003,7 @@ function buildVoteGrid(players){
     btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${p.name}</div>`;
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
-      try{ playVotePing(); }catch(e){}
+      try{const ctx=getAudioCtx();playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
       pConn.send({type:'SUBMIT_VOTE',target:p.name});
       show('s-pvoted');
     };
@@ -1995,6 +2016,12 @@ function pt(fn,ms){const t=setTimeout(fn,ms);pTimers.push(t);return t;}
 
 
 // ═══════════════════ SLOT MACHINE ═══════════════════
+
+function triggerSlot(){
+  const btn=$('slot-lever-btn');
+  if(btn){btn.disabled=true;btn.textContent='🎰 ...';}
+  if(window._revealContinue) window._revealContinue();
+}
 function runSlotMachine(players, duration, onDone){
   const reel = $('slot-reel');
   const qmark = $('q-mark-el');
@@ -2264,15 +2291,21 @@ function doReveal(data){
   if(maxV===0){
     // No votes — skip slot machine
   } else {
-    // 🎰 Slot machine spins through player photos before suspense
-    if(players.length>0){
+    // Show lever first — user triggers the slot
+    window._revealPlayers=players;
+    window._revealContinue=()=>{
+      // Play fart THEN spin
+      try{const ctx2=getAudioCtx();playFart(ctx2,ctx2.currentTime,0.5,70);}catch(e){}
+      const leverWrap=$('slot-lever-wrap');
+      if(leverWrap) leverWrap.style.display='none';
       runSlotMachine(players, 1600, ()=>{
-        // After slot machine, start drum roll
         try{ playSuspenseDrumRoll(3.0); }catch(e){}
       });
-    } else {
-      try{ playSuspenseDrumRoll(3.0); }catch(e){}
-    }
+    };
+    // Show lever
+    const lw=$('slot-lever-wrap');
+    if(lw) lw.style.display='flex';
+
   }
 
   if(maxV===0){
@@ -2344,7 +2377,10 @@ function doReveal(data){
       // Winner label + VIDEO_MAP clip
       pt(()=>{
         const lbl=$('rev-winner-lbl');
-        lbl.textContent='👑 '+winners.join(' & ')+' remporte'+(winners.length>1?'nt':'')+' ce round !';
+        // Build contextual phrase from adjective
+    const adjWords=adjective.split(' ');
+    const shortAdj=adjWords.slice(0,4).join(' ')+(adjWords.length>4?'…':'');
+    lbl.textContent='👑 '+winners.join(' & ')+' est vraiment le/la + '+shortAdj+' 😬';
         lbl.style.display='block';
         confetti();
 
@@ -2461,7 +2497,8 @@ function spinWheel(){
       if(pConn&&pConn.open){
         pConn.send({type:'WHEEL_RESULT',segment:seg.l,spinner:pName});
       }
-      $('w-result').textContent='👉 '+seg.l;
+      const wFun=WHEEL_FUN[seg.l]||'Bonne chance 😈';
+      $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+seg.l+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun+'</div>';
       $('wspin-btn').style.display='none';
       $('wdone-btn').style.display='';
       wSpinning=false;return;
@@ -2509,7 +2546,7 @@ function updateWheelDisplay(angle,spinner){
   wAngle=angle;
   const ov=$('wheel-ov');
   if(ov.style.display!=='flex'){
-    $('wt').textContent='🎰 '+spinner+' tourne la roue !';
+    $('wt').textContent='🎰 '+spinner+" tourne la roue de l'infortune.";
     $('ws').textContent='Regarde en direct !';
     $('wspin-btn').style.display='none';
     $('wdone-btn').style.display='none';
@@ -2788,7 +2825,8 @@ function spinDeathWheel(){
       const ptr=((-Math.PI/2-dAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
       const idx=Math.floor(ptr/D_ARC)%DEATH_SEGMENTS.length;
       const seg=DEATH_SEGMENTS[idx];
-      $('death-result').textContent='☠️ '+seg.l.replace('\n',' ');
+      const dFun=WHEEL_FUN[seg.l]||'Bonne chance 😈';
+      $('death-result').innerHTML='<div style="font-size:1.1rem;font-weight:900;color:var(--pk);">☠️ '+seg.l+'</div><div style="font-size:.85rem;color:rgba(255,255,255,.6);margin-top:4px;font-style:italic;">'+dFun+'</div>';
       try{playRevealSound();}catch(e){}
       dSpinning=false;
       // Broadcast result
@@ -2800,6 +2838,13 @@ function spinDeathWheel(){
     const cur=(a0+totalRot*eased)%(2*Math.PI);
     dAngle=cur;
     drawDeathWheel(cur);
+    // Broadcast to spectators (throttled)
+    const nowMs2=performance.now();
+    if(!frame._lb||nowMs2-frame._lb>66){
+      frame._lb=nowMs2;
+      if(pConn&&pConn.open) pConn.send({type:'DEATH_SPIN',angle:cur});
+      if(isHost) hBcast({type:'DEATH_SPIN',angle:cur});
+    }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
@@ -2822,13 +2867,28 @@ function drawDeathWheel(angle){
     ctx.textAlign='center';ctx.fillStyle='#fff';
     ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;
     ctx.font=`900 ${fs}px 'Nunito',sans-serif`;
-    ctx.translate(r*0.65,0);ctx.rotate(Math.PI/2);
-    const lines=seg.l.split('\n');
-    const lh=fs*1.2;
-    lines.forEach((line,li)=>ctx.fillText(line,0,(li-(lines.length-1)/2)*lh));
+    // Draw text along the segment, readable
+    ctx.rotate(Math.PI/2);
+    const txt=seg.l.replace('\n',' ');
+    const maxW=r*0.72;
+    // Word wrap
+    const words=txt.split(' ');
+    let lines2=[],cur='';
+    for(const w of words){
+      const test=cur?cur+' '+w:w;
+      if(ctx.measureText(test).width>maxW&&cur){lines2.push(cur);cur=w;}
+      else cur=test;
+    }
+    if(cur)lines2.push(cur);
+    const lh2=fs*1.15;
+    const totalH=lines2.length*lh2;
+    lines2.forEach((line,li)=>{
+      const y=(li-(lines2.length-1)/2)*lh2+2;
+      ctx.fillText(line,r*0.55,y);
+    });
     ctx.restore();
   });
-  ctx.beginPath();ctx.arc(cx,cy,SZ*0.09,0,2*Math.PI);
+  ctx.beginPath();ctx.arc(cx,cy,SZ*0.08,0,2*Math.PI);
   ctx.fillStyle='#fff';ctx.fill();
   ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
 }
