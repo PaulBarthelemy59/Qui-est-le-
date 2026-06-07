@@ -114,10 +114,29 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .ph-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
 .ph-circle:hover{border-color:var(--pu);transform:scale(1.04);}
 /* ═══════ REVEAL OVERLAY ═══════ */
-/* The "theatre" reveal takes over the whole screen */
-.reveal-theatre{position:fixed;inset:0;background:#000;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
+.reveal-theatre{position:fixed;inset:0;z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto;
+  background:#0a0018;
+  transition:background 2s ease;
+}
+.reveal-theatre.visible{display:flex;}
+.reveal-theatre.phase-suspense{background:radial-gradient(ellipse at 50% 60%, #1a0040 0%, #050010 70%);}
+.reveal-theatre.phase-reveal{background:radial-gradient(ellipse at 50% 40%, #2d0060 0%, #0a0018 70%);}
+/* Animated stars in the bg */
+.reveal-theatre::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(2px 2px at 10% 60%, rgba(167,139,250,.6) 0%, transparent 100%),
+    radial-gradient(2px 2px at 90% 50%, rgba(251,191,36,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 15%, rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 45%, rgba(255,255,255,.4) 0%, transparent 100%);
+  pointer-events:none;z-index:0;
+}
 /* Spotlight vignette */
-.spotlight{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 50% 45%,transparent 0%,rgba(0,0,0,.75) 100%);pointer-events:none;z-index:1;}
+.spotlight{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 50% 45%,transparent 0%,rgba(0,0,0,.7) 100%);pointer-events:none;z-index:1;}
 /* Q card — the mystery card before reveal */
 .q-card{
   width:min(52vw,220px);aspect-ratio:4/5;
@@ -127,20 +146,33 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
   box-shadow:0 0 60px rgba(124,58,237,.7),0 10px 0 rgba(0,0,0,.4);
   position:relative;z-index:2;
   cursor:default;
-  transition:transform .3s ease;
+  animation:qCardPulse 2s ease infinite alternate;
+}
+@keyframes qCardPulse{
+  from{box-shadow:0 0 40px rgba(124,58,237,.5),0 0 80px rgba(251,191,36,.2),0 10px 0 rgba(0,0,0,.4);border-color:var(--ye);transform:scale(1);}
+  to{box-shadow:0 0 80px rgba(124,58,237,.9),0 0 160px rgba(251,191,36,.5),0 10px 0 rgba(0,0,0,.4);border-color:#fff;transform:scale(1.03);}
 }
 /* Pulsing ? */
 .q-mark{
   font-family:'Baloo 2',cursive;font-size:clamp(4rem,14vw,7rem);font-weight:900;
   color:var(--ye);
   text-shadow:0 0 30px rgba(251,191,36,.8),4px 4px 0 rgba(0,0,0,.4);
-  animation:qPulse 1.2s ease infinite alternate;
+  animation:qPulse 1.4s ease infinite alternate;
   user-select:none;
 }
 @keyframes qPulse{
-  from{transform:scale(1);text-shadow:0 0 20px rgba(251,191,36,.5);}
-  to{transform:scale(1.15) rotate(8deg);text-shadow:0 0 60px rgba(251,191,36,1),0 0 100px rgba(251,191,36,.4);}
+  from{transform:scale(1) rotate(-5deg);text-shadow:0 0 20px rgba(251,191,36,.5);}
+  to{transform:scale(1.2) rotate(8deg);text-shadow:0 0 80px rgba(251,191,36,1),0 0 140px rgba(251,191,36,.5);}
 }
+/* Suspense countdown text under the card */
+.suspense-hint{
+  position:relative;z-index:2;
+  font-family:'Baloo 2',cursive;font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:900;
+  color:rgba(255,255,255,.35);letter-spacing:3px;text-transform:uppercase;
+  margin-top:16px;
+  animation:hintFade 1.5s ease infinite alternate;
+}
+@keyframes hintFade{from{opacity:.3;}to{opacity:.7;}}
 /* Reveal card replacing the ? */
 .rev-card{
   width:min(52vw,220px);aspect-ratio:4/5;
@@ -177,8 +209,33 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 #wcanvas{border-radius:50%;border:5px solid #fff;box-shadow:0 0 40px rgba(251,191,36,.5);display:block;}
 .wheel-ptr{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:28px solid #fff;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6));}
 .wheel-result{font-family:'Baloo 2',cursive;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:900;color:#fff;text-align:center;margin-top:14px;min-height:2.4rem;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
-/* MISC */
-.m-title{font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:900;color:var(--pu);margin-bottom:6px;}
+/* WINNER VIDEO CLIP */
+.rev-clip-wrap{
+  position:relative;z-index:2;
+  margin-top:16px;
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+}
+.clip-bubble{
+  width:90px;height:90px;border-radius:50%;
+  overflow:hidden;
+  border:4px solid var(--ye);
+  box-shadow:0 0 30px rgba(251,191,36,.6),0 4px 0 var(--ye-d);
+  position:relative;
+  animation:clipPulse .8s ease infinite alternate;
+  flex-shrink:0;
+}
+@keyframes clipPulse{
+  from{box-shadow:0 0 20px rgba(251,191,36,.4),0 4px 0 var(--ye-d);}
+  to{box-shadow:0 0 50px rgba(251,191,36,.9),0 4px 0 var(--ye-d);}
+}
+.clip-bubble video{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+.clip-name{
+  font-family:'Baloo 2',cursive;font-size:.75rem;font-weight:900;
+  color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;
+  text-align:center;margin-top:6px;
+}font-size:1.9rem;font-weight:900;color:var(--pu);margin-bottom:6px;}
 .big-emoji{font-size:3rem;margin-bottom:10px;display:block;animation:bounce .5s ease infinite alternate;}
 @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-8px);}}
 .wdots::after{content:'';animation:dots 1.5s infinite;}
@@ -190,12 +247,121 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .cp{position:fixed;pointer-events:none;z-index:9998;border-radius:2px;animation:fall linear forwards;}
 @keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:1;}100%{transform:translateY(105vh) rotate(800deg);opacity:0;}}
 @media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:6px;}}
+
+/* ═══════ TRASHTALK CHAT ═══════ */
+.chat-fab{
+  position:fixed;bottom:20px;right:20px;z-index:700;
+  width:54px;height:54px;border-radius:50%;
+  background:var(--pu);color:#fff;
+  border:3px solid var(--pu-d);
+  box-shadow:0 5px 0 var(--pu-d),0 8px 20px rgba(124,58,237,.4);
+  cursor:pointer;font-size:1.4rem;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  transition:transform .1s;
+}
+.chat-fab:active{transform:translateY(4px);box-shadow:0 1px 0 var(--pu-d);}
+.chat-badge{
+  position:absolute;top:-4px;right:-4px;
+  background:var(--pk);color:#fff;
+  border-radius:50%;width:20px;height:20px;
+  font-size:.7rem;font-weight:900;
+  display:none;align-items:center;justify-content:center;
+  border:2px solid #fff;
+  font-family:'Baloo 2',cursive;
+}
+.chat-badge.show{display:flex;}
+.chat-panel{
+  position:fixed;bottom:84px;right:12px;z-index:700;
+  width:min(92vw,320px);
+  background:#fff;
+  border:3px solid var(--pu-l);
+  border-radius:20px 20px 6px 20px;
+  box-shadow:0 8px 40px rgba(124,58,237,.25);
+  display:none;flex-direction:column;overflow:hidden;
+  max-height:420px;
+}
+.chat-panel.open{display:flex;}
+.chat-header{
+  background:var(--pu);padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.chat-header-title{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:900;color:#fff;letter-spacing:1px;}
+.chat-header-sub{font-size:.72rem;color:var(--pu-l);font-weight:700;}
+.chat-close{background:none;border:none;color:#fff;cursor:pointer;font-size:1.1rem;padding:2px 4px;opacity:.7;}
+.chat-close:hover{opacity:1;}
+.chat-msgs{
+  flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;
+  scrollbar-width:thin;scrollbar-color:var(--pu-l) transparent;
+}
+.chat-msg{
+  display:flex;flex-direction:column;gap:2px;
+  animation:msgPop .2s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes msgPop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.chat-msg-nick{font-family:'Baloo 2',cursive;font-size:.72rem;font-weight:900;color:var(--pu-l);}
+.chat-msg-bubble{
+  background:var(--pu-s);
+  border-radius:12px 12px 12px 3px;
+  padding:7px 10px;
+  font-size:.9rem;font-weight:700;color:var(--tx);
+  line-height:1.35;word-break:break-word;
+  border:1.5px solid var(--pu-l);
+  align-self:flex-start;
+  max-width:90%;
+}
+.chat-input-row{
+  display:flex;gap:6px;padding:8px 10px;
+  border-top:2px solid var(--pu-s);background:#fff;flex-shrink:0;
+}
+.chat-inp{
+  flex:1;background:var(--pu-s);border:2px solid var(--pu-l);
+  border-radius:10px;padding:8px 10px;
+  font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;
+  color:var(--tx);outline:none;
+}
+.chat-inp:focus{border-color:var(--pu);}
+.chat-inp::placeholder{color:var(--pu-l);}
+.chat-send{
+  background:var(--pu);color:#fff;border:2px solid var(--pu-d);
+  border-radius:10px;padding:8px 12px;
+  cursor:pointer;font-size:1rem;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 3px 0 var(--pu-d);transition:transform .08s,box-shadow .08s;
+}
+.chat-send:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu-d);}
+.chat-anon-tag{
+  font-size:.7rem;color:var(--pu-l);font-weight:700;text-align:center;
+  padding:5px;border-bottom:1px solid var(--pu-s);background:#fff;flex-shrink:0;
+}
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
 
-<!-- HOST LANDING -->
+<!-- 💬 TRASHTALK CHAT — always visible floating panel -->
+<div class="chat-fab" id="chat-fab" onclick="toggleChat()" title="Trashtalk 🔥">
+  💬
+  <div class="chat-badge" id="chat-badge"></div>
+</div>
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-header">
+    <div>
+      <div class="chat-header-title">💬 TRASHTALK</div>
+      <div class="chat-header-sub">Anonyme — personne sait qui tu es 👀</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-anon-tag" id="chat-anon-tag">Tu es : <strong id="chat-my-nick">...</strong></div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div style="text-align:center;color:var(--pu-l);font-size:.8rem;font-weight:700;padding:10px;">Le chat est vide pour l'instant… Sois le premier à clasher quelqu'un 🎤</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-inp" class="chat-inp" placeholder="Balance un truc…" maxlength="120" autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
 <div id="s-land" class="screen">
   <div class="lw"><div class="lb">QUI EST LE <span class="plus">+</span> ?</div><span class="ls">Le jeu qui révèle tout 👀</span></div>
   <div class="card">
@@ -259,6 +425,8 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
       </div>
       <input type="file" id="fi" style="display:none;" accept="image/*" capture="user" onchange="handlePhoto(event)">
       <div style="font-size:.73rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Photo optionnelle</div>
+
+
       <input type="text" id="pni" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off">
       <button class="btn big" style="width:100%;" onclick="playerJoin()">Rejoindre 🚀</button>
     </div>
@@ -319,21 +487,24 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 </div>
 
 <!-- REVEAL THEATRE (full-screen, fixed) -->
-<div id="rev-theatre" class="reveal-theatre hidden">
+<div id="rev-theatre" class="reveal-theatre phase-suspense">
   <div class="spotlight"></div>
   <div class="rev-adj-lbl" style="position:relative;z-index:2;font-size:.65rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;">Qui est le plus...</div>
   <div class="rev-adj" id="rev-adj-txt"></div>
   <!-- Mystery card (shown first) -->
   <div id="rev-mystery" class="q-card"><div class="q-mark">?</div></div>
+  <div class="suspense-hint" id="suspense-hint">Qui est-ce ?</div>
   <!-- Winner card(s) (hidden until reveal) -->
   <div id="rev-winners-wrap" style="display:none;flex-direction:row;flex-wrap:wrap;gap:16px;justify-content:center;position:relative;z-index:2;"></div>
+  <!-- Winner video clips (shown below cards) -->
+  <div id="rev-clip-wrap" class="rev-clip-wrap" style="display:none;"></div>
   <div id="rev-winner-lbl" class="rev-winner-lbl" style="display:none;"></div>
   <!-- Others (shown after winners) -->
   <div id="rev-others-sec" class="others-section" style="display:none;">
     <div class="others-lbl">Les autres votes</div>
     <div class="pgrid" id="rev-others-grid"></div>
   </div>
-  <!-- Controls -->
+  <!-- Controls — only shown when host sends NEXT_ALLOWED -->
   <div class="rev-controls" id="rev-ctrl" style="display:none;">
     <button class="btn gr big" onclick="playerAskNext()">Manche suivante ➡</button>
   </div>
@@ -382,11 +553,80 @@ const QUESTIONS=[
   "Accro aux réseaux dès le réveil"
 ];
 
-// Each segment: label + color
-// The wheel has N segments. Pointer is fixed at the TOP.
-// When the wheel stops at angle A, the segment under the pointer is:
-//   idx = floor( ((-(A + PI/2)) % 2PI + 2PI) % 2PI  /  arc )
-// We'll verify this once and use it consistently.
+// ════════════════════════════════════════════════
+// 🎬 VIDEO MAP — associe une URL MP4 à chaque question
+// Ajoute ou modifie les URLs ci-dessous avant ta soirée.
+// La clé doit correspondre EXACTEMENT à la question dans QUESTIONS.
+// Si une question n'a pas de vidéo, elle ne s'affiche pas.
+// ════════════════════════════════════════════════
+const VIDEO_MAP = {
+  "Radin quand c'est son tour de payer":
+    "", // ex: "https://drive.google.com/uc?export=download&id=TON_ID"
+  "Susceptible quand on le vanne":
+    "",
+  "Mauvais perdant sur un jeu de société":
+    "",
+  "Capable d'arriver en retard à son propre mariage":
+    "",
+  "Gaffeur qui lâche des secrets sans faire exprès":
+    "",
+  "Flambeur qui n'a plus une thune le 5 du mois":
+    "",
+  "Capable d'oublier ses clés à l'intérieur":
+    "",
+  "Prêt à survivre le plus longtemps sur une île déserte":
+    "",
+  "Râleur dès le matin sans café":
+    "",
+  "Gros mytho quand il raconte une anecdote":
+    "",
+  "Accro à son téléphone même au ciné":
+    "",
+  "Capable de manger seul toute une pizza sans honte":
+    "",
+  "Dramatique pour une simple égratignure":
+    "",
+  "Toujours en retard mais jamais gêné":
+    "",
+  "Charmeur quand il veut quelque chose":
+    "",
+  "Malin pour s'éclipser quand il y a la vaisselle":
+    "",
+  "Nostalgique du « avant c'était mieux »":
+    "",
+  "Convaincu d'avoir toujours raison":
+    "",
+  "Capable de roter en public sans honte":
+    "",
+  "Le plus probable à pleurer devant un Disney":
+    "",
+  "Celui qui parle le plus fort dans un resto":
+    "",
+  "Capable de zapper une soirée pour une série":
+    "",
+  "Le premier à s'endormir à une soirée":
+    "",
+  "Capable de mentir avec le sourire":
+    "",
+  "Accro aux réseaux dès le réveil":
+    "",
+};
+
+// ════════════════════════════════════════════════
+// 💬 CHAT — pseudos anonymes aléatoires
+// ════════════════════════════════════════════════
+const ANON_ANIMALS = [
+  "🦊 Renard","🐺 Loup","🦁 Lion","🐻 Ours","🦝 Raton",
+  "🐸 Grenouille","🦋 Papillon","🦜 Perroquet","🐙 Poulpe","🦄 Licorne",
+  "🐯 Tigre","🦈 Requin","🦚 Paon","🐊 Croco","🦉 Hibou",
+  "🐧 Pingouin","🦩 Flamant","🐺 Hyène","🦇 Chauve-Souris","🐢 Tortue"
+];
+// ctx.arc draws CW from `start` angle. 0 = 3 o'clock (right).
+// Pointer is fixed at TOP = -PI/2.
+// Segment under pointer at wheel angle A:
+//   ptr = (-Math.PI/2 - A % (2*PI) + 4*PI) % (2*PI)
+//   idx = Math.floor(ptr / ARC) % N_SEG
+// This is consistent with drawWheel which draws seg i from A + i*ARC.
 const WS=[
   {l:"1 gorgée",     c:"#7c3aed"},
   {l:"Cul sec 🔥",   c:"#dc2626"},
@@ -408,8 +648,8 @@ const CONN_TIMEOUT=9000;
 const $=id=>document.getElementById(id);
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));const el=$(id);if(el)el.classList.remove('hidden');}
-function showRev(){$('rev-theatre')&&$('rev-theatre').classList.remove('hidden');}
-function hideRev(){$('rev-theatre')&&$('rev-theatre').classList.add('hidden');}
+function showRev(){const t=$('rev-theatre');if(t){t.classList.add('visible');}}
+function hideRev(){const t=$('rev-theatre');if(t){t.classList.remove('visible');}}
 function toast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),dur);}
 function acol(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))&0xffffffff;return COLORS[Math.abs(h)%COLORS.length];}
 function ini(n){return n.substring(0,2).toUpperCase();}
@@ -433,6 +673,7 @@ let hQs=[],hQi=-1,hRevealed=false,hAdj='';
 let hCode='';
 // Player
 let pName='',pPhoto='',pConn=null,pList=[],pRoomId='';
+let pAnonNick=''; // anonymous chat identity
 let pTimers=[];  // reveal timers
 // Wheel state
 let wQueue=[];   // array of player names waiting to spin
@@ -448,6 +689,10 @@ window.onload=()=>{
   if(roomP){pRoomId=roomP;show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
 };
+
+// Chat
+let chatOpen = false;
+let chatUnread = 0;
 
 // ═══════════════════ NAV ═══════════════════
 function gotoCode(){show('s-pjoin');$('step-code').style.display='block';}
@@ -471,12 +716,14 @@ function handlePhoto(e){
   };img.src=url;
 }
 
-// ═══════════════════ PLAYER JOIN ═══════════════════
+// Videos are configured via VIDEO_MAP at the top of the script — not uploaded by players.
 function playerJoin(){
   const raw=$('pni').value.trim();
   if(!raw){toast('✏️ Entre ton prénom !');return;}
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   pName=raw.substring(0,12);
+  // Assign anonymous chat identity — random, different from real name
+  pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
   if(peer&&!isHost){try{peer.destroy();}catch(e){}}
   peer=new Peer(undefined,{debug:0});
@@ -524,14 +771,22 @@ function handleHConn(conn){
       const name=data.name.trim().substring(0,12);
       const oldPeer=Object.keys(hConns).find(k=>hConns[k].name===name);
       if(oldPeer)delete hConns[oldPeer];
-      hConns[conn.peer]={name,conn,photo:data.photo||''};
+      hConns[conn.peer]={name,conn,photo:data.photo||'',clip:data.clip||''};
       if(hScores[name]===undefined)hScores[name]=0;
       hostLobbyUI();
       hBcast({type:'LOBBY_UPDATE',players:hPList()});
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
-      if(hQi>=0&&!hRevealed){
-        conn.send({type:'START_ROUND',adjective:hAdj,players:hPList()});
-        if(hWhoVoted.has(oldPeer||'__none__'))conn.send({type:'ALREADY_VOTED',done:hWhoVoted.size,total:Object.keys(hConns).length});
+      if(hQi>=0){
+        if(hRevealed){
+          const _maxV=Math.max(...Object.values(hVotes),0);
+          const _winners=_maxV>0?Object.keys(hVotes).filter(n=>hVotes[n]===_maxV):[];
+          conn.send({type:'REVEAL',votes:{...hVotes},winners:_winners,adjective:hAdj,players:hPList()});
+        } else {
+          conn.send({type:'START_ROUND',adjective:hAdj,players:hPList()});
+          if(hWhoVoted.has(oldPeer||'__none__')){
+            conn.send({type:'ALREADY_VOTED',done:hWhoVoted.size,total:Object.keys(hConns).length});
+          }
+        }
       }
       return;
     }
@@ -558,6 +813,14 @@ function handleHConn(conn){
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
       return;
     }
+    if(data.type==='CHAT'){
+      if(!data.nick||!data.msg)return;
+      const _m=String(data.msg).substring(0,200);
+      hBcast({type:'CHAT',nick:data.nick,msg:_m,ts:Date.now()});
+      // Also display on host screen if host has chat open
+      appendChatMsg(data.nick, data.msg);
+      return;
+    }
   });
   conn.on('close',()=>{
     const info=hConns[conn.peer];
@@ -566,7 +829,7 @@ function handleHConn(conn){
   conn.on('error',()=>{delete hConns[conn.peer];hostLobbyUI();});
 }
 
-function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo}));}
+function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo,clip:p.clip||''}));}
 function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
 function hostLobbyUI(){
@@ -611,8 +874,9 @@ function hostReveal(){
 
 function hostFinal(){
   const photos=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]));
+  const clips=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.clip||'']));
   renderSB('h-sb',hScores,photos);show('s-hfinal');
-  hBcast({type:'GAME_OVER',scores:hScores,photos});confetti();
+  hBcast({type:'GAME_OVER',scores:hScores,photos,clips});confetti();
 }
 
 // ═══════════════════ SCOREBOARD ═══════════════════
@@ -639,6 +903,7 @@ function handlePData(data){
       pList=data.players;
       $('p-name-d').textContent=pName.toUpperCase();
       $('p-chips').innerHTML=pList.map(p=>`<div class="chip" style="color:${acol(p.name)};">${p.name}</div>`).join('');
+      initChatNick();
       show('s-pwait');break;
     case 'START_ROUND':
       pList=data.players;clearPTimers();
@@ -658,6 +923,30 @@ function handlePData(data){
       break;
     case 'WHEEL_LANDED':
       if(data.spinner!==pName) spectatorWheelLanded(data.segment,data.spinner);
+      break;
+    case 'WHEEL_QUEUE_DONE':
+      setTimeout(()=>{ const ov=$('wheel-ov');if(ov)ov.style.display='none'; },1800);
+      break;
+    case 'WHEEL_NEXT':
+      if(data.nextSpinner!==pName){
+        $('wt').textContent='🎰 '+data.nextSpinner+' tourne la roue !';
+        $('ws').textContent='Regarde en direct !';
+        $('wspin-btn').style.display='none';
+        $('wdone-btn').style.display='none';
+        $('w-result').textContent='';
+      }
+      break;
+    case 'NEXT_ALLOWED':
+      // Host has clicked "manche suivante" — show the button to everyone on reveal screen
+      if($('rev-theatre')&&$('rev-theatre').classList.contains('visible')){
+        $('rev-ctrl').style.display='block';
+      } else {
+        show('s-pbetween');
+      }
+      break;
+    case 'CHAT':
+      appendChatMsg(data.nick,data.msg);
+      if(!chatOpen){chatUnread++;updateChatBadge();}
       break;
     case 'GAME_OVER':
       clearPTimers();renderSB('go-sb',data.scores,data.photos||{});confetti();show('s-gameover');break;
@@ -684,7 +973,7 @@ function buildVoteGrid(players){
   });
 }
 
-function clearPTimers(){pTimers.forEach(clearTimeout);pTimers=[];}
+function clearPTimers(){pTimers.forEach(clearTimeout);pTimers=[];if(window._revealHintTimer){clearInterval(window._revealHintTimer);window._revealHintTimer=null;}}
 function pt(fn,ms){const t=setTimeout(fn,ms);pTimers.push(t);return t;}
 
 // ═══════════════════ THE REVEAL ═══════════════════
@@ -694,10 +983,18 @@ function doReveal(data){
   const iAmWinner=winners.includes(pName);
 
   // Reset theatre
+  const theatre=$('rev-theatre');
+  theatre.className='reveal-theatre phase-suspense';
   $('rev-adj-txt').textContent=adjective.toUpperCase();
   $('rev-mystery').style.display='flex';
+  $('rev-mystery').style.transform='';
+  $('rev-mystery').style.opacity='1';
+  $('suspense-hint').style.display='block';
+  $('suspense-hint').style.opacity='1';
   $('rev-winners-wrap').style.display='none';
   $('rev-winners-wrap').innerHTML='';
+  $('rev-clip-wrap').style.display='none';
+  $('rev-clip-wrap').innerHTML='';
   $('rev-winner-lbl').style.display='none';
   $('rev-winner-lbl').textContent='';
   $('rev-others-sec').style.display='none';
@@ -706,23 +1003,48 @@ function doReveal(data){
 
   // Show theatre over everything
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
-  $('rev-theatre').classList.remove('hidden');
+  showRev();
 
   if(maxV===0){
-    pt(()=>{$('rev-mystery').style.display='none';$('rev-winner-lbl').textContent='🤷 Aucun vote…';$('rev-winner-lbl').style.display='block';$('rev-ctrl').style.display='block';},2000);
+    pt(()=>{
+      $('rev-mystery').style.display='none';
+      $('suspense-hint').style.display='none';
+      $('rev-winner-lbl').textContent='🤷 Aucun vote…';
+      $('rev-winner-lbl').style.display='block';
+      // Controls hidden — wait for host to allow next
+    },2000);
     return;
   }
 
-  // Phase 1: dramatic ? for 4 seconds then flip
+  // Phase 1: dramatic suspense — 6 seconds on the ?
+  // Animate hint text cycling
+  const hints=['Qui est-ce ?', 'C\'est quelqu\'un parmi vous…', 'La honte approche…', 'Préparez-vous…'];
+  let hintIdx=0;
+  const hintTimer=setInterval(()=>{
+    hintIdx=(hintIdx+1)%hints.length;
+    const el=$('suspense-hint');
+    if(el){el.style.opacity='0';setTimeout(()=>{if(el)el.textContent=hints[hintIdx];el.style.opacity='1';},400);}
+  },1800);
+  window._revealHintTimer = hintTimer; // stored separately — must use clearInterval
+
   pt(()=>{
-    // The ? card shrinks and flips, then winner cards appear
+    clearInterval(window._revealHintTimer||hintTimer);
+    window._revealHintTimer=null;
+    // Background shift
+    theatre.classList.remove('phase-suspense');
+    theatre.classList.add('phase-reveal');
+    // The ? card shrinks and flips away
     const mystery=$('rev-mystery');
-    mystery.style.transition='transform .6s ease, opacity .6s ease';
-    mystery.style.transform='scale(0) rotate(15deg)';
+    const hint=$('suspense-hint');
+    mystery.style.transition='transform .7s cubic-bezier(.55,0,.45,1), opacity .5s ease .3s';
+    mystery.style.transform='scale(0) rotate(20deg)';
     mystery.style.opacity='0';
+    hint.style.transition='opacity .4s ease';
+    hint.style.opacity='0';
 
     pt(()=>{
       mystery.style.display='none';
+      hint.style.display='none';
       // Show winner card(s)
       const wrap=$('rev-winners-wrap');
       wrap.style.display='flex';
@@ -730,7 +1052,7 @@ function doReveal(data){
         const wp=players.find(p=>p.name===wname);if(!wp)return;
         const c=acol(wname);
         const d=document.createElement('div');
-        d.style.cssText='opacity:0;transform:scale(.5);transition:opacity .5s ease,transform .5s cubic-bezier(.175,.885,.32,1.275);transition-delay:'+(wi*150)+'ms;';
+        d.style.cssText='opacity:0;transform:scale(.4) translateY(30px);transition:opacity .6s ease,transform .6s cubic-bezier(.175,.885,.32,1.275);';
         d.innerHTML=`<div class="rev-card">
           <div class="rev-card-photo">
             ${wp.photo?`<img src="${wp.photo}" alt="${wname}">`:`<div class="ri" style="background:${c};">${ini(wname)}</div>`}
@@ -741,17 +1063,39 @@ function doReveal(data){
           </div>
         </div>`;
         wrap.appendChild(d);
-        pt(()=>{d.style.opacity='1';d.style.transform='scale(1)';},50+wi*150);
+        pt(()=>{
+          d.style.transition='opacity .6s ease '+(wi*200)+'ms, transform .6s cubic-bezier(.175,.885,.32,1.275) '+(wi*200)+'ms';
+          d.style.opacity='1';d.style.transform='scale(1) translateY(0)';
+        },60+wi*200);
       });
-      // Winner label
+
+      // Winner label + VIDEO_MAP clip
       pt(()=>{
         const lbl=$('rev-winner-lbl');
         lbl.textContent='👑 '+winners.join(' & ')+' remporte'+(winners.length>1?'nt':'')+' ce round !';
         lbl.style.display='block';
         confetti();
-      },800);
 
-      // Phase 2: others after 5s from winner reveal
+        // Show victory video if one is configured for this question in VIDEO_MAP
+        const videoUrl=VIDEO_MAP[adjective]||'';
+        const clipWrap=$('rev-clip-wrap');
+        clipWrap.innerHTML='';
+        if(videoUrl&&videoUrl.trim()!==''){
+          const d=document.createElement('div');
+          d.style.cssText='display:flex;flex-direction:column;align-items:center;opacity:0;transition:opacity .8s ease;';
+          d.innerHTML=`<div class="clip-bubble" style="width:110px;height:110px;">
+            <video src="${videoUrl.trim()}" autoplay loop playsinline
+              style="width:100%;height:100%;object-fit:cover;"
+              onerror="this.parentElement.parentElement.style.display='none'">
+            </video>
+          </div>`;
+          clipWrap.appendChild(d);
+          clipWrap.style.display='flex';
+          requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';}));
+        }
+      },900);
+
+      // Others after 5 more seconds
       const others=players
         .filter(p=>votes[p.name]>0&&!winners.includes(p.name))
         .sort((a,b)=>votes[b.name]-votes[a.name]);
@@ -767,26 +1111,23 @@ function doReveal(data){
             const ph=p.photo?`<img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div class="pcard-init" style="background:${c};">${ini(p.name)}</div>`;
             d.innerHTML=`<div class="pcard-pa">${ph}</div><div class="pcard-nb"><div class="pcard-name">${p.name}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
             grid.appendChild(d);
-            pt(()=>d.style.opacity='1',100+idx*500);
+            pt(()=>d.style.opacity='1',80+idx*450);
           });
-          // Show controls after all others appear
-          pt(()=>$('rev-ctrl').style.display='block', 100+others.length*500+1000);
+          // Controls: do NOT show yet — wait for host's NEXT_ALLOWED signal
         },5000);
-      } else {
-        pt(()=>$('rev-ctrl').style.display='block',4000);
       }
 
-      // If I'm a winner, trigger wheel queue
+      // If I'm a winner → trigger wheel queue after winner is shown
       if(iAmWinner){
-        pt(()=>startWheelQueue(winners,iAmWinner),2500);
+        pt(()=>startWheelQueue(winners),2200);
       }
-    },700);
-  },4000); // 4 second suspense on the ?
+    },750);
+  },6000); // 6 seconds of pure suspense
 }
 
 function playerAskNext(){
-  if(pConn&&pConn.open)pConn.send({type:'REQUEST_NEXT'});
-  $('rev-theatre').classList.add('hidden');show('s-pbetween');
+  hideRev();
+  show('s-pbetween');
 }
 
 // ═══════════════════ WHEEL QUEUE SYSTEM ═══════════════════
@@ -794,7 +1135,7 @@ function playerAskNext(){
 // current spinner = wQueue[0]
 // when done: wQueue.shift(), if more → next, else close overlay
 
-function startWheelQueue(winners,iAmInQueue){
+function startWheelQueue(winners){
   wQueue=[...winners];
   wAngle=0;wSpinning=false;
   showWheelForTurn();
@@ -825,16 +1166,8 @@ function spinWheel(){
     if(el>=dur){
       wAngle=(a0+totalRot)%(2*Math.PI);
       drawWheel(wAngle);
-      // Determine winning segment
-      // Pointer is at TOP = angle -π/2 (270° = 3π/2 counterclockwise)
-      // Segment i occupies angles [i*ARC, (i+1)*ARC) measured from 0 going clockwise
-      // The visual angle of the pointer relative to the rotated wheel is: -wAngle (mod 2π)
-      // Then offset by -π/2 to account for pointer position at top vs right
-      // Actually simpler: pointer at top means we need the segment at rotation offset 0
-      // At angle=0, segment 0 is at [0, ARC). With pointer at top (−π/2):
-      // the pointer points to angle −π/2 on the canvas = angle (2π−π/2) = 3π/2 in positive coords
-      // So: ptrInWheel = (3*Math.PI/2 - wAngle % (2*Math.PI) + 4*Math.PI) % (2*Math.PI)
-      const ptr=((3*Math.PI/2-wAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
+      // Determine winning segment — pointer at TOP = -PI/2 in canvas coords
+      const ptr=((-Math.PI/2 - wAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
       const idx=Math.floor(ptr/ARC)%N_SEG;
       const seg=WS[idx];
       // Broadcast to all via host relay
@@ -851,9 +1184,13 @@ function spinWheel(){
     const cur=(a0+totalRot*eased)%(2*Math.PI);
     wAngle=cur;
     drawWheel(cur);
-    // Broadcast angle for spectators
+    // Broadcast angle for spectators — throttled to 15fps to avoid P2P flood
     if(pConn&&pConn.open){
-      pConn.send({type:'WHEEL_SPIN',angle:cur,spinner:pName});
+      const nowMs=performance.now();
+      if(!spinWheel._lastBcast||nowMs-spinWheel._lastBcast>66){
+        spinWheel._lastBcast=nowMs;
+        pConn.send({type:'WHEEL_SPIN',angle:cur,spinner:pName});
+      }
     }
     requestAnimationFrame(frame);
   }
@@ -861,23 +1198,29 @@ function spinWheel(){
 }
 
 function wheelNext(){
-  // Done with this spinner, next in queue
   wQueue.shift();
   wAngle=0;wSpinning=false;
+  if(pConn&&pConn.open){
+    pConn.send(wQueue.length===0
+      ?{type:'WHEEL_QUEUE_DONE'}
+      :{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
+  }
   showWheelForTurn();
 }
 
 // Spectator updates
 function updateWheelDisplay(angle,spinner){
-  wAngle=angle;drawWheel(angle);
-  if($('wheel-ov').style.display==='none'){
+  wAngle=angle;
+  const ov=$('wheel-ov');
+  if(ov.style.display!=='flex'){
     $('wt').textContent='🎰 '+spinner+' tourne la roue !';
     $('ws').textContent='Regarde en direct !';
     $('wspin-btn').style.display='none';
     $('wdone-btn').style.display='none';
     $('w-result').textContent='';
-    $('wheel-ov').style.display='flex';
+    ov.style.display='flex';
   }
+  drawWheel(angle);
 }
 
 function spectatorWheelLanded(segment,spinner){
@@ -924,6 +1267,79 @@ function drawWheel(angle){
   ctx.beginPath();ctx.arc(cx,cy,SZ*0.09,0,2*Math.PI);
   ctx.fillStyle='#fff';ctx.fill();
   ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
+}
+
+// ═══════════════════ 💬 CHAT ═══════════════════
+function toggleChat(){
+  chatOpen=!chatOpen;
+  const panel=$('chat-panel');
+  if(chatOpen){
+    panel.classList.add('open');
+    chatUnread=0;
+    updateChatBadge();
+    // Show nick in header
+    if(pAnonNick) $('chat-my-nick').textContent=pAnonNick;
+    else $('chat-anon-tag').style.display='none';
+    // Scroll to bottom
+    const msgs=$('chat-msgs');
+    msgs.scrollTop=msgs.scrollHeight;
+    $('chat-inp').focus();
+  } else {
+    panel.classList.remove('open');
+  }
+}
+
+function updateChatBadge(){
+  const badge=$('chat-badge');
+  if(chatUnread>0){
+    badge.textContent=chatUnread>9?'9+':chatUnread;
+    badge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
+function sendChat(){
+  const inp=$('chat-inp');
+  const msg=inp.value.trim().substring(0,200);
+  if(!msg)return;
+  inp.value='';
+  const nick=pAnonNick||'👑 Hôte';
+  if(isHost){
+    // Host broadcasts directly
+    hBcast({type:'CHAT',nick,msg,ts:Date.now()});
+    appendChatMsg(nick,msg,true);
+  } else if(pConn&&pConn.open){
+    pConn.send({type:'CHAT',nick,msg});
+    appendChatMsg(nick,msg,true);
+  }
+}
+
+const _sentKeys=new Set();
+function appendChatMsg(nick,msg,isMine=false){
+  const msgs=$('chat-msgs');
+  if(!msgs)return;
+  const key=nick+'|'+msg;
+  if(!isMine&&_sentKeys.has(key)){_sentKeys.delete(key);return;}
+  if(isMine)_sentKeys.add(key);
+  const placeholder=msgs.querySelector('div[style*="text-align:center"]');
+  if(placeholder)placeholder.remove();
+  const d=document.createElement('div');
+  d.className='chat-msg';
+  d.innerHTML=`<div class="chat-msg-nick">${escHtml(nick)}</div>
+    <div class="chat-msg-bubble" style="${isMine?'background:var(--pu);color:#fff;border-color:var(--pu-d);align-self:flex-end;border-radius:12px 12px 3px 12px;':''}">${escHtml(msg)}</div>`;
+  msgs.appendChild(d);
+  // Auto-scroll to bottom
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Show chat nick once player is connected
+function initChatNick(){
+  if(pAnonNick&&$('chat-my-nick'))$('chat-my-nick').textContent=pAnonNick;
 }
 
 // ═══════════════════ KEYBOARD ═══════════════════
