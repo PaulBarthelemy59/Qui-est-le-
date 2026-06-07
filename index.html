@@ -2,19 +2,16 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>QUI EST LE + ?</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.4.7/peerjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f0eeff; --white:#fff;
-  --pu:#7c3aed; --pu-l:#a78bfa; --pu-d:#4c1d95; --pu-s:#ede9fe; --pu-c:#8b5cf6;
-  --pk:#ec4899; --pk-d:#be185d;
-  --ye:#fbbf24; --ye-d:#d97706;
-  --gr:#10b981; --gr-d:#065f46;
-  --tx:#1e1b4b;
+  --bg:#f0eeff;--pu:#7c3aed;--pu-l:#a78bfa;--pu-d:#4c1d95;--pu-s:#ede9fe;--pu-c:#8b5cf6;
+  --pk:#ec4899;--pk-d:#be185d;--ye:#fbbf24;--ye-d:#d97706;
+  --gr:#10b981;--gr-d:#065f46;--tx:#1e1b4b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;}
@@ -22,16 +19,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .screen.hidden{display:none!important;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 .screen:not(.hidden){animation:fadeUp .3s ease;}
-
 /* LOGO */
-.logo-brush{display:inline-block;background:var(--pu);color:#fff;font-family:'Baloo 2',cursive;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;padding:8px 32px 12px;border-radius:16px 20px 18px 14px/14px 18px 20px 16px;letter-spacing:2px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 var(--pu-d);}
-.logo-brush .plus{color:var(--ye);}
-.logo-wrap{text-align:center;margin-bottom:20px;}
-.logo-sub{display:block;font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.4rem);font-weight:800;color:var(--pu);margin-top:8px;font-style:italic;}
-
+.lb{display:inline-block;background:var(--pu);color:#fff;font-family:'Baloo 2',cursive;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;padding:8px 32px 12px;border-radius:16px 20px 18px 14px/14px 18px 20px 16px;letter-spacing:2px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 var(--pu-d);}
+.lb .plus{color:var(--ye);}
+.lw{text-align:center;margin-bottom:20px;}
+.ls{display:block;font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.4rem);font-weight:800;color:var(--pu);margin-top:8px;font-style:italic;}
 /* CARD */
 .card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 4px 30px rgba(124,58,237,.1);border:2px solid rgba(124,58,237,.08);text-align:center;}
-
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pu);color:#fff;border:3px solid var(--pu-d);padding:13px 26px;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;border-radius:14px;cursor:pointer;box-shadow:0 5px 0 var(--pu-d);transition:transform .08s,box-shadow .08s;text-transform:uppercase;letter-spacing:1px;margin:5px;-webkit-tap-highlight-color:transparent;user-select:none;}
 .btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--pu-d);}
@@ -43,66 +37,54 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .btn.gr{background:var(--gr);color:#fff;border-color:var(--gr-d);box-shadow:0 5px 0 var(--gr-d);}
 .btn.gr:active{box-shadow:0 0 0 var(--gr-d);}
 .btn.big{font-size:1.25rem;padding:15px 34px;border-radius:16px;}
-
 /* INPUTS */
 .inp{width:100%;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:700;color:var(--tx);outline:none;text-align:center;transition:border-color .2s;margin-bottom:12px;}
 .inp:focus{border-color:var(--pu);}
 .inp::placeholder{color:var(--pu-l);}
 .code-inp{width:100%;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:16px;padding:16px;font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu);outline:none;text-align:center;letter-spacing:8px;transition:border-color .2s;text-transform:uppercase;margin-bottom:14px;}
 .code-inp:focus{border-color:var(--pu);}
-.code-inp::placeholder{color:var(--pu-l);letter-spacing:4px;}
-
 /* ROOM CODE */
-.room-code-big{font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;color:var(--pu);letter-spacing:10px;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:20px;padding:12px 28px;display:inline-block;box-shadow:0 5px 0 var(--pu-l);margin:10px 0;}
-.rc-label{font-size:.72rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
-
+.rc-big{font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;color:var(--pu);letter-spacing:10px;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:20px;padding:12px 28px;display:inline-block;box-shadow:0 5px 0 var(--pu-l);margin:10px 0;}
+.rc-lbl{font-size:.72rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
 /* CHIPS */
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;min-height:36px;}
 .chip{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:50px;padding:6px 14px;font-weight:800;font-size:.9rem;color:var(--pu-d);display:flex;align-items:center;gap:6px;animation:popIn .3s cubic-bezier(.175,.885,.32,1.275);}
 .dot{width:8px;height:8px;background:var(--gr);border-radius:50%;animation:blink 1.2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
 @keyframes popIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
-
 /* QR */
-.qr-block{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0;}
+.qrb{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0;}
 #qrcode{background:#fff;padding:12px;border-radius:14px;border:3px solid var(--pu);box-shadow:5px 5px 0 var(--pu-d);}
-.room-url-small{font-size:.7rem;color:var(--pu-l);word-break:break-all;max-width:320px;}
-
-/* QUESTION BANNER */
-.q-banner{background:var(--pu);border-radius:20px 24px 22px 18px/18px 22px 24px 20px;padding:18px 22px;margin-bottom:18px;transform:rotate(-.5deg);position:relative;overflow:hidden;}
-.q-label{font-size:.7rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:5px;}
-.q-text{font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.6rem);font-weight:900;color:#fff;line-height:1.2;}
-
+.ru-small{font-size:.7rem;color:var(--pu-l);word-break:break-all;max-width:320px;}
+/* Q BANNER */
+.qbn{background:var(--pu);border-radius:20px 24px 22px 18px/18px 22px 24px 20px;padding:18px 22px;margin-bottom:18px;transform:rotate(-.5deg);position:relative;overflow:hidden;}
+.qbn-lbl{font-size:.7rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:5px;}
+.qbn-txt{font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.6rem);font-weight:900;color:#fff;line-height:1.2;}
 /* VOTE BAR */
-.vbar-wrap{display:flex;align-items:center;gap:10px;margin:0 0 14px;}
-.vbar-track{flex:1;height:12px;background:var(--pu-s);border-radius:99px;overflow:hidden;border:2px solid var(--pu-l);}
-.vbar-fill{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .5s ease;width:0%;}
-.vbar-lbl{font-size:.9rem;font-weight:800;color:var(--pu);white-space:nowrap;}
-
-/* ═══════════════════════════════
-   PLAYER CARDS — Cacabox style
-═══════════════════════════════ */
-/* Responsive grid: auto-fills, works for 4 to 20 players */
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(90px,12vw,145px),1fr));gap:clamp(8px,1.5vw,16px);}
-.pcard{background:var(--pu-c);border:4px solid #fff;border-radius:22px;padding:0;overflow:hidden;box-shadow:0 7px 0 rgba(0,0,0,.22);position:relative;aspect-ratio:4/5;display:flex;flex-direction:column;transition:border-color .3s,box-shadow .3s;}
-.pcard.voted-in{border-color:var(--gr);box-shadow:0 7px 0 var(--gr-d);}
-.pcard.winner{border-color:var(--ye)!important;animation:winnerGlow .55s ease infinite alternate;z-index:5;}
-@keyframes winnerGlow{from{box-shadow:0 8px 0 var(--ye-d),0 0 20px rgba(251,191,36,.4);}to{box-shadow:0 8px 0 var(--ye-d),0 0 55px rgba(251,191,36,.9),0 0 90px rgba(251,191,36,.25);}}
-.winner-crown{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:1.7rem;animation:crownFloat .4s ease infinite alternate;z-index:10;}
-@keyframes crownFloat{from{transform:translateX(-50%) translateY(0);}to{transform:translateX(-50%) translateY(-7px);}}
-.pcard-pa{flex:1;position:relative;overflow:hidden;background:linear-gradient(135deg,#6d28d9,#8b5cf6,#a78bfa);}
+.vbw{display:flex;align-items:center;gap:10px;margin:0 0 14px;}
+.vbt{flex:1;height:12px;background:var(--pu-s);border-radius:99px;overflow:hidden;border:2px solid var(--pu-l);}
+.vbf{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .5s ease;width:0%;}
+.vbl{font-size:.9rem;font-weight:800;color:var(--pu);white-space:nowrap;}
+/* WAITING VOTE COUNTER — shown on s-pvoted */
+.vote-counter-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:16px;padding:14px 20px;margin:16px 0;}
+.vote-counter-num{font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu);line-height:1;}
+.vote-counter-lbl{font-size:.8rem;font-weight:800;color:var(--pu-l);margin-top:4px;}
+.vote-counter-bar{height:10px;background:#e5e7eb;border-radius:99px;margin-top:10px;overflow:hidden;}
+.vote-counter-fill{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .4s ease;width:0%;}
+/* PLAYER CARDS */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(80px,11vw,140px),1fr));gap:clamp(6px,1.2vw,14px);}
+.pcard{background:var(--pu-c);border:4px solid #fff;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,.2);position:relative;aspect-ratio:4/5;display:flex;flex-direction:column;transition:border-color .3s,box-shadow .3s;}
+.pcard.voted-in{border-color:var(--gr);box-shadow:0 6px 0 var(--gr-d);}
+.pcard.winner{border-color:var(--ye)!important;animation:winG .55s ease infinite alternate;z-index:5;}
+@keyframes winG{from{box-shadow:0 8px 0 var(--ye-d),0 0 20px rgba(251,191,36,.4);}to{box-shadow:0 8px 0 var(--ye-d),0 0 55px rgba(251,191,36,.95);}}
+.wcrown{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:1.7rem;animation:crownF .4s ease infinite alternate;z-index:10;}
+@keyframes crownF{from{transform:translateX(-50%) translateY(0);}to{transform:translateX(-50%) translateY(-7px);}}
+.pcard-pa{flex:1;position:relative;overflow:hidden;background:linear-gradient(135deg,#6d28d9,#8b5cf6);}
 .pcard-pa img,.pcard-init{width:100%;height:100%;object-fit:cover;display:block;}
-.pcard-init{display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.8rem);font-weight:900;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);}
-.pcard-nb{background:#fff;padding:7px 8px 5px;text-align:center;flex-shrink:0;}
-.pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.75rem,.9rem,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
-.pcard-votes{display:none;font-family:'Baloo 2',cursive;font-size:clamp(.75rem,.85rem,1rem);font-weight:900;color:var(--pu);margin-top:2px;}
-
-/* REVEAL MASK — sits over photo, fades out slowly */
-.rmask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3;}
-.rmask-bg{position:absolute;inset:0;background:linear-gradient(160deg,#3b0764,#5b21b6);transition:opacity 3s ease;opacity:1;}
-.rmask-q{position:relative;z-index:2;font-family:'Baloo 2',cursive;font-size:clamp(2rem,5vw,4rem);font-weight:900;color:var(--ye);text-shadow:3px 3px 0 rgba(0,0,0,.3);animation:qPulse .9s ease infinite alternate;transition:opacity 1s ease;}
-@keyframes qPulse{from{transform:scale(1);}to{transform:scale(1.12) rotate(5deg);}}
-
+.pcard-init{display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:clamp(1.4rem,4vw,2.8rem);font-weight:900;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);}
+.pcard-nb{background:#fff;padding:6px 8px 5px;text-align:center;flex-shrink:0;}
+.pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.7rem,.85rem,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.pcard-votes{display:none;font-family:'Baloo 2',cursive;font-size:clamp(.7rem,.82rem,.95rem);font-weight:900;color:var(--pu);margin-top:1px;}
 /* SCOREBOARD */
 .sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;}
 .sb-row{display:flex;align-items:center;gap:12px;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:16px;padding:11px 15px;animation:slideIn .35s ease both;}
@@ -116,228 +98,263 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .sb-name{flex:1;font-weight:900;font-size:.95rem;text-transform:uppercase;color:var(--tx);}
 .sb-pts{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:900;color:var(--pu);}
 .sb-sub{font-size:.62rem;color:var(--pu-l);font-weight:700;text-align:right;}
-
-/* VOTE BUTTONS */
-.vote-banner{background:var(--pu);border-radius:18px;padding:15px 18px;margin-bottom:14px;transform:rotate(-.5deg);}
-.vote-banner-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
-.vote-banner-txt{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:#fff;line-height:1.25;}
+/* VOTE SCREEN */
+.vbanner{background:var(--pu);border-radius:18px;padding:15px 18px;margin-bottom:14px;transform:rotate(-.5deg);}
+.vb-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
+.vb-txt{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:#fff;line-height:1.25;}
 .vote-grid{display:flex;flex-direction:column;gap:9px;}
-.vote-btn{background:#fff;border:3px solid var(--pu-l);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;text-align:left;box-shadow:0 3px 0 var(--pu-l);}
+.vote-btn{background:#fff;border:3px solid var(--pu-l);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;box-shadow:0 3px 0 var(--pu-l);}
 .vote-btn:hover{border-color:var(--pu);box-shadow:0 3px 0 var(--pu-d);}
 .vote-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu);}
 .vb-ph{width:42px;height:42px;border-radius:10px;object-fit:cover;border:2px solid var(--pu-l);flex-shrink:0;}
 .vb-in{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0;}
 .vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:1.05rem;text-transform:uppercase;color:var(--tx);}
-
 /* PHOTO PICKER */
-.photo-circle{width:84px;height:84px;border-radius:18px;margin:0 auto 12px;border:3px dashed var(--pu-l);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;background:var(--pu-s);overflow:hidden;position:relative;transition:border-color .2s,transform .15s;}
-.photo-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
-.photo-circle:hover{border-color:var(--pu);transform:scale(1.04);}
-.file-inp{display:none;}
-
-/* ════════════════════════════════════
-   SPINNING WHEEL
-════════════════════════════════════ */
-.wheel-overlay{position:fixed;inset:0;background:rgba(76,29,149,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;padding:20px;}
-.wheel-title{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:900;color:var(--ye);margin-bottom:16px;text-align:center;text-transform:uppercase;letter-spacing:2px;}
-.wheel-wrap{position:relative;width:min(80vw,320px);height:min(80vw,320px);}
-.wheel-canvas{border-radius:50%;border:5px solid #fff;box-shadow:0 0 30px rgba(255,225,53,.4);}
-.wheel-pointer{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:32px solid #fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
-.wheel-btn{margin-top:20px;font-size:1.3rem;}
-.wheel-result{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:900;color:#fff;text-align:center;margin-top:14px;min-height:2.2rem;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
-.wheel-close{margin-top:12px;font-size:.9rem;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 3px 0 rgba(0,0,0,.3);}
-
+.ph-circle{width:84px;height:84px;border-radius:18px;margin:0 auto 12px;border:3px dashed var(--pu-l);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;background:var(--pu-s);overflow:hidden;position:relative;transition:border-color .2s,transform .15s;}
+.ph-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
+.ph-circle:hover{border-color:var(--pu);transform:scale(1.04);}
+/* ═══════ REVEAL OVERLAY ═══════ */
+/* The "theatre" reveal takes over the whole screen */
+.reveal-theatre{position:fixed;inset:0;background:#000;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
+/* Spotlight vignette */
+.spotlight{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 50% 45%,transparent 0%,rgba(0,0,0,.75) 100%);pointer-events:none;z-index:1;}
+/* Q card — the mystery card before reveal */
+.q-card{
+  width:min(52vw,220px);aspect-ratio:4/5;
+  border-radius:22px;border:5px solid var(--ye);
+  background:linear-gradient(160deg,#3b0764,#5b21b6,#7c3aed);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 60px rgba(124,58,237,.7),0 10px 0 rgba(0,0,0,.4);
+  position:relative;z-index:2;
+  cursor:default;
+  transition:transform .3s ease;
+}
+/* Pulsing ? */
+.q-mark{
+  font-family:'Baloo 2',cursive;font-size:clamp(4rem,14vw,7rem);font-weight:900;
+  color:var(--ye);
+  text-shadow:0 0 30px rgba(251,191,36,.8),4px 4px 0 rgba(0,0,0,.4);
+  animation:qPulse 1.2s ease infinite alternate;
+  user-select:none;
+}
+@keyframes qPulse{
+  from{transform:scale(1);text-shadow:0 0 20px rgba(251,191,36,.5);}
+  to{transform:scale(1.15) rotate(8deg);text-shadow:0 0 60px rgba(251,191,36,1),0 0 100px rgba(251,191,36,.4);}
+}
+/* Reveal card replacing the ? */
+.rev-card{
+  width:min(52vw,220px);aspect-ratio:4/5;
+  border-radius:22px;border:5px solid var(--ye);
+  background:var(--pu-c);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 0 80px rgba(251,191,36,.8),0 10px 0 var(--ye-d);
+  position:relative;z-index:2;
+  animation:winnerG .55s ease infinite alternate;
+}
+@keyframes winnerG{from{box-shadow:0 0 40px rgba(251,191,36,.5),0 10px 0 var(--ye-d);}to{box-shadow:0 0 100px rgba(251,191,36,1),0 0 200px rgba(251,191,36,.3),0 10px 0 var(--ye-d);}}
+.rev-card-photo{flex:1;overflow:hidden;position:relative;}
+.rev-card-photo img,.rev-card-photo .ri{width:100%;height:100%;object-fit:cover;display:block;}
+.rev-card-photo .ri{display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,4rem);font-weight:900;color:#fff;}
+.rev-card-nb{background:#fff;padding:8px 10px;text-align:center;flex-shrink:0;}
+.rev-card-name{font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.2rem);font-weight:900;color:var(--tx);text-transform:uppercase;}
+.rev-card-votes{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:900;color:var(--pu);}
+/* Reveal adj label on theatre */
+.rev-adj{font-family:'Baloo 2',cursive;font-size:clamp(1rem,3.5vw,1.8rem);font-weight:900;color:rgba(255,255,255,.85);text-transform:uppercase;text-align:center;margin-bottom:18px;letter-spacing:1px;position:relative;z-index:2;}
+.rev-adj-lbl{font-size:.65rem;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:4px;}
+/* Winner label */
+.rev-winner-lbl{font-family:'Baloo 2',cursive;font-size:clamp(1rem,3vw,1.5rem);font-weight:900;color:var(--ye);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-top:14px;position:relative;z-index:2;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
+/* Others grid during reveal */
+.others-section{width:100%;max-width:700px;margin-top:22px;position:relative;z-index:2;}
+.others-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:center;margin-bottom:10px;}
+/* Controls on reveal */
+.rev-controls{margin-top:20px;position:relative;z-index:2;text-align:center;}
+/* ═══════ WHEEL OVERLAY ═══════ */
+.wheel-ov{position:fixed;inset:0;background:rgba(30,5,70,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:600;padding:20px;}
+.wheel-title{font-family:'Baloo 2',cursive;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;color:var(--ye);margin-bottom:6px;text-align:center;text-transform:uppercase;letter-spacing:2px;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
+.wheel-sub{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:700;margin-bottom:14px;text-align:center;}
+.wheel-wrap{position:relative;width:min(78vw,300px);height:min(78vw,300px);}
+#wcanvas{border-radius:50%;border:5px solid #fff;box-shadow:0 0 40px rgba(251,191,36,.5);display:block;}
+.wheel-ptr{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:28px solid #fff;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6));}
+.wheel-result{font-family:'Baloo 2',cursive;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:900;color:#fff;text-align:center;margin-top:14px;min-height:2.4rem;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
 /* MISC */
 .m-title{font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:900;color:var(--pu);margin-bottom:6px;}
 .big-emoji{font-size:3rem;margin-bottom:10px;display:block;animation:bounce .5s ease infinite alternate;}
 @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-8px);}}
-.wait-dots::after{content:'';animation:dots 1.5s infinite;}
+.wdots::after{content:'';animation:dots 1.5s infinite;}
 @keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}};
-.tag{display:inline-block;padding:5px 14px;border-radius:50px;font-size:.85rem;font-weight:800;background:var(--pu-s);color:var(--pu-d);border:2px solid var(--pu-l);}
-.emergency-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
+.em-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
 hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--pu);color:#fff;padding:10px 22px;border-radius:50px;font-weight:800;font-size:1rem;box-shadow:0 5px 0 var(--pu-d),0 8px 30px rgba(0,0,0,.2);transition:transform .3s cubic-bezier(.175,.885,.32,1.275);z-index:9999;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .cp{position:fixed;pointer-events:none;z-index:9998;border-radius:2px;animation:fall linear forwards;}
 @keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:1;}100%{transform:translateY(105vh) rotate(800deg);opacity:0;}}
-@media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:8px;}}
+@media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:6px;}}
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════ HOST LANDING ═══════════════ -->
+<!-- HOST LANDING -->
 <div id="s-land" class="screen">
-  <div class="logo-wrap">
-    <div class="logo-brush">QUI EST LE <span class="plus">+</span> ?</div>
-    <span class="logo-sub">Le jeu qui révèle tout 👀</span>
-  </div>
+  <div class="lw"><div class="lb">QUI EST LE <span class="plus">+</span> ?</div><span class="ls">Le jeu qui révèle tout 👀</span></div>
   <div class="card">
-    <p style="color:var(--pu-l);margin-bottom:18px;font-size:.95rem;font-weight:700;">Lance un salon sur cet écran.<br>Tes amis scannent le QR ou entrent le code de salon.</p>
+    <p style="color:var(--pu-l);margin-bottom:18px;font-size:.95rem;font-weight:700;">Lance le salon sur cet écran. Tes amis scannent le QR ou tapent le code.</p>
     <button class="btn big ye" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
     <div style="margin:14px 0;font-size:.85rem;color:var(--pu-l);font-weight:700;">— ou —</div>
-    <button class="btn" onclick="gotoCodeEntry()">🔑 Rejoindre avec un code</button>
+    <button class="btn" onclick="gotoCode()">🔑 Rejoindre avec un code</button>
   </div>
 </div>
 
-<!-- ═══════════════ HOST SCREEN ═══════════════ -->
+<!-- HOST SCREEN -->
 <div id="s-host" class="screen hidden">
-  <div class="logo-wrap"><div class="logo-brush" style="font-size:clamp(1.4rem,4vw,2.2rem);transform:rotate(0);padding:6px 22px 8px;">QUI EST LE <span class="plus">+</span> ?</div></div>
+  <div class="lw"><div class="lb" style="font-size:clamp(1.4rem,4vw,2.2rem);transform:rotate(0);padding:6px 22px 8px;">QUI EST LE <span class="plus">+</span> ?</div></div>
   <div class="card">
-    <!-- LOBBY -->
     <div id="h-lobby">
-      <div class="rc-label">Code de salon — à rentrer depuis n'importe quel téléphone</div>
-      <div class="room-code-big" id="rc-display">----</div>
-      <div class="qr-block"><div id="qrcode"></div><div class="room-url-small" id="room-url"></div></div>
-      <div id="lobby-stat" style="font-size:1rem;font-weight:800;color:var(--pu);margin-bottom:6px;">0 joueur connecté</div>
-      <div class="chips" id="lobby-chips"></div>
+      <div class="rc-lbl">Code de salon</div>
+      <div class="rc-big" id="rc1">----</div>
+      <div class="qrb"><div id="qrcode"></div><div class="ru-small" id="room-url"></div></div>
+      <div id="lstat" style="font-size:1rem;font-weight:800;color:var(--pu);margin-bottom:6px;">0 joueur connecté</div>
+      <div class="chips" id="lchips"></div>
       <hr class="div">
       <button class="btn big" id="btn-launch" onclick="hostLaunch()" disabled>🚀 Lancer la Partie</button>
       <div style="font-size:.75rem;color:var(--pu-l);margin-top:6px;">2 joueurs minimum</div>
     </div>
-    <!-- GAME (emergency only) -->
     <div id="h-game" style="display:none;">
-      <div class="rc-label">Code de reconnexion</div>
-      <div class="room-code-big" id="rc-display2">----</div>
-      <div id="lobby-stat2" style="font-size:.9rem;font-weight:800;color:var(--pu);margin:6px 0 4px;"></div>
-      <div class="chips" id="lobby-chips2"></div>
-      <div class="emergency-box">
-        <div style="font-size:.7rem;letter-spacing:4px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:10px;">⚡ Contrôles d'urgence</div>
+      <div class="rc-lbl">Code de reconnexion</div>
+      <div class="rc-big" id="rc2">----</div>
+      <div id="lstat2" style="font-size:.9rem;font-weight:800;color:var(--pu);margin:6px 0 4px;"></div>
+      <div class="chips" id="lchips2"></div>
+      <div class="em-box">
+        <div style="font-size:.7rem;letter-spacing:4px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:10px;">⚡ Urgence</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
-          <button class="btn pk" id="btn-freveal" onclick="hostForceReveal()" style="font-size:.88rem;padding:9px 16px;">💥 Forcer le reveal</button>
-          <button class="btn gr" id="btn-fnext" onclick="hostNext()" style="font-size:.88rem;padding:9px 16px;" disabled>⏭ Manche suivante</button>
+          <button class="btn pk" id="btn-fr" onclick="hostForceReveal()" style="font-size:.88rem;padding:9px 16px;">💥 Forcer le reveal</button>
+          <button class="btn gr" id="btn-fn" onclick="hostNext()" style="font-size:.88rem;padding:9px 16px;" disabled>⏭ Manche suivante</button>
         </div>
-        <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnum-h">0</span> / <span id="rtot-h">10</span></div>
+        <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnh">0</span>/<span id="rth">10</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ HOST FINAL ═══════════════ -->
+<!-- HOST FINAL -->
 <div id="s-hfinal" class="screen hidden">
-  <div class="logo-wrap"><div class="logo-brush" style="transform:rotate(0);">🏆 CLASSEMENT FINAL</div></div>
+  <div class="lw"><div class="lb" style="transform:rotate(0);">🏆 CLASSEMENT FINAL</div></div>
   <div class="card"><ul class="sb-list" id="h-sb"></ul><button class="btn ye" onclick="location.reload()" style="margin-top:10px;">🔄 Rejouer</button></div>
 </div>
 
-<!-- ═══════════════ PLAYER JOIN ═══════════════ -->
+<!-- PLAYER JOIN -->
 <div id="s-pjoin" class="screen hidden">
-  <div class="logo-wrap"><div class="logo-brush" style="font-size:clamp(1.8rem,6vw,3rem);">REJOINDRE</div></div>
+  <div class="lw"><div class="lb" style="font-size:clamp(1.8rem,6vw,3rem);">REJOINDRE</div></div>
   <div class="card" style="max-width:420px;margin:0 auto;">
-    <!-- Step A: code entry (no ?room param) -->
     <div id="step-code" style="display:none;">
       <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Entre le code affiché sur l'écran principal</p>
-      <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase()" onkeydown="if(event.key==='Enter')validateCode()">
+      <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase()">
       <button class="btn big" style="width:100%;" onclick="validateCode()">Valider ✓</button>
     </div>
-    <!-- Step B: name + photo -->
     <div id="step-name" style="display:none;">
       <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Ajoute ta photo et ton prénom</p>
-      <div class="photo-circle" id="photo-circle" onclick="document.getElementById('file-inp').click()">
-        <span id="photo-ph">📷</span>
-        <img id="photo-prev" src="" style="display:none;" alt="">
+      <div class="ph-circle" id="phc" onclick="document.getElementById('fi').click()">
+        <span id="php">📷</span><img id="phprev" src="" style="display:none;" alt="">
       </div>
-      <input type="file" id="file-inp" class="file-inp" accept="image/*" capture="user" onchange="handlePhoto(event)">
-      <div style="font-size:.73rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Photo optionnelle — clique pour choisir</div>
-      <input type="text" id="pname-inp" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off" onkeydown="if(event.key==='Enter')playerJoin()">
+      <input type="file" id="fi" style="display:none;" accept="image/*" capture="user" onchange="handlePhoto(event)">
+      <div style="font-size:.73rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Photo optionnelle</div>
+      <input type="text" id="pni" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off">
       <button class="btn big" style="width:100%;" onclick="playerJoin()">Rejoindre 🚀</button>
     </div>
-    <div id="join-stat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;"></div>
+    <div id="jstat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;"></div>
   </div>
 </div>
 
-<!-- ═══════════════ PLAYER WAIT ═══════════════ -->
+<!-- PLAYER WAIT -->
 <div id="s-pwait" class="screen hidden">
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji">👀</span>
-    <div class="m-title" id="p-name-disp">...</div>
+    <div class="m-title" id="p-name-d">...</div>
     <p style="color:var(--pu);font-weight:800;font-size:1rem;">Tu es dans le salon !</p>
-    <p style="color:var(--pu-l);margin-top:8px;font-size:.9rem;font-weight:700;">La partie commence bientôt<span class="wait-dots"></span></p>
+    <p style="color:var(--pu-l);margin-top:8px;font-size:.9rem;font-weight:700;">La partie commence bientôt<span class="wdots"></span></p>
     <div class="chips" id="p-chips" style="margin-top:14px;"></div>
   </div>
 </div>
 
-<!-- ═══════════════ PLAYER VOTE ═══════════════ -->
+<!-- PLAYER VOTE -->
 <div id="s-pvote" class="screen hidden">
   <div style="max-width:440px;margin:0 auto;">
-    <div class="vote-banner">
-      <div class="vote-banner-lbl">Qui est le plus...</div>
-      <div class="vote-banner-txt" id="vote-adj">...</div>
-    </div>
-    <div class="vote-grid" id="vote-grid"></div>
+    <div class="vbanner"><div class="vb-lbl">Qui est le plus...</div><div class="vb-txt" id="v-adj">...</div></div>
+    <div class="vote-grid" id="v-grid"></div>
   </div>
 </div>
 
-<!-- ═══════════════ PLAYER VOTED ═══════════════ -->
+<!-- PLAYER VOTED — shows live vote counter -->
 <div id="s-pvoted" class="screen hidden">
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji">🤫</span>
     <div class="m-title">VOTÉ !</div>
-    <p style="color:var(--pk);font-weight:800;">Vote bien enregistré</p>
-    <p style="color:var(--pu-l);margin-top:8px;font-weight:700;">Révélation bientôt<span class="wait-dots"></span></p>
+    <p style="color:var(--pk);font-weight:800;margin-bottom:4px;">Vote enregistré</p>
+    <div class="vote-counter-box">
+      <div class="vote-counter-num"><span id="vc-done">?</span> / <span id="vc-total">?</span></div>
+      <div class="vote-counter-lbl">joueur(s) ont voté</div>
+      <div class="vote-counter-bar"><div class="vote-counter-fill" id="vc-fill"></div></div>
+    </div>
+    <p style="color:var(--pu-l);font-size:.85rem;font-weight:700;">Le reveal se fera quand tout le monde aura voté<span class="wdots"></span></p>
   </div>
 </div>
 
-<!-- ═══════════════ PLAYER REVEAL ═══════════════ -->
-<div id="s-preveal" class="screen hidden">
-  <div style="max-width:700px;margin:0 auto;text-align:center;">
-    <div class="q-banner">
-      <div class="q-label">Qui est le plus...</div>
-      <div class="q-text" id="reveal-adj">...</div>
-    </div>
-    <!-- Step 1: winner(s) only, big card -->
-    <div id="rev-s1" style="display:none;">
-      <div style="font-size:.68rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:12px;">Et c'est…</div>
-      <!-- winner card injected here -->
-      <div id="rev-winner-wrap" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;"></div>
-      <div id="rev-winner-label" style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu);text-transform:uppercase;letter-spacing:2px;margin-top:14px;opacity:0;transition:opacity 1.5s ease;"></div>
-    </div>
-    <!-- Step 2: others (only those with votes > 0, excluding winner) -->
-    <div id="rev-s2" style="display:none;margin-top:22px;">
-      <div style="font-size:.68rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:10px;">Les autres votes</div>
-      <div class="pgrid" id="rev-others"></div>
-    </div>
-    <!-- Host controls for next round — visible once reveal complete -->
-    <div id="rev-controls" style="display:none;margin-top:20px;">
-      <button class="btn gr big" onclick="playerRequestNext()">Manche suivante ➡</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════ PLAYER BETWEEN ═══════════════ -->
+<!-- PLAYER BETWEEN -->
 <div id="s-pbetween" class="screen hidden">
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji">⏳</span>
     <div class="m-title">MANCHE TERMINÉE</div>
-    <p style="color:var(--pu-l);font-weight:700;">Prochaine manche en cours<span class="wait-dots"></span></p>
+    <p style="color:var(--pu-l);font-weight:700;">Prochaine manche<span class="wdots"></span></p>
   </div>
 </div>
 
-<!-- ═══════════════ GAME OVER ═══════════════ -->
+<!-- GAME OVER -->
 <div id="s-gameover" class="screen hidden">
-  <div class="logo-wrap"><div class="logo-brush" style="transform:rotate(0);">🎊 FIN DU JEU !</div></div>
+  <div class="lw"><div class="lb" style="transform:rotate(0);">🎊 FIN DU JEU !</div></div>
   <div class="card" style="max-width:700px;margin:0 auto;">
     <ul class="sb-list" id="go-sb"></ul>
     <button class="btn ye" onclick="location.reload()" style="margin-top:12px;">🔄 Rejouer</button>
   </div>
 </div>
 
-<!-- ═══════════════ SPIN WHEEL OVERLAY ═══════════════ -->
-<div id="wheel-overlay" class="wheel-overlay" style="display:none;">
-  <div class="wheel-title" id="wheel-title">🎰 TOURNE LA ROUE !</div>
-  <div class="wheel-wrap">
-    <div class="wheel-pointer"></div>
-    <canvas id="wheel-canvas" class="wheel-canvas"></canvas>
+<!-- REVEAL THEATRE (full-screen, fixed) -->
+<div id="rev-theatre" class="reveal-theatre hidden">
+  <div class="spotlight"></div>
+  <div class="rev-adj-lbl" style="position:relative;z-index:2;font-size:.65rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;">Qui est le plus...</div>
+  <div class="rev-adj" id="rev-adj-txt"></div>
+  <!-- Mystery card (shown first) -->
+  <div id="rev-mystery" class="q-card"><div class="q-mark">?</div></div>
+  <!-- Winner card(s) (hidden until reveal) -->
+  <div id="rev-winners-wrap" style="display:none;flex-direction:row;flex-wrap:wrap;gap:16px;justify-content:center;position:relative;z-index:2;"></div>
+  <div id="rev-winner-lbl" class="rev-winner-lbl" style="display:none;"></div>
+  <!-- Others (shown after winners) -->
+  <div id="rev-others-sec" class="others-section" style="display:none;">
+    <div class="others-lbl">Les autres votes</div>
+    <div class="pgrid" id="rev-others-grid"></div>
   </div>
-  <button class="btn ye big wheel-btn" id="wheel-spin-btn" onclick="spinWheel()">🎰 Tourner !</button>
-  <div class="wheel-result" id="wheel-result"></div>
-  <button class="btn wheel-close" id="wheel-next-btn" style="display:none;" onclick="wheelDone()">✅ Ok, manche suivante ➡</button>
+  <!-- Controls -->
+  <div class="rev-controls" id="rev-ctrl" style="display:none;">
+    <button class="btn gr big" onclick="playerAskNext()">Manche suivante ➡</button>
+  </div>
+</div>
+
+<!-- WHEEL OVERLAY (full-screen, fixed) -->
+<div id="wheel-ov" class="wheel-ov" style="display:none;">
+  <div class="wheel-title" id="wt">🎰 Tourne la roue !</div>
+  <div class="wheel-sub" id="ws">...</div>
+  <div class="wheel-wrap">
+    <div class="wheel-ptr"></div>
+    <canvas id="wcanvas"></canvas>
+  </div>
+  <button class="btn ye big" id="wspin-btn" onclick="spinWheel()" style="margin-top:18px;">🎰 Tourner !</button>
+  <div class="wheel-result" id="w-result"></div>
+  <button class="btn" id="wdone-btn" style="display:none;margin-top:8px;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 3px 0 rgba(0,0,0,.3);" onclick="wheelNext()">✅ OK !</button>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONSTANTS
-// ══════════════════════════════════════════════
-const QUESTIONS = [
+// ═══════════════════ CONSTANTS ═══════════════════
+const QUESTIONS=[
   "Radin quand c'est son tour de payer",
   "Susceptible quand on le vanne",
   "Mauvais perdant sur un jeu de société",
@@ -365,33 +382,39 @@ const QUESTIONS = [
   "Accro aux réseaux dès le réveil"
 ];
 
-const WHEEL_SEGMENTS = [
-  { label: "1 gorgée",       color: "#7c3aed" },
-  { label: "3 gorgées",      color: "#db2777" },
-  { label: "Donne 4 gorgées",color: "#d97706" },
-  { label: "Cul sec !",      color: "#dc2626" },
-  { label: "Cul rouge 🍑",   color: "#059669" },
-  { label: "Cul sec pour\nmoi",   color: "#2563eb" },
-  { label: "Cul sec pour\ntoi",   color: "#9333ea" },
-  { label: "2 gorgées",      color: "#0891b2" },
+// Each segment: label + color
+// The wheel has N segments. Pointer is fixed at the TOP.
+// When the wheel stops at angle A, the segment under the pointer is:
+//   idx = floor( ((-(A + PI/2)) % 2PI + 2PI) % 2PI  /  arc )
+// We'll verify this once and use it consistently.
+const WS=[
+  {l:"1 gorgée",     c:"#7c3aed"},
+  {l:"Cul sec 🔥",   c:"#dc2626"},
+  {l:"3 gorgées",    c:"#db2777"},
+  {l:"Donne 4 gorgées",c:"#d97706"},
+  {l:"Cul rouge 🍑", c:"#059669"},
+  {l:"2 gorgées",    c:"#2563eb"},
+  {l:"Cul sec pour toi",c:"#9333ea"},
+  {l:"Cul sec pour moi",c:"#0891b2"},
 ];
+const N_SEG=WS.length;
+const ARC=2*Math.PI/N_SEG;
 
-const COLORS = ['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309','#be185d','#065f46'];
-const MAX_ROUNDS = 10;
-const CONN_TIMEOUT_MS = 9000;
+const COLORS=['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309','#be185d','#065f46'];
+const MAX_ROUNDS=10;
+const CONN_TIMEOUT=9000;
 
-// ══════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════
+// ═══════════════════ UTILS ═══════════════════
+const $=id=>document.getElementById(id);
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));const el=document.getElementById(id);if(el)el.classList.remove('hidden');}
-function toast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tt);t._tt=setTimeout(()=>t.classList.remove('show'),dur);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));const el=$(id);if(el)el.classList.remove('hidden');}
+function showRev(){$('rev-theatre')&&$('rev-theatre').classList.remove('hidden');}
+function hideRev(){$('rev-theatre')&&$('rev-theatre').classList.add('hidden');}
+function toast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),dur);}
 function acol(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))&0xffffffff;return COLORS[Math.abs(h)%COLORS.length];}
 function ini(n){return n.substring(0,2).toUpperCase();}
-function sid(n){return 'q'+btoa(n).replace(/[^a-zA-Z0-9]/g,'').substring(0,12);}
-
 function confetti(){
-  const cols=['#7c3aed','#ec4899','#fbbf24','#10b981','#3b82f6','#f97316','#fff'];
+  const cols=['#7c3aed','#ec4899','#fbbf24','#10b981','#3b82f6','#f97316'];
   for(let i=0;i<70;i++)setTimeout(()=>{
     const el=document.createElement('div');el.className='cp';const s=6+Math.random()*10;
     el.style.cssText=`left:${Math.random()*100}vw;top:-30px;background:${cols[0|Math.random()*cols.length]};width:${s}px;height:${s}px;border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${1.5+Math.random()*2.5}s;`;
@@ -399,387 +422,260 @@ function confetti(){
   },i*30);
 }
 
-function photoEl(photo,name,classes,size){
-  if(photo)return `<img class="${classes}" src="${photo}" alt="${name}" style="width:${size}px;height:${size}px;">`;
-  return `<div class="${classes}" style="background:${acol(name)};width:${size}px;height:${size}px;">${ini(name)}</div>`;
-}
-
-// ══════════════════════════════════════════════
-// GLOBAL STATE
-// ══════════════════════════════════════════════
-let peer=null, isHost=false;
+// ═══════════════════ STATE ═══════════════════
+let peer=null,isHost=false;
 // Host
-let hConns={};        // peerId → {name, conn, photo}
-let hScores={};       // name → cumulative points
-let hVotes={};        // name → vote count this round
+let hConns={};   // peerId → {name,conn,photo}
+let hScores={};  // name → points
+let hVotes={};   // name → votes this round
 let hWhoVoted=new Set();
-let hQuestions=[], hQIdx=-1;
-let hRevealed=false;  // prevents double-reveal
-let hCurrentAdj='';
-let hRoomCode='';
+let hQs=[],hQi=-1,hRevealed=false,hAdj='';
+let hCode='';
 // Player
-let pName='', pPhoto='', pConn=null, pList=[], pRoomId='';
-let pRevealTimers=[];  // track all reveal timeouts so we can clear on reconnect
+let pName='',pPhoto='',pConn=null,pList=[],pRoomId='';
+let pTimers=[];  // reveal timers
+// Wheel state
+let wQueue=[];   // array of player names waiting to spin
+let wAngle=0;    // current wheel angle
+let wSpinning=false;
+let wIsSpinner=false; // am I the one spinning right now?
 
 const urlP=new URLSearchParams(window.location.search);
 const roomP=urlP.get('room');
 const baseUrl=window.location.href.split('?')[0];
 
 window.onload=()=>{
-  if(roomP){
-    // Arrived via QR → skip code, go straight to name
-    pRoomId=roomP;
-    show('s-pjoin');
-    document.getElementById('step-name').style.display='block';
-  } else {
-    show('s-land');
-  }
+  if(roomP){pRoomId=roomP;show('s-pjoin');$('step-name').style.display='block';}
+  else show('s-land');
 };
 
-// ══════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════
-function gotoCodeEntry(){
-  show('s-pjoin');
-  document.getElementById('step-code').style.display='block';
-}
-
+// ═══════════════════ NAV ═══════════════════
+function gotoCode(){show('s-pjoin');$('step-code').style.display='block';}
 function validateCode(){
-  const code=document.getElementById('code-inp').value.trim().toUpperCase();
-  if(code.length!==4){toast('⚠️ Code de 4 lettres !');return;}
-  pRoomId=code;
-  document.getElementById('step-code').style.display='none';
-  document.getElementById('step-name').style.display='block';
-  document.getElementById('pname-inp').focus();
+  const c=$('code-inp').value.trim().toUpperCase();
+  if(c.length!==4){toast('⚠️ Code de 4 lettres !');return;}
+  pRoomId=c;$('step-code').style.display='none';$('step-name').style.display='block';$('pni').focus();
 }
 
-// ══════════════════════════════════════════════
-// PHOTO HANDLER
-// ══════════════════════════════════════════════
+// ═══════════════════ PHOTO ═══════════════════
 function handlePhoto(e){
   const file=e.target.files[0];if(!file)return;
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
-    // Compress to 80x80 — sufficient for cards, much lighter for P2P transfer
     const c=document.createElement('canvas');c.width=80;c.height=80;
     c.getContext('2d').drawImage(img,0,0,80,80);
     pPhoto=c.toDataURL('image/jpeg',.7);
     URL.revokeObjectURL(url);
-    document.getElementById('photo-ph').style.display='none';
-    const p=document.getElementById('photo-prev');p.src=pPhoto;p.style.display='block';
-  };
-  img.src=url;
+    $('php').style.display='none';
+    const p=$('phprev');p.src=pPhoto;p.style.display='block';
+  };img.src=url;
 }
 
-// ══════════════════════════════════════════════
-// PLAYER JOIN
-// ══════════════════════════════════════════════
+// ═══════════════════ PLAYER JOIN ═══════════════════
 function playerJoin(){
-  const nameRaw=document.getElementById('pname-inp').value.trim();
-  if(!nameRaw){toast('✏️ Entre ton prénom !');return;}
+  const raw=$('pni').value.trim();
+  if(!raw){toast('✏️ Entre ton prénom !');return;}
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
-  pName=nameRaw.substring(0,12);
-  const stat=document.getElementById('join-stat');
-  stat.textContent='🔄 Connexion…';
-
-  // Destroy previous peer if reconnecting
+  pName=raw.substring(0,12);
+  const stat=$('jstat');stat.textContent='🔄 Connexion…';
   if(peer&&!isHost){try{peer.destroy();}catch(e){}}
-
   peer=new Peer(undefined,{debug:0});
-
-  // Timeout if PeerJS server never responds
-  const openTimeout=setTimeout(()=>{
-    stat.textContent='❌ Impossible de se connecter. Vérifie ta connexion.';
-    try{peer.destroy();}catch(e){}
-  },CONN_TIMEOUT_MS);
-
-  peer.on('error',err=>{
-    clearTimeout(openTimeout);
-    stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);
-  });
-
+  const to1=setTimeout(()=>{stat.textContent='❌ Impossible de se connecter.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
+  peer.on('error',err=>{clearTimeout(to1);stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);});
   peer.on('open',()=>{
-    clearTimeout(openTimeout);
+    clearTimeout(to1);
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
-
-    const connTimeout=setTimeout(()=>{
-      stat.textContent='❌ Code invalide ou salon introuvable.';
-      try{peer.destroy();}catch(e){}
-    },CONN_TIMEOUT_MS);
-
-    pConn.on('error',()=>{
-      clearTimeout(connTimeout);
-      stat.textContent='❌ Connexion refusée.';
-    });
-    pConn.on('open',()=>{
-      clearTimeout(connTimeout);
-      pConn.send({type:'JOIN',name:pName,photo:pPhoto});
-    });
-    pConn.on('data',data=>handlePlayerData(data));
+    const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
+    pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';});
+    pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto});});
+    pConn.on('data',handlePData);
     pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
 }
 
-// ══════════════════════════════════════════════
-// HOST OPEN
-// ══════════════════════════════════════════════
+// ═══════════════════ HOST OPEN ═══════════════════
 function hostOpen(){
-  const btn=event.target;btn.textContent='⏳ Connexion…';btn.disabled=true;
-
-  // Generate 4-letter code = the peer ID
+  const btn=event.target;btn.textContent='⏳…';btn.disabled=true;
   const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
-  const tryCode=()=>{
-    let code='';for(let i=0;i<4;i++)code+=alpha[0|Math.random()*alpha.length];
-    return code;
-  };
-
-  const attemptOpen=(code)=>{
-    hRoomCode=code;
-    if(peer){try{peer.destroy();}catch(e){}}
+  const rndCode=()=>{let c='';for(let i=0;i<4;i++)c+=alpha[0|Math.random()*alpha.length];return c;};
+  const attempt=(code)=>{
+    hCode=code;
+    if(peer)try{peer.destroy();}catch(e){}
     peer=new Peer(code,{debug:0});
     peer.on('error',err=>{
-      if(err.type==='unavailable-id'){
-        // Code taken — try another
-        attemptOpen(tryCode());return;
-      }
+      if(err.type==='unavailable-id'){attempt(rndCode());return;}
       toast('❌ '+err.message);btn.textContent='🎮 Ouvrir le Salon';btn.disabled=false;
     });
     peer.on('open',id=>{
       isHost=true;show('s-host');
       const url=baseUrl+'?room='+id;
-      document.getElementById('rc-display').textContent=code;
-      document.getElementById('rc-display2').textContent=code;
-      document.getElementById('room-url').textContent=url;
-      document.getElementById('qrcode').innerHTML='';
-      new QRCode(document.getElementById('qrcode'),{text:url,width:190,height:190,colorDark:'#4c1d95',colorLight:'#ffffff'});
+      $('rc1').textContent=code;$('rc2').textContent=code;$('room-url').textContent=url;
+      $('qrcode').innerHTML='';
+      new QRCode($('qrcode'),{text:url,width:190,height:190,colorDark:'#4c1d95',colorLight:'#fff'});
     });
-    peer.on('connection',handleHostConnection);
+    peer.on('connection',handleHConn);
   };
-
-  attemptOpen(tryCode());
+  attempt(rndCode());
 }
 
-function handleHostConnection(conn){
+function handleHConn(conn){
   conn.on('data',data=>{
-    // ─── JOIN ───
     if(data.type==='JOIN'){
       const name=data.name.trim().substring(0,12);
-      // Allow reconnection: if same name already exists, replace its connection
-      const existingPeer=Object.keys(hConns).find(k=>hConns[k].name===name);
-      if(existingPeer) delete hConns[existingPeer];
-
+      const oldPeer=Object.keys(hConns).find(k=>hConns[k].name===name);
+      if(oldPeer)delete hConns[oldPeer];
       hConns[conn.peer]={name,conn,photo:data.photo||''};
-      if(hScores[name]===undefined) hScores[name]=0;
-
+      if(hScores[name]===undefined)hScores[name]=0;
       hostLobbyUI();
-      hBroadcast({type:'LOBBY_UPDATE',players:hPList()});
-      toast(`${name} ${existingPeer?'reconnecté':'a rejoint'} ! 🎉`);
-
-      // If game running, send current state
-      if(hQIdx>=0&&!hRevealed){
-        conn.send({type:'START_ROUND',adjective:hCurrentAdj,players:hPList()});
-        // If already voted, send straight to voted screen
-        if(hWhoVoted.has(existingPeer)){
-          conn.send({type:'ALREADY_VOTED'});
-        }
+      hBcast({type:'LOBBY_UPDATE',players:hPList()});
+      toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
+      if(hQi>=0&&!hRevealed){
+        conn.send({type:'START_ROUND',adjective:hAdj,players:hPList()});
+        if(hWhoVoted.has(oldPeer||'__none__'))conn.send({type:'ALREADY_VOTED',done:hWhoVoted.size,total:Object.keys(hConns).length});
       }
       return;
     }
-    // ─── VOTE ───
     if(data.type==='SUBMIT_VOTE'){
-      if(hRevealed)return; // ignore late votes after reveal
-      const voter=hConns[conn.peer]?.name;
-      const target=data.target;
+      if(hRevealed||hWhoVoted.has(conn.peer))return;
+      const voter=hConns[conn.peer]?.name,target=data.target;
       if(!voter||hVotes[target]===undefined)return;
-      // Prevent double vote from same player
-      if(hWhoVoted.has(conn.peer))return;
       hWhoVoted.add(conn.peer);
       hVotes[target]++;
-      hostVBarUI();
-      // Auto-reveal when every connected player voted
+      // Broadcast vote progress to all
+      hBcast({type:'VOTE_PROGRESS',done:hWhoVoted.size,total:Object.keys(hConns).length});
       if(!hRevealed&&hWhoVoted.size>=Object.keys(hConns).length){
-        hRevealed=true;
-        setTimeout(hostReveal,500);
+        hRevealed=true;setTimeout(hostReveal,600);
       }
       return;
     }
-    // ─── REQUEST NEXT (from host-player's wheel done) ───
-    if(data.type==='WHEEL_DONE'){
-      // Just ignore — host controls next
+    if(data.type==='WHEEL_SPIN'){
+      // Relay spin event to all other players so they see the wheel turning
+      hBcast({type:'WHEEL_SPINNING',angle:data.angle,spinner:data.spinner});
+      return;
+    }
+    if(data.type==='WHEEL_RESULT'){
+      // Relay result to all
+      hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
       return;
     }
   });
   conn.on('close',()=>{
     const info=hConns[conn.peer];
-    if(info){
-      toast(`${info.name} a quitté`);
-      delete hConns[conn.peer];
-      hostLobbyUI();
-      hBroadcast({type:'LOBBY_UPDATE',players:hPList()});
-    }
+    if(info){toast(`${info.name} a quitté`);delete hConns[conn.peer];hostLobbyUI();hBcast({type:'LOBBY_UPDATE',players:hPList()});}
   });
-  conn.on('error',()=>{
-    delete hConns[conn.peer];
-    hostLobbyUI();
-  });
+  conn.on('error',()=>{delete hConns[conn.peer];hostLobbyUI();});
 }
 
-// ══════════════════════════════════════════════
-// HOST UTILS
-// ══════════════════════════════════════════════
 function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo}));}
-function hBroadcast(msg){
-  Object.values(hConns).forEach(p=>{
-    if(p.conn.open) try{p.conn.send(msg);}catch(e){}
-  });
-}
+function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
 function hostLobbyUI(){
-  const players=Object.values(hConns);const n=players.length;
+  const ps=Object.values(hConns),n=ps.length;
   const txt=`${n} joueur${n>1?'s':''} connecté${n>1?'s':''}`;
-  ['lobby-stat','lobby-stat2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
-  document.getElementById('btn-launch').disabled=n<2;
-  const html=players.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${p.name}</span></div>`).join('');
-  document.getElementById('lobby-chips').innerHTML=html;
-  const c2=document.getElementById('lobby-chips2');if(c2)c2.innerHTML=html;
+  [$('lstat'),$('lstat2')].forEach(el=>{if(el)el.textContent=txt;});
+  $('btn-launch').disabled=n<2;
+  const html=ps.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${p.name}</span></div>`).join('');
+  $('lchips').innerHTML=html;const c2=$('lchips2');if(c2)c2.innerHTML=html;
 }
 
-function hostVBarUI(){
-  const total=Object.keys(hConns).length,done=hWhoVoted.size;
-  // Broadcast vote count to players so they can see progress on their screens
-  hBroadcast({type:'VOTE_PROGRESS',done,total});
-}
-
-// ══════════════════════════════════════════════
-// HOST GAME FLOW
-// ══════════════════════════════════════════════
+// ═══════════════════ HOST GAME ═══════════════════
 function hostLaunch(){
-  hQuestions=shuffle(QUESTIONS).slice(0,MAX_ROUNDS);
-  hQIdx=-1;
-  document.getElementById('h-lobby').style.display='none';
-  document.getElementById('h-game').style.display='block';
-  document.getElementById('rtot-h').textContent=MAX_ROUNDS;
-  hostNext();
+  hQs=shuffle(QUESTIONS).slice(0,MAX_ROUNDS);hQi=-1;
+  $('h-lobby').style.display='none';$('h-game').style.display='block';
+  $('rth').textContent=MAX_ROUNDS;hostNext();
 }
 
 function hostNext(){
-  hQIdx++;
-  if(hQIdx>=MAX_ROUNDS){hostFinal();return;}
-  // Reset round state
-  hWhoVoted.clear();
-  hVotes={};
-  hRevealed=false;
+  hQi++;if(hQi>=MAX_ROUNDS){hostFinal();return;}
+  hWhoVoted.clear();hVotes={};hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
-  hCurrentAdj=hQuestions[hQIdx];
-  document.getElementById('rnum-h').textContent=hQIdx+1;
-  document.getElementById('btn-freveal').disabled=false;
-  document.getElementById('btn-fnext').disabled=true;
-  hBroadcast({type:'START_ROUND',adjective:hCurrentAdj,players:hPList()});
+  hAdj=hQs[hQi];
+  $('rnh').textContent=hQi+1;
+  $('btn-fr').disabled=false;$('btn-fn').disabled=true;
+  hBcast({type:'START_ROUND',adjective:hAdj,players:hPList()});
 }
 
 function hostForceReveal(){
-  if(hRevealed)return;
-  hRevealed=true;
-  document.getElementById('btn-freveal').disabled=true;
-  hostReveal();
+  if(hRevealed)return;hRevealed=true;$('btn-fr').disabled=true;hostReveal();
 }
 
 function hostReveal(){
-  document.getElementById('btn-freveal').disabled=true;
+  $('btn-fr').disabled=true;
   const names=Object.keys(hVotes);
   const maxV=Math.max(...Object.values(hVotes),0);
   const winners=maxV>0?names.filter(n=>hVotes[n]===maxV):[];
-  // Award points
   winners.forEach(w=>hScores[w]=(hScores[w]||0)+1);
-  // Send reveal data to all players
-  hBroadcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hCurrentAdj,players:hPList()});
-  // Enable next round button after reveal animation has time to play
-  setTimeout(()=>document.getElementById('btn-fnext').disabled=false, 1000);
+  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,players:hPList()});
+  setTimeout(()=>$('btn-fn').disabled=false,1500);
 }
 
 function hostFinal(){
   const photos=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]));
-  renderSB('h-sb',hScores,photos);
-  show('s-hfinal');
-  hBroadcast({type:'GAME_OVER',scores:hScores,photos});
-  confetti();
+  renderSB('h-sb',hScores,photos);show('s-hfinal');
+  hBcast({type:'GAME_OVER',scores:hScores,photos});confetti();
 }
 
-// ══════════════════════════════════════════════
-// SCOREBOARD
-// ══════════════════════════════════════════════
+// ═══════════════════ SCOREBOARD ═══════════════════
 function renderSB(id,scores,photos={}){
   const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  const el=document.getElementById(id);el.innerHTML='';
+  const el=$(id);el.innerHTML='';
   const cls=['gold','silver','bronze'],medals=['🥇','🥈','🥉'];
   sorted.forEach(([name,pts],i)=>{
     const li=document.createElement('li');
     li.className='sb-row '+(cls[i]||'');li.style.animationDelay=i*.08+'s';
     const ph=photos[name]||'';
-    const phEl=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
-    li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${phEl}<div class="sb-name">${name}</div><div><div class="sb-pts">${pts}</div><div class="sb-sub">pt${pts>1?'s':''}</div></div>`;
+    const pe=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
+    li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${pe}<div class="sb-name">${name}</div><div><div class="sb-pts">${pts}</div><div class="sb-sub">pt${pts>1?'s':''}</div></div>`;
     el.appendChild(li);
   });
 }
 
-// ══════════════════════════════════════════════
-// PLAYER DATA HANDLER
-// ══════════════════════════════════════════════
-function handlePlayerData(data){
+// ═══════════════════ PLAYER DATA ═══════════════════
+function handlePData(data){
   switch(data.type){
     case 'NAME_TAKEN':
-      document.getElementById('join-stat').textContent='❌ Ce prénom est déjà pris !';
-      break;
-
+      $('jstat').textContent='❌ Ce prénom est déjà pris !';break;
     case 'LOBBY_UPDATE':
       pList=data.players;
-      document.getElementById('p-name-disp').textContent=pName.toUpperCase();
-      document.getElementById('p-chips').innerHTML=pList.map(p=>`<div class="chip" style="color:${acol(p.name)};">${p.name}</div>`).join('');
-      show('s-pwait');
-      break;
-
+      $('p-name-d').textContent=pName.toUpperCase();
+      $('p-chips').innerHTML=pList.map(p=>`<div class="chip" style="color:${acol(p.name)};">${p.name}</div>`).join('');
+      show('s-pwait');break;
     case 'START_ROUND':
-      pList=data.players;
-      clearRevealTimers();
-      document.getElementById('vote-adj').textContent=data.adjective;
-      buildVoteGrid(data.players);
-      show('s-pvote');
-      break;
-
+      pList=data.players;clearPTimers();
+      $('v-adj').textContent=data.adjective;
+      buildVoteGrid(data.players);show('s-pvote');break;
     case 'ALREADY_VOTED':
-      show('s-pvoted');
+      updateVoteCounter(data.done,data.total);show('s-pvoted');break;
+    case 'VOTE_PROGRESS':
+      updateVoteCounter(data.done,data.total);
+      // if we already voted, we're on s-pvoted
       break;
-
-    case 'VOTE_PROGRESS': {
-      // Update a small counter on the voted screen
-      const el=document.getElementById('voted-progress');
-      if(el) el.textContent=`${data.done} / ${data.total} votes`;
-      break;
-    }
-
     case 'REVEAL':
-      clearRevealTimers();
-      playerDoReveal(data);
+      clearPTimers();doReveal(data);break;
+    case 'WHEEL_SPINNING':
+      // spectators see the wheel spinning in real-time
+      if(data.spinner!==pName) updateWheelDisplay(data.angle,data.spinner);
       break;
-
+    case 'WHEEL_LANDED':
+      if(data.spinner!==pName) spectatorWheelLanded(data.segment,data.spinner);
+      break;
     case 'GAME_OVER':
-      clearRevealTimers();
-      renderSB('go-sb',data.scores,data.photos||{});
-      confetti();
-      show('s-gameover');
-      break;
+      clearPTimers();renderSB('go-sb',data.scores,data.photos||{});confetti();show('s-gameover');break;
   }
 }
 
+function updateVoteCounter(done,total){
+  $('vc-done').textContent=done;$('vc-total').textContent=total;
+  $('vc-fill').style.width=(total>0?done/total*100:0)+'%';
+}
+
 function buildVoteGrid(players){
-  const grid=document.getElementById('vote-grid');grid.innerHTML='';
+  const grid=$('v-grid');grid.innerHTML='';
   players.forEach(p=>{
     const btn=document.createElement('button');btn.className='vote-btn';
-    const color=acol(p.name);
-    const pEl=p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${color};">${ini(p.name)}</div>`;
-    btn.innerHTML=`${pEl}<div class="vb-name">${p.name}</div>`;
+    const c=acol(p.name);
+    btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${p.name}</div>`;
     btn.onclick=()=>{
-      // Disable all buttons to prevent double vote
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
       pConn.send({type:'SUBMIT_VOTE',target:p.name});
       show('s-pvoted');
@@ -788,222 +684,255 @@ function buildVoteGrid(players){
   });
 }
 
-function clearRevealTimers(){
-  pRevealTimers.forEach(t=>clearTimeout(t));
-  pRevealTimers=[];
-}
-function rt(fn,ms){const t=setTimeout(fn,ms);pRevealTimers.push(t);return t;}
+function clearPTimers(){pTimers.forEach(clearTimeout);pTimers=[];}
+function pt(fn,ms){const t=setTimeout(fn,ms);pTimers.push(t);return t;}
 
-// ══════════════════════════════════════════════
-// PLAYER — REVEAL ANIMATION
-// ══════════════════════════════════════════════
-function playerDoReveal(data){
+// ═══════════════════ THE REVEAL ═══════════════════
+function doReveal(data){
   const {votes,winners,adjective,players}=data;
   const maxV=Math.max(...Object.values(votes),0);
   const iAmWinner=winners.includes(pName);
 
-  document.getElementById('reveal-adj').textContent=adjective.toUpperCase();
-  document.getElementById('rev-s1').style.display='none';
-  document.getElementById('rev-s2').style.display='none';
-  document.getElementById('rev-controls').style.display='none';
-  document.getElementById('rev-winner-wrap').innerHTML='';
-  document.getElementById('rev-winner-label').style.opacity='0';
-  document.getElementById('rev-winner-label').textContent='';
-  document.getElementById('rev-others').innerHTML='';
-  show('s-preveal');
+  // Reset theatre
+  $('rev-adj-txt').textContent=adjective.toUpperCase();
+  $('rev-mystery').style.display='flex';
+  $('rev-winners-wrap').style.display='none';
+  $('rev-winners-wrap').innerHTML='';
+  $('rev-winner-lbl').style.display='none';
+  $('rev-winner-lbl').textContent='';
+  $('rev-others-sec').style.display='none';
+  $('rev-others-grid').innerHTML='';
+  $('rev-ctrl').style.display='none';
+
+  // Show theatre over everything
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  $('rev-theatre').classList.remove('hidden');
 
   if(maxV===0){
-    // Nobody voted — show "Égalité / Aucun vote"
-    document.getElementById('rev-s1').style.display='block';
-    document.getElementById('rev-winner-label').textContent='🤷 Aucun vote…';
-    document.getElementById('rev-winner-label').style.opacity='1';
-    rt(()=>document.getElementById('rev-controls').style.display='block',1500);
+    pt(()=>{$('rev-mystery').style.display='none';$('rev-winner-lbl').textContent='🤷 Aucun vote…';$('rev-winner-lbl').style.display='block';$('rev-ctrl').style.display='block';},2000);
     return;
   }
 
-  // ── Step 1: reveal winner(s) ──
-  document.getElementById('rev-s1').style.display='block';
-  const wrap=document.getElementById('rev-winner-wrap');
+  // Phase 1: dramatic ? for 4 seconds then flip
+  pt(()=>{
+    // The ? card shrinks and flips, then winner cards appear
+    const mystery=$('rev-mystery');
+    mystery.style.transition='transform .6s ease, opacity .6s ease';
+    mystery.style.transform='scale(0) rotate(15deg)';
+    mystery.style.opacity='0';
 
-  winners.forEach((wname,wi)=>{
-    const wPlayer=players.find(p=>p.name===wname);
-    if(!wPlayer)return;
-    const color=acol(wname);
-    // Build a big winner card
-    const cardId='wcard-'+wi;
-    const div=document.createElement('div');
-    div.style.cssText='display:flex;flex-direction:column;align-items:center;';
-    const cardHtml=`
-      <div id="${cardId}" style="width:min(45vw,180px);aspect-ratio:4/5;background:${color};border:5px solid var(--ye);border-radius:22px;overflow:hidden;position:relative;box-shadow:0 10px 0 var(--ye-d),0 0 40px rgba(251,191,36,.3);">
-        <div id="${cardId}-pa" style="width:100%;height:80%;position:relative;overflow:hidden;background:linear-gradient(135deg,#3b0764,#5b21b6);">
-          ${wPlayer.photo?`<img src="${wPlayer.photo}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="${wname}">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${color};font-family:'Baloo 2',cursive;font-size:clamp(2rem,8vw,3.5rem);font-weight:900;color:white;">${ini(wname)}</div>`}
-          <div id="${cardId}-mask" style="position:absolute;inset:0;background:linear-gradient(160deg,#3b0764,#5b21b6);display:flex;align-items:center;justify-content:center;transition:opacity 3.5s ease;opacity:1;">
-            <span style="font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,4rem);font-weight:900;color:var(--ye);animation:qPulse .9s ease infinite alternate;">?</span>
-          </div>
-        </div>
-        <div id="${cardId}-nb" style="background:white;padding:7px 8px 5px;height:20%;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 2s ease 2s;">
-          <div style="font-family:'Baloo 2',cursive;font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:900;color:var(--tx);text-transform:uppercase;">${wname}</div>
-          <div style="font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:900;color:var(--pu);">${votes[wname]} vote${votes[wname]!==1?'s':''}</div>
-        </div>
-      </div>`;
-    div.innerHTML=cardHtml;
-    wrap.appendChild(div);
-
-    // Trigger fade-in
-    rt(()=>{
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        const mask=document.getElementById(cardId+'-mask');
-        const nb=document.getElementById(cardId+'-nb');
-        if(mask){mask.style.opacity='0';}
-        if(nb){nb.style.opacity='1';}
-      }));
-    },300+wi*400);
-  });
-
-  // Winner label appears after reveal
-  rt(()=>{
-    const lbl=document.getElementById('rev-winner-label');
-    lbl.innerHTML='👑 <strong>'+winners.join(' &amp; ')+'</strong> remporte ce round !';
-    lbl.style.opacity='1';
-    confetti();
-    // If current player is a winner → show wheel
-    if(iAmWinner) rt(()=>showWheel(winners),800);
-  },4000);
-
-  // ── Step 2: others (votes > 0, not winner) ──
-  const others=players.filter(p=>votes[p.name]>0&&!winners.includes(p.name))
-                       .sort((a,b)=>votes[b.name]-votes[a.name]);
-
-  if(others.length>0){
-    rt(()=>{
-      const grid=document.getElementById('rev-others');grid.innerHTML='';
-      others.forEach((p,idx)=>{
-        const color=acol(p.name);
+    pt(()=>{
+      mystery.style.display='none';
+      // Show winner card(s)
+      const wrap=$('rev-winners-wrap');
+      wrap.style.display='flex';
+      winners.forEach((wname,wi)=>{
+        const wp=players.find(p=>p.name===wname);if(!wp)return;
+        const c=acol(wname);
         const d=document.createElement('div');
-        d.className='pcard';d.style.cssText='opacity:0;transition:opacity .8s ease;';
-        const phEl=p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">`:`<div class="pcard-init" style="background:${color};">${ini(p.name)}</div>`;
-        d.innerHTML=`<div class="pcard-pa">${phEl}</div><div class="pcard-nb"><div class="pcard-name">${p.name}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
-        grid.appendChild(d);
-        rt(()=>{d.style.opacity='1';},idx*500);
+        d.style.cssText='opacity:0;transform:scale(.5);transition:opacity .5s ease,transform .5s cubic-bezier(.175,.885,.32,1.275);transition-delay:'+(wi*150)+'ms;';
+        d.innerHTML=`<div class="rev-card">
+          <div class="rev-card-photo">
+            ${wp.photo?`<img src="${wp.photo}" alt="${wname}">`:`<div class="ri" style="background:${c};">${ini(wname)}</div>`}
+          </div>
+          <div class="rev-card-nb">
+            <div class="rev-card-name">${wname}</div>
+            <div class="rev-card-votes">${votes[wname]} vote${votes[wname]!==1?'s':''}</div>
+          </div>
+        </div>`;
+        wrap.appendChild(d);
+        pt(()=>{d.style.opacity='1';d.style.transform='scale(1)';},50+wi*150);
       });
-      document.getElementById('rev-s2').style.display='block';
-    },5500);
-  }
+      // Winner label
+      pt(()=>{
+        const lbl=$('rev-winner-lbl');
+        lbl.textContent='👑 '+winners.join(' & ')+' remporte'+(winners.length>1?'nt':'')+' ce round !';
+        lbl.style.display='block';
+        confetti();
+      },800);
 
-  // Show "manche suivante" controls for everyone — but only host can actually advance
-  // (here the button sends a signal to host; host decides)
-  rt(()=>{
-    if(!iAmWinner) document.getElementById('rev-controls').style.display='block';
-  }, others.length>0 ? 5500+others.length*500+1500 : 5000);
+      // Phase 2: others after 5s from winner reveal
+      const others=players
+        .filter(p=>votes[p.name]>0&&!winners.includes(p.name))
+        .sort((a,b)=>votes[b.name]-votes[a.name]);
+
+      if(others.length>0){
+        pt(()=>{
+          $('rev-others-sec').style.display='block';
+          const grid=$('rev-others-grid');grid.innerHTML='';
+          others.forEach((p,idx)=>{
+            const c=acol(p.name);
+            const d=document.createElement('div');
+            d.className='pcard';d.style.cssText='opacity:0;transition:opacity .7s ease;';
+            const ph=p.photo?`<img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div class="pcard-init" style="background:${c};">${ini(p.name)}</div>`;
+            d.innerHTML=`<div class="pcard-pa">${ph}</div><div class="pcard-nb"><div class="pcard-name">${p.name}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
+            grid.appendChild(d);
+            pt(()=>d.style.opacity='1',100+idx*500);
+          });
+          // Show controls after all others appear
+          pt(()=>$('rev-ctrl').style.display='block', 100+others.length*500+1000);
+        },5000);
+      } else {
+        pt(()=>$('rev-ctrl').style.display='block',4000);
+      }
+
+      // If I'm a winner, trigger wheel queue
+      if(iAmWinner){
+        pt(()=>startWheelQueue(winners,iAmWinner),2500);
+      }
+    },700);
+  },4000); // 4 second suspense on the ?
 }
 
-function playerRequestNext(){
-  // Only the host advances — this btn is just cosmetic for non-winners
-  // For the host's own player view, clicking this sends "next" request
-  if(pConn&&pConn.open) pConn.send({type:'REQUEST_NEXT'});
-  show('s-pbetween');
+function playerAskNext(){
+  if(pConn&&pConn.open)pConn.send({type:'REQUEST_NEXT'});
+  $('rev-theatre').classList.add('hidden');show('s-pbetween');
 }
 
-// ══════════════════════════════════════════════
-// SPINNING WHEEL
-// ══════════════════════════════════════════════
-const W_SIZE=Math.min(window.innerWidth*0.8,320);
-let wheelSpinning=false;
-let wheelAngle=0;
-let wheelWinners=[];
+// ═══════════════════ WHEEL QUEUE SYSTEM ═══════════════════
+// wQueue = list of winner names to spin in order
+// current spinner = wQueue[0]
+// when done: wQueue.shift(), if more → next, else close overlay
 
-function drawWheel(angle){
-  const canvas=document.getElementById('wheel-canvas');
-  if(!canvas)return;
-  canvas.width=W_SIZE;canvas.height=W_SIZE;
-  const ctx=canvas.getContext('2d');
-  const n=WHEEL_SEGMENTS.length;
-  const arc=2*Math.PI/n;
-  const cx=W_SIZE/2,cy=W_SIZE/2,r=W_SIZE/2-4;
-  WHEEL_SEGMENTS.forEach((seg,i)=>{
-    const start=angle+i*arc,end=start+arc;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,end);ctx.closePath();
-    ctx.fillStyle=seg.color;ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();
-    // Label
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(start+arc/2);ctx.textAlign='right';
-    ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(10,W_SIZE*0.048)}px 'Nunito',sans-serif`;
-    const lines=seg.label.split('\n');
-    lines.forEach((line,li)=>{
-      ctx.fillText(line,r-12,(li-(lines.length-1)/2)*16);
-    });
-    ctx.restore();
-  });
-  // Center circle
-  ctx.beginPath();ctx.arc(cx,cy,W_SIZE*0.08,0,2*Math.PI);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.strokeStyle='#ccc';ctx.lineWidth=2;ctx.stroke();
+function startWheelQueue(winners,iAmInQueue){
+  wQueue=[...winners];
+  wAngle=0;wSpinning=false;
+  showWheelForTurn();
 }
 
-function showWheel(winners){
-  wheelWinners=winners;
-  wheelSpinning=false;
-  wheelAngle=0;
-  document.getElementById('wheel-result').textContent='';
-  document.getElementById('wheel-spin-btn').style.display='';
-  document.getElementById('wheel-next-btn').style.display='none';
-  document.getElementById('wheel-title').textContent=(winners.length>1?'🎰 ÉGALITÉ — chacun tourne !':'🎰 '+(winners[0]===pName?'TOI ! Tourne la roue !':winners[0]+' tourne la roue !'));
-  drawWheel(0);
-  document.getElementById('wheel-overlay').style.display='flex';
+function showWheelForTurn(){
+  if(wQueue.length===0){$('wheel-ov').style.display='none';return;}
+  const spinner=wQueue[0];
+  wIsSpinner=(spinner===pName);
+  $('wt').textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
+  $('ws').textContent=wIsSpinner?'Tu as été désigné(e) !':'Regarde en direct !';
+  $('wspin-btn').style.display=wIsSpinner?'':'none';
+  $('wdone-btn').style.display='none';
+  $('w-result').textContent='';
+  drawWheel(wAngle);
+  $('wheel-ov').style.display='flex';
 }
 
 function spinWheel(){
-  if(wheelSpinning)return;
-  wheelSpinning=true;
-  document.getElementById('wheel-spin-btn').disabled=true;
-  document.getElementById('wheel-result').textContent='';
-
-  const totalRotation=2*Math.PI*(5+Math.random()*5);
-  const duration=3500;
-  const start=performance.now();
-  const startAngle=wheelAngle;
-
+  if(wSpinning||!wIsSpinner)return;
+  wSpinning=true;
+  $('wspin-btn').disabled=true;$('w-result').textContent='';
+  const totalRot=2*Math.PI*(6+Math.random()*6);
+  const dur=4000+Math.random()*1000;
+  const t0=performance.now(),a0=wAngle;
   function frame(now){
-    const elapsed=now-start;
-    if(elapsed>=duration){
-      wheelAngle=(startAngle+totalRotation)%(2*Math.PI);
-      drawWheel(wheelAngle);
-      // Determine winning segment: pointer is at top (−π/2)
-      const n=WHEEL_SEGMENTS.length,arc=2*Math.PI/n;
-      const normalized=(((-wheelAngle%(2*Math.PI))+(2*Math.PI))%(2*Math.PI));
-      const idx=Math.floor(normalized/arc)%n;
-      const seg=WHEEL_SEGMENTS[idx];
-      document.getElementById('wheel-result').textContent='👉 '+seg.label.replace('\n',' ');
-      document.getElementById('wheel-spin-btn').style.display='none';
-      document.getElementById('wheel-next-btn').style.display='';
-      wheelSpinning=false;
-      return;
+    const el=now-t0;
+    if(el>=dur){
+      wAngle=(a0+totalRot)%(2*Math.PI);
+      drawWheel(wAngle);
+      // Determine winning segment
+      // Pointer is at TOP = angle -π/2 (270° = 3π/2 counterclockwise)
+      // Segment i occupies angles [i*ARC, (i+1)*ARC) measured from 0 going clockwise
+      // The visual angle of the pointer relative to the rotated wheel is: -wAngle (mod 2π)
+      // Then offset by -π/2 to account for pointer position at top vs right
+      // Actually simpler: pointer at top means we need the segment at rotation offset 0
+      // At angle=0, segment 0 is at [0, ARC). With pointer at top (−π/2):
+      // the pointer points to angle −π/2 on the canvas = angle (2π−π/2) = 3π/2 in positive coords
+      // So: ptrInWheel = (3*Math.PI/2 - wAngle % (2*Math.PI) + 4*Math.PI) % (2*Math.PI)
+      const ptr=((3*Math.PI/2-wAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
+      const idx=Math.floor(ptr/ARC)%N_SEG;
+      const seg=WS[idx];
+      // Broadcast to all via host relay
+      if(pConn&&pConn.open){
+        pConn.send({type:'WHEEL_RESULT',segment:seg.l,spinner:pName});
+      }
+      $('w-result').textContent='👉 '+seg.l;
+      $('wspin-btn').style.display='none';
+      $('wdone-btn').style.display='';
+      wSpinning=false;return;
     }
-    // Ease out cubic
-    const t=elapsed/duration;
-    const eased=1-Math.pow(1-t,3);
-    const current=(startAngle+totalRotation*eased)%(2*Math.PI);
-    drawWheel(current);
+    const progress=el/dur;
+    const eased=1-Math.pow(1-progress,3); // ease-out cubic
+    const cur=(a0+totalRot*eased)%(2*Math.PI);
+    wAngle=cur;
+    drawWheel(cur);
+    // Broadcast angle for spectators
+    if(pConn&&pConn.open){
+      pConn.send({type:'WHEEL_SPIN',angle:cur,spinner:pName});
+    }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
 
-function wheelDone(){
-  document.getElementById('wheel-overlay').style.display='none';
-  document.getElementById('rev-controls').style.display='block';
-  if(pConn&&pConn.open) pConn.send({type:'WHEEL_DONE'});
+function wheelNext(){
+  // Done with this spinner, next in queue
+  wQueue.shift();
+  wAngle=0;wSpinning=false;
+  showWheelForTurn();
 }
 
-// ══════════════════════════════════════════════
-// KEYBOARD
-// ══════════════════════════════════════════════
+// Spectator updates
+function updateWheelDisplay(angle,spinner){
+  wAngle=angle;drawWheel(angle);
+  if($('wheel-ov').style.display==='none'){
+    $('wt').textContent='🎰 '+spinner+' tourne la roue !';
+    $('ws').textContent='Regarde en direct !';
+    $('wspin-btn').style.display='none';
+    $('wdone-btn').style.display='none';
+    $('w-result').textContent='';
+    $('wheel-ov').style.display='flex';
+  }
+}
+
+function spectatorWheelLanded(segment,spinner){
+  $('w-result').textContent='👉 '+segment;
+  $('wt').textContent='🎰 '+spinner+' a eu : '+segment;
+}
+
+// ═══════════════════ DRAW WHEEL ═══════════════════
+function drawWheel(angle){
+  const canvas=$('wcanvas');if(!canvas)return;
+  const SZ=Math.min(window.innerWidth*0.78,300);
+  canvas.width=SZ;canvas.height=SZ;
+  const ctx=canvas.getContext('2d');
+  const cx=SZ/2,cy=SZ/2,r=SZ/2-3;
+  const fs=Math.max(10,SZ*0.052);
+  WS.forEach((seg,i)=>{
+    const sa=angle+i*ARC,ea=sa+ARC;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();
+    ctx.fillStyle=seg.c;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
+    // Label — draw text radially, centered in segment
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(sa+ARC/2);
+    ctx.textAlign='center';
+    ctx.fillStyle='#fff';
+    ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=4;
+    ctx.font=`900 ${fs}px 'Nunito',sans-serif`;
+    // Place text at 65% of radius from center
+    const tr=r*0.65;
+    ctx.translate(tr,0);
+    ctx.rotate(Math.PI/2); // rotate text upright relative to segment
+    const lines=seg.l.split(' ');
+    // Pack into max 2 lines
+    const maxChars=10;
+    const wrapped=[];let cur='';
+    lines.forEach(w=>{if((cur+' '+w).trim().length>maxChars&&cur){wrapped.push(cur);cur=w;}else cur=(cur+' '+w).trim();});
+    if(cur)wrapped.push(cur);
+    const lh=fs*1.15;
+    wrapped.forEach((line,li)=>ctx.fillText(line,0,(li-(wrapped.length-1)/2)*lh));
+    ctx.restore();
+  });
+  // Center disc
+  ctx.beginPath();ctx.arc(cx,cy,SZ*0.09,0,2*Math.PI);
+  ctx.fillStyle='#fff';ctx.fill();
+  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
+}
+
+// ═══════════════════ KEYBOARD ═══════════════════
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
-  const join=document.getElementById('s-pjoin');
-  if(join&&!join.classList.contains('hidden')){
-    if(document.getElementById('step-code').style.display!=='none') validateCode();
-    else if(document.getElementById('step-name').style.display!=='none') playerJoin();
+  const j=$('s-pjoin');
+  if(j&&!j.classList.contains('hidden')){
+    if($('step-code').style.display!=='none')validateCode();
+    else if($('step-name').style.display!=='none')playerJoin();
   }
 });
 </script>
