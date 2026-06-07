@@ -375,6 +375,168 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .fe3{top:70%;left:15%;animation-duration:4.5s;animation-delay:-1.5s;}
 .fe4{top:25%;right:15%;animation-duration:7s;animation-delay:-2s;}
 .fe5{bottom:25%;left:40%;animation-duration:5.5s;animation-delay:-1s;}
+
+
+
+
+/* ═══ SCORE PIN (live scoreboard) ═══ */
+.score-pin{
+  position:fixed;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  z-index:800;
+  display:none; /* shown only when game started */
+}
+.score-pin-tab{
+  background:var(--pu);
+  color:#fff;
+  border:none;
+  padding:6px 18px 8px;
+  border-radius:0 0 16px 16px;
+  font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  box-shadow:0 4px 14px rgba(0,0,0,.35);
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  letter-spacing:.5px;
+  transition:background .15s;
+}
+.score-pin-tab:hover{background:var(--pu-l);}
+.score-pin-tab .spt-count{
+  background:var(--ye);color:var(--tx);
+  border-radius:50px;padding:1px 8px;
+  font-size:.75rem;font-weight:900;
+}
+.score-panel{
+  position:absolute;top:100%;left:50%;
+  transform:translateX(-50%) translateY(-8px);
+  opacity:0;pointer-events:none;
+  transition:transform .25s cubic-bezier(.175,.885,.32,1.275), opacity .2s ease;
+  width:min(92vw,380px);
+  max-height:70vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.score-panel.open{
+  transform:translateX(-50%) translateY(4px);
+  opacity:1;pointer-events:all;
+}
+.score-panel-inner{
+  background:rgba(255,255,255,.97);
+  border:2px solid rgba(124,58,237,.15);
+  border-radius:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+.sp-header{
+  background:var(--pu);padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sp-title{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:900;color:#fff;letter-spacing:1px;}
+.sp-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1rem;cursor:pointer;padding:2px 4px;}
+.sp-close:hover{color:#fff;}
+.sp-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 14px;
+  border-bottom:1px solid rgba(124,58,237,.06);
+  transition:background .1s;
+}
+.sp-row:last-child{border-bottom:none;}
+.sp-row.sp-me{background:rgba(124,58,237,.05);}
+.sp-rank{font-family:'Baloo 2',cursive;font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;padding-top:2px;}
+.sp-photo{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--pu-l);flex-shrink:0;}
+.sp-init{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:900;color:#fff;flex-shrink:0;}
+.sp-info{flex:1;min-width:0;}
+.sp-name{font-family:'Baloo 2',cursive;font-size:.92rem;font-weight:900;color:var(--pu-d);text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.sp-pts{font-family:'Baloo 2',cursive;font-size:.9rem;color:var(--pu);font-weight:900;flex-shrink:0;}
+.sp-adj-list{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
+.sp-adj{background:var(--pu-s);border:1px solid var(--pu-l);border-radius:50px;padding:1px 7px;font-size:.62rem;font-weight:700;color:var(--pu-d);}
+.sp-adj.sp-adj-new{background:var(--ye);border-color:var(--ye-d);color:var(--tx);animation:newAdj .4s ease;}
+@keyframes newAdj{from{transform:scale(1.3);}to{transform:scale(1);}}
+.sp-empty{padding:16px;text-align:center;font-size:.85rem;font-weight:700;color:var(--pu-l);}
+/* ═══ FINAL SCOREBOARD ═══ */
+.final-winner-card{
+  background:linear-gradient(135deg,var(--pu-d),var(--pu));
+  border:4px solid var(--ye);border-radius:22px;
+  padding:20px;margin-bottom:20px;
+  box-shadow:0 0 40px rgba(251,191,36,.3),0 8px 0 var(--ye-d);
+  animation:winnerGlow2 .7s ease infinite alternate;
+  text-align:center;
+}
+@keyframes winnerGlow2{
+  from{box-shadow:0 0 20px rgba(251,191,36,.3),0 8px 0 var(--ye-d);}
+  to{box-shadow:0 0 60px rgba(251,191,36,.8),0 8px 0 var(--ye-d);}
+}
+.final-winner-photo{
+  width:80px;height:80px;border-radius:50%;object-fit:cover;
+  border:4px solid var(--ye);margin:0 auto 10px;display:block;
+}
+.final-winner-init{
+  width:80px;height:80px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:#fff;
+  border:4px solid var(--ye);margin:0 auto 10px;
+}
+.final-winner-name{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--ye);text-transform:uppercase;}
+.final-winner-sub{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.65);margin-top:4px;}
+.win-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:8px;}
+.win-tag{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);border-radius:50px;padding:3px 10px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.75);}
+.sb-win-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px;}
+.sb-win-tag{background:var(--pu-s);border:1.5px solid var(--pu-l);border-radius:50px;padding:2px 8px;font-size:.65rem;font-weight:700;color:var(--pu-d);}
+/* ROUE DE LA MORT */
+.death-wheel-banner{
+  background:linear-gradient(135deg,#1a0030,#3b0060,#1a0030);
+  border:3px solid var(--pk);border-radius:18px;
+  padding:16px;margin:16px 0;text-align:center;
+  box-shadow:0 0 30px rgba(236,72,153,.3);
+}
+.death-wheel-title{
+  font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:900;
+  color:var(--pk);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;
+}
+.death-wheel-sub{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.55);}
+/* ═══ SLOT MACHINE REEL ═══ */
+#slot-reel{
+  position:absolute;inset:0;border-radius:18px;
+  overflow:hidden;z-index:4;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#3b0764,#5b21b6);
+}
+#slot-reel .slot-frame{
+  width:100%;height:100%;
+  object-fit:cover;display:block;
+  transition:none;
+}
+#slot-reel .slot-init{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-size:2.8rem;font-weight:900;color:#fff;
+}
+/* ═══ FLOATING PLAYER PHOTO CARDS (background) ═══ */
+.fbg-card{
+  position:absolute;
+  width:clamp(45px,6vw,72px);
+  aspect-ratio:4/5;
+  border-radius:12px;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,.18);
+  opacity:.14;
+  animation:fbgFloat linear infinite;
+  pointer-events:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+.fbg-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.fbg-card .fbg-init{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:900;color:#fff;
+}
+@keyframes fbgFloat{
+  0%  {transform:translateY(0)   rotate(var(--r));}
+  25% {transform:translateY(-14px) rotate(calc(var(--r) + 3deg));}
+  50% {transform:translateY(-6px)  rotate(calc(var(--r) - 2deg));}
+  75% {transform:translateY(-18px) rotate(calc(var(--r) + 2deg));}
+  100%{transform:translateY(0)   rotate(var(--r));}
+}
 .fe6{top:12%;left:22%;animation-duration:6.5s;animation-delay:-3s;}
 .fe7{top:38%;right:8%;animation-duration:7s;animation-delay:-1.2s;}
 .fe8{bottom:35%;left:28%;animation-duration:5.5s;animation-delay:-4s;}
@@ -666,6 +828,24 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 </head>
 <body>
 <div class="toast" id="toast"></div>
+<!-- 🏆 SCORE PIN — live scoreboard accessible at all times -->
+<div class="score-pin" id="score-pin">
+  <button class="score-pin-tab" id="score-pin-tab" onclick="toggleScorePin()">
+    🏆 SCORES <span class="spt-count" id="spt-count">0</span>
+  </button>
+  <div class="score-panel" id="score-panel">
+    <div class="score-panel-inner">
+      <div class="sp-header">
+        <div class="sp-title">🏆 Tableau des scores</div>
+        <button class="sp-close" onclick="toggleScorePin()">✕</button>
+      </div>
+      <div id="sp-body">
+        <div class="sp-empty">La partie n'a pas encore commencé…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- 💬 TRASHTALK CHAT — always visible floating panel -->
 <div class="chat-fab" id="chat-fab" onclick="toggleChat()" title="Trashtalk 🔥">
@@ -861,8 +1041,12 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 </div>
 <!-- HOST FINAL -->
 <div id="s-hfinal" class="screen hidden">
-  <div class="lw"><div class="lb" style="transform:rotate(0);">🏆 CLASSEMENT FINAL</div></div>
-  <div class="card"><ul class="sb-list" id="h-sb"></ul><button class="btn ye" onclick="location.reload()" style="margin-top:10px;">🔄 Rejouer</button></div>
+  <div class="lw"><div class="lb" style="transform:rotate(0);font-size:clamp(1.5rem,5vw,3rem);">🏆 CLASSEMENT FINAL</div></div>
+  <div class="card" style="max-width:700px;margin:0 auto;">
+    <div id="h-final-winner"></div>
+    <ul class="sb-list" id="h-sb"></ul>
+    <button class="btn ye" onclick="location.reload()" style="margin-top:10px;width:100%;">🔄 Rejouer</button>
+  </div>
 </div>
 
 <!-- PLAYER JOIN — onboarding flow -->
@@ -972,12 +1156,25 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   </div>
 </div>
 
-<!-- GAME OVER -->
+<!-- GAME OVER (player view) -->
 <div id="s-gameover" class="screen hidden">
-  <div class="lw"><div class="lb" style="transform:rotate(0);">🎊 FIN DU JEU !</div></div>
+  <div class="lw"><div class="lb" style="transform:rotate(0);font-size:clamp(1.5rem,5vw,3rem);">🎊 FIN DU JEU !</div></div>
   <div class="card" style="max-width:700px;margin:0 auto;">
+    <div id="go-final-winner"></div>
     <ul class="sb-list" id="go-sb"></ul>
-    <button class="btn ye" onclick="location.reload()" style="margin-top:12px;">🔄 Rejouer</button>
+    <div id="go-death-wheel-section" style="display:none;">
+      <div class="death-wheel-banner">
+        <div class="death-wheel-title">☠️ LA ROUE ABSOLUE DE LA MORT</div>
+        <div class="death-wheel-sub" id="go-death-who"></div>
+      </div>
+      <div class="wheel-wrap" style="margin:0 auto;">
+        <div class="wheel-ptr"></div>
+        <canvas id="death-wcanvas"></canvas>
+      </div>
+      <button class="btn pk big" id="death-spin-btn" style="margin-top:16px;width:100%;display:none;" onclick="spinDeathWheel()">☠️ TOURNER LA ROUE DE LA MORT</button>
+      <div class="wheel-result" id="death-result" style="color:var(--pk);margin-top:12px;"></div>
+    </div>
+    <button class="btn ye" onclick="location.reload()" style="margin-top:12px;width:100%;">🔄 Rejouer</button>
   </div>
 </div>
 
@@ -987,7 +1184,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   <div class="rev-adj-lbl" style="position:relative;z-index:2;font-size:.65rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;">Qui est le plus...</div>
   <div class="rev-adj" id="rev-adj-txt"></div>
   <!-- Mystery card (shown first) -->
-  <div id="rev-mystery" class="q-card"><div class="q-mark">?</div></div>
+  <div id="rev-mystery" class="q-card" style="position:relative;"><div id="slot-reel" style="display:none;"></div><div class="q-mark" id="q-mark-el">?</div></div>
   <div class="suspense-hint" id="suspense-hint">Qui est-ce ?</div>
   <!-- Winner card(s) (hidden until reveal) -->
   <div id="rev-winners-wrap" style="display:none;flex-direction:row;flex-wrap:wrap;gap:16px;justify-content:center;position:relative;z-index:2;"></div>
@@ -1016,8 +1213,8 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   <button class="btn ye big" id="wspin-btn" onclick="spinWheel()" style="margin-top:18px;">🎰 Tourner !</button>
   <div class="wheel-result" id="w-result"></div>
   <button class="btn" id="wdone-btn" style="display:none;margin-top:8px;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 3px 0 rgba(0,0,0,.3);" onclick="wheelNext()">✅ OK !</button>
-  <!-- Spectator dismiss — always visible after result shown -->
-  <button class="btn" id="wdismiss-btn" style="display:none;margin-top:6px;background:transparent;color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.15);box-shadow:none;font-size:.8rem;padding:8px 16px;" onclick="spectatorDismissWheel()">✕ Fermer la roue</button>
+  <!-- Close button — visible for EVERYONE at all times -->
+  <button class="btn" id="wdismiss-btn" style="margin-top:8px;background:transparent;color:rgba(255,255,255,.35);border-color:rgba(255,255,255,.12);box-shadow:none;font-size:.78rem;padding:7px 14px;" onclick="anyoneDismissWheel()">✕ Fermer la roue</button>
 </div>
 
 <script>
@@ -1115,9 +1312,13 @@ let hScores={};  // name → points
 let hVotes={};   // name → votes this round
 let hWhoVoted=new Set();
 let hQs=[],hQi=-1,hRevealed=false,hAdj='';
+let hWinHistory=[]; // [{name,adjective}]
 let hCode='';
 // Player
 let pName='',pPhoto='',pConn=null,pList=[],pRoomId='';
+let pScores={}; // live scores from server
+let pHistory=[]; // live win history from server
+let pPhotosMap={}; // name→photo, updated on LOBBY_UPDATE/START_ROUND
 let pAnonNick=''; // anonymous chat identity
 let pTimers=[];  // reveal timers
 // Wheel state
@@ -1262,6 +1463,7 @@ function handleHConn(conn){
       if(hScores[name]===undefined)hScores[name]=0;
       hostLobbyUI();
       hBcast({type:'LOBBY_UPDATE',players:hPList()});
+      updateBgCards(hPList());
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
       if(hQi>=0){
         if(hRevealed){
@@ -1303,6 +1505,10 @@ function handleHConn(conn){
     if(data.type==='EMOJI_REACT'){
       hBcast({type:'EMOJI_REACT',emoji:data.emoji});
       spawnFloatEmoji(data.emoji);
+      return;
+    }
+    if(data.type==='DEATH_WHEEL_RESULT'){
+      hBcast({type:'DEATH_WHEEL_RESULT',segment:data.segment});
       return;
     }
     if(data.type==='CHAT'){
@@ -1354,10 +1560,19 @@ function renderCfgList(){
   window.cfgQuestions.forEach((q,i)=>{
     const row=document.createElement('div');
     row.className='cfg-q-row '+(q.active?'active':'inactive');
+    // Split question: extract adjective (first word or two) vs the rest
+    const parts=splitQAdj(q.text);
     row.innerHTML=`
       <input type="checkbox" class="cfg-q-check" ${q.active?'checked':''} onchange="cfgToggle(${i},this.checked)">
       <div style="flex:1;">
-        <div class="cfg-q-text" onclick="cfgToggle(${i},!window.cfgQuestions[${i}].active)">${escHtml(q.text)}</div>
+        <div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;margin-bottom:4px;">
+          <span style="font-size:.7rem;font-weight:800;color:var(--pu-l);white-space:nowrap;">✏️ adj :</span>
+          <input type="text" class="cfg-adj-inp" value="${escHtml(parts.adj)}"
+            style="flex:1;min-width:80px;max-width:160px;font-weight:900;color:var(--pu-d);background:rgba(124,58,237,.06);border:1.5px solid var(--pu-l);border-radius:7px;padding:3px 8px;font-size:.82rem;outline:none;font-family:'Baloo 2',cursive;"
+            oninput="cfgUpdateAdj(${i},this.value,'${escHtml(parts.rest).replace(/'/g,"\'")}')"
+            onclick="this.select()">
+          <span style="font-size:.78rem;color:var(--pu-l);font-style:italic;">${escHtml(parts.rest)}</span>
+        </div>
         <input type="text" class="cfg-q-media" placeholder="URL vidéo/son (optionnel)" value="${escHtml(q.media||'')}"
           oninput="window.cfgQuestions[${i}].media=this.value"
           onclick="this.select()">
@@ -1365,6 +1580,27 @@ function renderCfgList(){
       <button class="cfg-q-del" onclick="cfgDeleteQ(${i})" title="Supprimer">🗑️</button>`;
     list.appendChild(row);
   });
+}
+
+// Split "Radin quand c'est son tour" → {adj:"Radin", rest:"quand c'est son tour"}
+// Split "Capable d'arriver en retard" → {adj:"Capable d'arriver", rest:"en retard..."}
+// Heuristic: first word up to first space-keyword (quand/capable/de/d'/le/la/qui/en/à/dès)
+function splitQAdj(text){
+  // Find the first "connector" word
+  const connectors=['quand','capable','d'','de ','le ','la ','qui ','en ','à ','dès ','pour ','sur ','sans ','par '];
+  let bestIdx=text.length;
+  for(const c of connectors){
+    const idx=text.toLowerCase().indexOf(c);
+    if(idx>0&&idx<bestIdx) bestIdx=idx;
+  }
+  if(bestIdx===text.length) bestIdx=Math.min(text.indexOf(' '),text.length);
+  const adj=text.substring(0,bestIdx).trimEnd();
+  const rest=text.substring(bestIdx).trimStart();
+  return {adj,rest};
+}
+
+function cfgUpdateAdj(i,newAdj,rest){
+  window.cfgQuestions[i].text=(newAdj.trim()+' '+rest).trim();
 }
 
 function cfgToggle(i,val){
@@ -1421,7 +1657,7 @@ function hostLaunchFromConfig(){
   hQs=shuffle(pool).slice(0,MAX_ROUNDS);hQi=-1;
   $('h-lobby').style.display='none';$('h-game').style.display='block';
   $('rth').textContent=Math.min(MAX_ROUNDS,pool.length);
-  show('s-host');hostNext();
+  show('s-host');showScorePin();updateScorePin();hostNext();
 }
 
 // Keep old hostLaunch as alias just in case
@@ -1436,7 +1672,9 @@ function hostNext(){
   hAdj=hQs[hQi];
   $('rnh').textContent=hQi+1;
   $('btn-fr').disabled=false;$('btn-fn').disabled=true;
-  hBcast({type:'START_ROUND',adjective:hAdj,players:hPList()});
+  // Force all players to transition immediately
+  hBcast({type:'FORCE_NEXT'});
+  setTimeout(()=>hBcast({type:'START_ROUND',adjective:hAdj,players:hPList()}),600);
 }
 
 function hostForceReveal(){
@@ -1448,16 +1686,26 @@ function hostReveal(){
   const names=Object.keys(hVotes);
   const maxV=Math.max(...Object.values(hVotes),0);
   const winners=maxV>0?names.filter(n=>hVotes[n]===maxV):[];
-  winners.forEach(w=>hScores[w]=(hScores[w]||0)+1);
-  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,players:hPList()});
+  winners.forEach(w=>{
+    hScores[w]=(hScores[w]||0)+1;
+    hWinHistory.push({name:w,adjective:hAdj});
+  });
+  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,players:hPList(),scores:{...hScores},history:[...hWinHistory]});
+  // Update host's own score pin
+  pScores={...hScores};
+  pHistory=[...hWinHistory];
+  Object.values(hConns).forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
+  updateScorePin();
   setTimeout(()=>$('btn-fn').disabled=false,1500);
 }
 
 function hostFinal(){
   const photos=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]));
   const clips=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.clip||'']));
-  renderSB('h-sb',hScores,photos);show('s-hfinal');
-  hBcast({type:'GAME_OVER',scores:hScores,photos,clips});confetti();
+  renderFinalSB('h-sb','h-final-winner',hScores,photos,hWinHistory);
+  show('s-hfinal');
+  hBcast({type:'GAME_OVER',scores:hScores,photos,clips,history:hWinHistory});
+  confetti();
 }
 
 // ═══════════════════ SCOREBOARD ═══════════════════
@@ -1475,6 +1723,60 @@ function renderSB(id,scores,photos={}){
   });
 }
 
+// Final scoreboard with winner spotlight + win history tags
+function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const maxPts = sorted.length>0 ? sorted[0][1] : 0;
+  const champions = sorted.filter(([,p])=>p===maxPts && maxPts>0).map(([n])=>n);
+
+  // Build per-name win tag list from history
+  const tagMap={};
+  history.forEach(h=>{
+    if(!tagMap[h.name]) tagMap[h.name]=[];
+    // Short label: first 3 words of adjective
+    const short = h.adjective.split(' ').slice(0,3).join(' ')+(h.adjective.split(' ').length>3?'…':'');
+    tagMap[h.name].push(short);
+  });
+
+  // Winner spotlight
+  const ws=$(winnerSectionId);
+  if(ws && champions.length>0 && maxPts>0){
+    const ch=champions[0];
+    const ph=photos[ch]||'';
+    const phEl=ph?`<img class="final-winner-photo" src="${ph}" alt="${ch}">`:`<div class="final-winner-init" style="background:${acol(ch)};">${ini(ch)}</div>`;
+    const tags=(tagMap[ch]||[]).map(t=>`<span class="win-tag">${escHtml(t)}</span>`).join('');
+    ws.innerHTML=`
+      <div class="final-winner-card">
+        <div style="font-size:.65rem;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:8px;">👑 Champion·ne de la soirée</div>
+        ${phEl}
+        <div class="final-winner-name">${escHtml(ch)}</div>
+        <div class="final-winner-sub">${maxPts} victoire${maxPts>1?'s':''} · La plus grosse pute de Rouen</div>
+        ${tags?`<div class="win-tags">${tags}</div>`:''}
+      </div>`;
+  } else if(ws){
+    ws.innerHTML='';
+  }
+
+  // Main list with win tags
+  const el=$(sbId);el.innerHTML='';
+  const cls=['gold','silver','bronze'],medals=['🥇','🥈','🥉'];
+  sorted.forEach(([name,pts],i)=>{
+    const li=document.createElement('li');
+    li.className='sb-row '+(cls[i]||'');li.style.animationDelay=i*.08+'s';
+    const ph=photos[name]||'';
+    const pe=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
+    const myTags=(tagMap[name]||[]).map(t=>`<span class="sb-win-tag">${escHtml(t)}</span>`).join('');
+    li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${pe}
+      <div style="flex:1;min-width:0;">
+        <div class="sb-name">${name}</div>
+        ${myTags?`<div class="sb-win-tags">${myTags}</div>`:''}
+      </div>
+      <div style="text-align:right;flex-shrink:0;"><div class="sb-pts">${pts}</div><div class="sb-sub">pt${pts>1?'s':''}</div></div>`;
+    el.appendChild(li);
+  });
+}
+
+
 // ═══════════════════ PLAYER DATA ═══════════════════
 function handlePData(data){
   switch(data.type){
@@ -1482,12 +1784,16 @@ function handlePData(data){
       $('jstat').textContent='❌ Ce prénom est déjà pris !';break;
     case 'LOBBY_UPDATE':
       pList=data.players;
+      pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       $('p-name-d').textContent=pName.toUpperCase();
       $('p-chips').innerHTML=pList.map(p=>`<div class="chip" style="color:${acol(p.name)};">${p.name}</div>`).join('');
       initChatNick();
-      show('s-pwait');break;
+      updateBgCards(pList);
+      showScorePin();updateScorePin();show('s-pwait');break;
     case 'START_ROUND':
       pList=data.players;clearPTimers();
+      pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
+      updateBgCards(pList);
       $('v-adj').textContent=data.adjective;
       buildVoteGrid(data.players);show('s-pvote');break;
     case 'ALREADY_VOTED':
@@ -1497,7 +1803,12 @@ function handlePData(data){
       // if we already voted, we're on s-pvoted
       break;
     case 'REVEAL':
-      clearPTimers();doReveal(data);break;
+      clearPTimers();
+      if(data.scores) pScores=data.scores;
+      if(data.history) pHistory=data.history;
+      if(data.players) data.players.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
+      updateScorePin();
+      doReveal(data);break;
     case 'WHEEL_SPINNING':
       // spectators see the wheel spinning in real-time
       if(data.spinner!==pName) updateWheelDisplay(data.angle,data.spinner);
@@ -1507,7 +1818,6 @@ function handlePData(data){
       break;
     case 'WHEEL_QUEUE_DONE':
       // Show dismiss button and then rev-ctrl for spectators
-      $('wdismiss-btn').style.display='';
       setTimeout(()=>{
         const ov=$('wheel-ov');
         if(ov)ov.style.display='none';
@@ -1525,8 +1835,14 @@ function handlePData(data){
         $('w-result').textContent='';
       }
       break;
+    case 'FORCE_NEXT':
+      // Host forced next round — clean up everything immediately
+      clearPTimers();
+      hideRev();
+      $('wheel-ov').style.display='none';
+      show('s-pbetween');
+      break;
     case 'NEXT_ALLOWED':
-      // Host has clicked "manche suivante" — show the button to everyone on reveal screen
       if($('rev-theatre')&&$('rev-theatre').classList.contains('visible')){
         $('rev-ctrl').style.display='block';
       } else {
@@ -1539,8 +1855,20 @@ function handlePData(data){
       appendChatMsg(data.nick,data.msg);
       if(!chatOpen){chatUnread++;updateChatBadge();}
       break;
+    case 'DEATH_WHEEL_RESULT':
+      // Spectators see the death wheel result
+      const dr=$('death-result');
+      if(dr) dr.textContent='☠️ '+data.segment;
+      break;
     case 'GAME_OVER':
-      clearPTimers();renderSB('go-sb',data.scores,data.photos||{});confetti();show('s-gameover');break;
+      clearPTimers();
+      if(data.scores) pScores=data.scores;
+      if(data.history) pHistory=data.history;
+      renderFinalSB('go-sb','go-final-winner',data.scores,data.photos||{},data.history||[]);
+      confetti();
+      show('s-gameover');
+      setupDeathWheel(data.scores,data.photos||{});
+      break;
   }
 }
 
@@ -1557,6 +1885,7 @@ function buildVoteGrid(players){
     btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${p.name}</div>`;
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
+      try{ playVotePing(); }catch(e){}
       pConn.send({type:'SUBMIT_VOTE',target:p.name});
       show('s-pvoted');
     };
@@ -1566,6 +1895,238 @@ function buildVoteGrid(players){
 
 function clearPTimers(){pTimers.forEach(clearTimeout);pTimers=[];if(window._revealHintTimer){clearInterval(window._revealHintTimer);window._revealHintTimer=null;}}
 function pt(fn,ms){const t=setTimeout(fn,ms);pTimers.push(t);return t;}
+
+
+// ═══════════════════ SLOT MACHINE ═══════════════════
+function runSlotMachine(players, duration, onDone){
+  const reel = $('slot-reel');
+  const qmark = $('q-mark-el');
+  if(!reel || !players || players.length === 0){ onDone(); return; }
+
+  reel.style.display = 'flex';
+  qmark.style.opacity = '0';
+
+  let frameIdx = 0;
+  let elapsed = 0;
+  // Speed: starts fast (50ms/frame), slows to 180ms, then freezes
+  const totalFrames = 28;
+  const frameDurations = [];
+  for(let i=0;i<totalFrames;i++){
+    const progress = i/totalFrames;
+    // Ease in: slow → fast → slow
+    const t = Math.sin(progress * Math.PI);
+    // First half fast, second half slowing
+    const spd = progress < 0.6 ? 40 + 60*progress : 80 + 220*(progress-0.6)/0.4;
+    frameDurations.push(Math.round(spd));
+  }
+
+  let fi = 0;
+  function nextFrame(){
+    if(fi >= totalFrames){
+      // End: show ? mark, hide reel
+      reel.style.display='none';
+      qmark.style.opacity='1';
+      onDone();
+      return;
+    }
+    const p = players[fi % players.length];
+    if(p.photo){
+      reel.innerHTML=`<img class="slot-frame" src="${p.photo}" alt="${p.name}">`;
+    } else {
+      reel.innerHTML=`<div class="slot-init" style="background:${acol(p.name)}">${ini(p.name)}</div>`;
+    }
+    setTimeout(nextFrame, frameDurations[fi]);
+    fi++;
+  }
+  nextFrame();
+}
+
+// ═══════════════════ 🔊 SOUND ENGINE (Web Audio API) ═══════════════════
+// Sons absurdes générés procéduralement — aucun fichier externe.
+
+let _audioCtx = null;
+
+function getAudioCtx(){
+  if(!_audioCtx || _audioCtx.state === 'closed'){
+    _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+function stopRevealSounds(){
+  // Sounds are fire-and-forget with scheduled stop — nothing to cancel
+}
+
+// 💨 PROUT — the classic
+function playFart(ctx, startTime, duration=0.6, pitch=80){
+  const bufSize = Math.floor(ctx.sampleRate * duration);
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  // Low-frequency turbulence: noise modulated by a slow sine
+  for(let i=0;i<bufSize;i++){
+    const t = i/ctx.sampleRate;
+    const decay = Math.exp(-t * (3.5 / duration));
+    // Modulate frequency slightly downward as it "releases"
+    const freqMod = Math.sin(2*Math.PI*pitch*(t - t*t*1.2));
+    const noise = (Math.random()*2-1) * 0.3;
+    data[i] = (freqMod * 0.7 + noise) * decay;
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  // Bandpass to keep it in the right register
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = pitch * 2;
+  filter.Q.value = 0.8;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(1.0, startTime);
+  src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+  src.start(startTime);
+  src.stop(startTime + duration + 0.1);
+}
+
+// 🤮 VOMI — wet gurgling splat
+function playVomit(ctx, startTime){
+  const now = startTime;
+  // Phase 1: pré-vomi (retching burble)
+  for(let i=0;i<4;i++){
+    const t = now + i * 0.09;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(120 - i*8, t);
+    osc.frequency.linearRampToValueAtTime(60, t + 0.07);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.5 - i*0.05, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+    const f = ctx.createBiquadFilter();
+    f.type = 'lowpass'; f.frequency.value = 500;
+    osc.connect(f); f.connect(g); g.connect(ctx.destination);
+    osc.start(t); osc.stop(t+0.1);
+  }
+  // Phase 2: le SPLAT final (bruit de fond humide)
+  const splatTime = now + 0.4;
+  const bufSize = Math.floor(ctx.sampleRate * 0.35);
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++){
+    const t = i/ctx.sampleRate;
+    data[i] = (Math.random()*2-1) * Math.exp(-t*8) * (1 + Math.sin(2*Math.PI*80*t)*0.5);
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const f2 = ctx.createBiquadFilter(); f2.type='lowpass'; f2.frequency.value=400;
+  const g2 = ctx.createGain(); g2.gain.setValueAtTime(1.2, splatTime);
+  src.connect(f2); f2.connect(g2); g2.connect(ctx.destination);
+  src.start(splatTime); src.stop(splatTime + 0.4);
+}
+
+// 🫧 ROT — gros renvoi
+function playBurp(ctx, startTime){
+  const now = startTime;
+  const dur = 0.5;
+  const osc = ctx.createOscillator();
+  osc.type = 'sawtooth';
+  // Frequency wobble = classic burp
+  osc.frequency.setValueAtTime(140, now);
+  osc.frequency.linearRampToValueAtTime(95, now + 0.15);
+  osc.frequency.linearRampToValueAtTime(115, now + 0.28);
+  osc.frequency.linearRampToValueAtTime(70, now + dur);
+  const dist = ctx.createWaveShaper();
+  const k = 80;
+  const curve = new Float32Array(256);
+  for(let i=0;i<256;i++){ const x=i*2/255-1; curve[i]=((Math.PI+k)*x)/(Math.PI+k*Math.abs(x)); }
+  dist.curve = curve;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.7, now);
+  g.gain.linearRampToValueAtTime(0, now + dur);
+  const f = ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=300; f.Q.value=1.5;
+  osc.connect(dist); dist.connect(f); f.connect(g); g.connect(ctx.destination);
+  osc.start(now); osc.stop(now + dur + 0.05);
+}
+
+// 🎺 TROMPETTE PÉTARADANTE — "wah wah" loser horn
+function playLoserHorn(ctx, startTime){
+  const now = startTime;
+  const notes = [466, 415, 370, 311]; // descending minor
+  notes.forEach((freq, i)=>{
+    const t = now + i * 0.18;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(freq, t);
+    // Slight portamento
+    if(i < notes.length-1) osc.frequency.linearRampToValueAtTime(notes[i+1], t+0.17);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.45, t+0.03);
+    g.gain.setValueAtTime(0.45, t+0.14);
+    g.gain.linearRampToValueAtTime(0, t+0.18);
+    const f = ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1200;
+    osc.connect(f); f.connect(g); g.connect(ctx.destination);
+    osc.start(t); osc.stop(t+0.22);
+  });
+}
+
+// 🥁 DRUM ROLL suspense (garde ça pour le build-up)
+function playSuspenseDrumRoll(duration=3.0){
+  const ctx = getAudioCtx();
+  const start = ctx.currentTime + 0.05;
+  const startRate = 3, endRate = 18;
+  let t = start, elapsed = 0;
+  while(elapsed < duration){
+    const progress = elapsed/duration;
+    const rate = startRate + (endRate-startRate)*Math.pow(progress,2);
+    const gap = 1/rate;
+    const vol = 0.2 + 0.5*progress;
+    // Snare hit
+    const bufSize = Math.floor(ctx.sampleRate * 0.07);
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<bufSize;i++) data[i]=(Math.random()*2-1)*Math.exp(-i/(bufSize*0.25));
+    const src = ctx.createBufferSource(); src.buffer=buf;
+    const g = ctx.createGain(); g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.07);
+    src.connect(g); g.connect(ctx.destination);
+    src.start(t); src.stop(t+0.08);
+    t += gap; elapsed += gap;
+  }
+  // Final big drum hit
+  const bufF = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.1), ctx.sampleRate);
+  const dF = bufF.getChannelData(0);
+  for(let i=0;i<dF.length;i++) dF[i]=(Math.random()*2-1)*Math.exp(-i/(dF.length*0.2));
+  const srcF=ctx.createBufferSource();srcF.buffer=bufF;
+  const gF=ctx.createGain();gF.gain.setValueAtTime(1.0,t);gF.gain.exponentialRampToValueAtTime(0.001,t+0.1);
+  srcF.connect(gF);gF.connect(ctx.destination);srcF.start(t);srcF.stop(t+0.12);
+}
+
+// 🎲 Choisit un son absurde aléatoire pour le reveal
+function playRevealSound(){
+  try{
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const roll = Math.random();
+    if(roll < 0.35)      playFart(ctx, now, 0.55 + Math.random()*0.3, 70 + Math.random()*40);
+    else if(roll < 0.60) playVomit(ctx, now);
+    else if(roll < 0.82) playBurp(ctx, now);
+    else                 playLoserHorn(ctx, now);
+  }catch(e){}
+}
+
+// Vote ding (petit son quand quelqu'un vote)
+function playVotePing(){
+  try{
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, now);
+    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.2);
+  }catch(e){}
+}
 
 // ═══════════════════ THE REVEAL ═══════════════════
 function doReveal(data){
@@ -1596,6 +2157,26 @@ function doReveal(data){
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
   showRev();
 
+  // Reset slot reel
+  const slotReel=$('slot-reel');
+  if(slotReel) slotReel.style.display='none';
+  const qmarkEl=$('q-mark-el');
+  if(qmarkEl) qmarkEl.style.opacity='1';
+
+  if(maxV===0){
+    // No votes — skip slot machine
+  } else {
+    // 🎰 Slot machine spins through player photos before suspense
+    if(players.length>0){
+      runSlotMachine(players, 1600, ()=>{
+        // After slot machine, start drum roll
+        try{ playSuspenseDrumRoll(3.0); }catch(e){}
+      });
+    } else {
+      try{ playSuspenseDrumRoll(3.0); }catch(e){}
+    }
+  }
+
   if(maxV===0){
     pt(()=>{
       $('rev-mystery').style.display='none';
@@ -1621,6 +2202,8 @@ function doReveal(data){
   pt(()=>{
     clearInterval(window._revealHintTimer||hintTimer);
     window._revealHintTimer=null;
+    // 🔊 Son absurde aléatoire au moment du reveal 💨🤮
+    try{ playRevealSound(); }catch(e){}
     // Background shift
     theatre.classList.remove('phase-suspense');
     theatre.classList.add('phase-reveal');
@@ -1726,7 +2309,7 @@ function doReveal(data){
         pt(()=>startWheelQueue(winners),1200);
       }
     },400);
-  },3000); // 3 seconds of suspense
+  },2800); // 2.8s suspense (after ~1.5s slot machine)
 }
 
 function playerAskNext(){
@@ -1755,7 +2338,6 @@ function showWheelForTurn(){
   $('ws').textContent=wIsSpinner?'Tu as été désigné(e) !':'Regarde en direct !';
   $('wspin-btn').style.display=wIsSpinner?'':'none';
   $('wdone-btn').style.display='none';
-  $('wdismiss-btn').style.display='none';
   $('w-result').textContent='';
   drawWheel(wAngle);
   $('wheel-ov').style.display='flex';
@@ -1842,16 +2424,15 @@ function updateWheelDisplay(angle,spinner){
 function spectatorWheelLanded(segment,spinner){
   $('w-result').textContent='👉 '+segment;
   $('wt').textContent='🎰 '+spinner+' a eu : '+segment;
-  $('wdismiss-btn').style.display='';
 }
 
-function spectatorDismissWheel(){
+function anyoneDismissWheel(){
   $('wheel-ov').style.display='none';
-  $('wdismiss-btn').style.display='none';
-  // Show rev-ctrl if reveal is still open
   const rc=$('rev-ctrl');
   if(rc) rc.style.display='block';
 }
+// Keep old name as alias
+function spectatorDismissWheel(){ anyoneDismissWheel(); }
 
 // ═══════════════════ DRAW WHEEL ═══════════════════
 function drawWheel(angle){
@@ -2007,7 +2588,257 @@ document.addEventListener('input',e=>{
   if(e.target.id==='cfg-rounds') updateCfgInfo();
 });
 
+
+// ═══════════════════ FLOATING PLAYER PHOTO CARDS ═══════════════════
+let _bgPlayers = []; // cached player list for background cards
+
+function updateBgCards(players){
+  _bgPlayers = players;
+  const bg = $('global-bg');
+  if(!bg) return;
+  // Remove old player cards
+  bg.querySelectorAll('.fbg-card').forEach(c=>c.remove());
+  if(!players || players.length === 0) return;
+
+  // Spread N cards across the background; cycle through players
+  const COUNT = Math.max(players.length, 8); // at least 8 cards
+  // Predefined positions to avoid center (where content is)
+  const positions = [
+    {top:'5%',  left:'1%'}, {top:'8%',  right:'2%'},
+    {top:'28%', left:'2%'}, {top:'22%', right:'3%'},
+    {top:'48%', left:'1%'}, {top:'52%', right:'1%'},
+    {top:'68%', left:'3%'}, {top:'72%', right:'2%'},
+    {top:'85%', left:'10%'},{top:'82%', right:'10%'},
+    {top:'15%', left:'15%'},{top:'12%', right:'18%'},
+    {top:'38%', left:'88%'},{top:'60%', right:'88%'},
+    {top:'90%', left:'40%'},{top:'92%', right:'45%'},
+  ];
+
+  const usedPositions = positions.slice(0, Math.min(COUNT, positions.length));
+  usedPositions.forEach((pos, i) => {
+    const p = players[i % players.length];
+    const card = document.createElement('div');
+    card.className = 'fbg-card';
+    const rot = (-8 + Math.random()*16).toFixed(1);
+    const dur = (6 + Math.random()*8).toFixed(1);
+    const delay = -(Math.random()*8).toFixed(1);
+    let posStyle = '';
+    if(pos.top)    posStyle += `top:${pos.top};`;
+    if(pos.left)   posStyle += `left:${pos.left};`;
+    if(pos.right)  posStyle += `right:${pos.right};`;
+    if(pos.bottom) posStyle += `bottom:${pos.bottom};`;
+    card.style.cssText = `${posStyle}--r:${rot}deg;animation-duration:${dur}s;animation-delay:${delay}s;`;
+    if(p.photo){
+      card.innerHTML = `<img src="${p.photo}" alt="${p.name}">`;
+    } else {
+      const color = acol(p.name);
+      card.innerHTML = `<div class="fbg-init" style="background:${color};">${ini(p.name)}</div>`;
+    }
+    bg.appendChild(card);
+  });
+}
+
+
+// ═══════════════════ ☠️ ROUE ABSOLUE DE LA MORT ═══════════════════
+const DEATH_SEGMENTS = [
+  {l:"Cul sec pour
+tout le monde",c:"#dc2626"},
+  {l:"Le perdant
+offre le shot",c:"#9333ea"},
+  {l:"Tous en
+jugement",c:"#db2777"},
+  {l:"Strip-tease
+obligatoire",c:"#d97706"},
+  {l:"Vérité ou
+défi collectif",c:"#059669"},
+  {l:"Cul sec
+pour deux",c:"#2563eb"},
+  {l:"Le champion
+ouvre bouteille",c:"#7c3aed"},
+  {l:"Règle
+maison",c:"#0891b2"},
+];
+const D_ARC = 2*Math.PI/DEATH_SEGMENTS.length;
+let dAngle=0, dSpinning=false, dIsSpinner=false;
+
+function setupDeathWheel(scores,photos){
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  if(!sorted.length || sorted[0][1]===0) return;
+  const maxPts=sorted[0][1];
+  const champs=sorted.filter(([,p])=>p===maxPts).map(([n])=>n);
+  const champion=champs[0];
+  // Is current player the champion?
+  dIsSpinner=(pName===champion);
+  const sec=$('go-death-wheel-section');
+  if(!sec) return;
+  sec.style.display='block';
+  const whoEl=$('go-death-who');
+  if(whoEl){
+    if(dIsSpinner) whoEl.textContent='☠️ C'EST TOI ! Tourne la roue de la mort…';
+    else whoEl.textContent=`☠️ ${champion} va tourner la roue de la mort pour tout le monde…`;
+  }
+  const spinBtn=$('death-spin-btn');
+  if(spinBtn) spinBtn.style.display=dIsSpinner?'':'none';
+  drawDeathWheel(0);
+}
+
+function spinDeathWheel(){
+  if(dSpinning||!dIsSpinner) return;
+  dSpinning=true;
+  $('death-spin-btn').disabled=true;
+  $('death-result').textContent='';
+  const totalRot=2*Math.PI*(5+Math.random()*6);
+  const dur=4500+Math.random()*1000;
+  const t0=performance.now(), a0=dAngle;
+  function frame(now){
+    const el=now-t0;
+    if(el>=dur){
+      dAngle=(a0+totalRot)%(2*Math.PI);
+      drawDeathWheel(dAngle);
+      const ptr=((-Math.PI/2-dAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
+      const idx=Math.floor(ptr/D_ARC)%DEATH_SEGMENTS.length;
+      const seg=DEATH_SEGMENTS[idx];
+      $('death-result').textContent='☠️ '+seg.l.replace('\n',' ');
+      try{playRevealSound();}catch(e){}
+      dSpinning=false;
+      // Broadcast result
+      if(pConn&&pConn.open) pConn.send({type:'DEATH_WHEEL_RESULT',segment:seg.l.replace('\n',' ')});
+      if(isHost) hBcast({type:'DEATH_WHEEL_RESULT',segment:seg.l.replace('\n',' ')});
+      return;
+    }
+    const eased=1-Math.pow(1-(el/dur),3);
+    const cur=(a0+totalRot*eased)%(2*Math.PI);
+    dAngle=cur;
+    drawDeathWheel(cur);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function drawDeathWheel(angle){
+  const canvas=$('death-wcanvas');
+  if(!canvas) return;
+  const SZ=Math.min(window.innerWidth*0.78,300);
+  canvas.width=SZ;canvas.height=SZ;
+  const ctx=canvas.getContext('2d');
+  const cx=SZ/2,cy=SZ/2,r=SZ/2-3;
+  const fs=Math.max(9,SZ*0.048);
+  DEATH_SEGMENTS.forEach((seg,i)=>{
+    const sa=angle+i*D_ARC,ea=sa+D_ARC;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();
+    ctx.fillStyle=seg.c;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(sa+D_ARC/2);
+    ctx.textAlign='center';ctx.fillStyle='#fff';
+    ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;
+    ctx.font=`900 ${fs}px 'Nunito',sans-serif`;
+    ctx.translate(r*0.65,0);ctx.rotate(Math.PI/2);
+    const lines=seg.l.split('\n');
+    const lh=fs*1.2;
+    lines.forEach((line,li)=>ctx.fillText(line,0,(li-(lines.length-1)/2)*lh));
+    ctx.restore();
+  });
+  ctx.beginPath();ctx.arc(cx,cy,SZ*0.09,0,2*Math.PI);
+  ctx.fillStyle='#fff';ctx.fill();
+  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
+}
+
+
+// ═══════════════════ 🏆 SCORE PIN ═══════════════════
+let scorePinOpen = false;
+
+function showScorePin(){
+  const pin=$('score-pin');
+  if(pin) pin.style.display='block';
+}
+
+function toggleScorePin(){
+  scorePinOpen=!scorePinOpen;
+  const panel=$('score-panel');
+  if(panel) panel.classList.toggle('open',scorePinOpen);
+  if(scorePinOpen) updateScorePin();
+}
+
+// Close pin when clicking outside
+document.addEventListener('click',e=>{
+  if(!scorePinOpen) return;
+  const pin=$('score-pin');
+  if(pin&&!pin.contains(e.target)){
+    scorePinOpen=false;
+    const panel=$('score-panel');
+    if(panel) panel.classList.remove('open');
+  }
+});
+
+function updateScorePin(){
+  // Determine scores to show — host uses hScores, player uses pScores
+  const scores=isHost?{...hScores}:{...pScores};
+  const history=isHost?[...hWinHistory]:[...pHistory];
+  const photos=isHost
+    ?Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]))
+    :{...pPhotosMap};
+
+  // Show pin once game is started (at least 1 score entry or game in progress)
+  const gameStarted=Object.keys(scores).length>0 || (isHost&&hQi>=0) || pList.length>0;
+  if(gameStarted) showScorePin();
+
+  // Build per-player adj list from history
+  const adjMap={};
+  history.forEach(h=>{
+    if(!adjMap[h.name]) adjMap[h.name]=[];
+    adjMap[h.name].push(h.adjective);
+  });
+
+  const body=$('sp-body');
+  if(!body) return;
+
+  // Get all known players (from scores or pList)
+  let allNames=Object.keys(scores);
+  if(allNames.length===0){
+    // Before any vote, show joined players with 0
+    allNames=isHost?Object.values(hConns).map(p=>p.name):pList.map(p=>p.name);
+  }
+  if(allNames.length===0){body.innerHTML='<div class="sp-empty">En attente de joueurs…</div>';return;}
+
+  const sorted=[...allNames].map(n=>([n,scores[n]||0])).sort((a,b)=>b[1]-a[1]);
+  const maxPts=sorted.length>0?sorted[0][1]:0;
+  const medals=['🥇','🥈','🥉'];
+
+  // Update count badge
+  const badge=$('spt-count');
+  if(badge) badge.textContent=sorted.length;
+
+  body.innerHTML='';
+  sorted.forEach(([name,pts],i)=>{
+    const row=document.createElement('div');
+    row.className='sp-row'+(name===pName?' sp-me':'');
+    const ph=photos[name]||'';
+    const phEl=ph
+      ?`<img class="sp-photo" src="${ph}" alt="${name}">`
+      :`<div class="sp-init" style="background:${acol(name)};">${ini(name)}</div>`;
+    const medal=medals[i]||(i+1);
+    const crown=pts>0&&pts===maxPts?' 👑':'';
+    // Adjectives — each one a pill
+    const adjs=adjMap[name]||[];
+    const adjHtml=adjs.length>0
+      ?`<div class="sp-adj-list">${adjs.map((a,ai)=>`<span class="sp-adj${ai===adjs.length-1?' sp-adj-new':''}">${escHtml(a.split(' ').slice(0,3).join(' ')+(a.split(' ').length>3?'…':''))}</span>`).join('')}</div>`
+      :'';
+    row.innerHTML=`
+      <div class="sp-rank">${medal}</div>
+      ${phEl}
+      <div class="sp-info">
+        <div class="sp-name">${escHtml(name)}${crown}${name===pName?' <span style="font-size:.6rem;color:var(--pu-l);font-weight:700;">(toi)</span>':''}</div>
+        ${adjHtml}
+      </div>
+      <div class="sp-pts">${pts} pt${pts>1?'s':''}</div>`;
+    body.appendChild(row);
+  });
+}
+
 // ═══════════════════ KEYBOARD ═══════════════════
+// Unlock AudioContext on first touch/click (required by iOS Safari)
+document.addEventListener('touchstart', ()=>{ try{getAudioCtx();}catch(e){} }, {once:true, passive:true});
+document.addEventListener('click',      ()=>{ try{getAudioCtx();}catch(e){} }, {once:true});
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
   const j=$('s-pjoin');
