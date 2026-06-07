@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>QUI EST LE + ?</title>
+<title>Qui est la + grosse pute de Rouen ?</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.4.7/peerjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
@@ -114,7 +114,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .ph-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
 .ph-circle:hover{border-color:var(--pu);transform:scale(1.04);}
 /* ═══════ REVEAL OVERLAY ═══════ */
-.reveal-theatre{position:fixed;inset:0;z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto;
+.reveal-theatre{position:fixed;top:0;left:0;right:0;bottom:0;
+  /* iOS Safari safe area */
+  padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
+  z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;
+  -webkit-overflow-scrolling:touch;overflow-y:auto;
   background:#0a0018;
   transition:background 2s ease;
 }
@@ -202,7 +206,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 /* Controls on reveal */
 .rev-controls{margin-top:20px;position:relative;z-index:2;text-align:center;}
 /* ═══════ WHEEL OVERLAY ═══════ */
-.wheel-ov{position:fixed;inset:0;background:rgba(30,5,70,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:600;padding:20px;}
+.wheel-ov{position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(30,5,70,.95);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:600;
+  padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling:touch;}
 .wheel-title{font-family:'Baloo 2',cursive;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;color:var(--ye);margin-bottom:6px;text-align:center;text-transform:uppercase;letter-spacing:2px;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
 .wheel-sub{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:700;margin-bottom:14px;text-align:center;}
 .wheel-wrap{position:relative;width:min(78vw,300px);height:min(78vw,300px);}
@@ -242,15 +251,245 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 @keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}};
 .em-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
 hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
+.rules-list{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
+.rule-item{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:12px;padding:10px 14px;font-size:.88rem;font-weight:700;color:var(--pu-d);line-height:1.4;}
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--pu);color:#fff;padding:10px 22px;border-radius:50px;font-weight:800;font-size:1rem;box-shadow:0 5px 0 var(--pu-d),0 8px 30px rgba(0,0,0,.2);transition:transform .3s cubic-bezier(.175,.885,.32,1.275);z-index:9999;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .cp{position:fixed;pointer-events:none;z-index:9998;border-radius:2px;animation:fall linear forwards;}
 @keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:1;}100%{transform:translateY(105vh) rotate(800deg);opacity:0;}}
-@media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:6px;}}
+/* ═══════════════════════════════════════
+   LANDING SCREEN — rich animated version
+═══════════════════════════════════════ */
 
+/* Override body for landing to allow full-viewport feel */
+#s-land{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  max-width:100%;
+  padding:0;
+}
+
+/* Animated background layer */
+.land-bg{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+
+/* Big color blobs */
+.land-blob{
+  position:absolute;border-radius:50%;
+  filter:blur(70px);opacity:.22;
+}
+.b1{width:520px;height:520px;background:#7c3aed;top:-120px;right:-80px;animation:blobFloat 8s ease-in-out infinite alternate;}
+.b2{width:400px;height:400px;background:#ec4899;bottom:-80px;left:-60px;animation:blobFloat 10s ease-in-out infinite alternate-reverse;}
+.b3{width:300px;height:300px;background:#fbbf24;top:40%;left:35%;animation:blobFloat 12s ease-in-out infinite alternate;}
+@keyframes blobFloat{
+  from{transform:translate(0,0) scale(1);}
+  to{transform:translate(30px,20px) scale(1.05);}
+}
+
+/* Floating mystery cards */
+.fcard{
+  position:absolute;
+  width:clamp(44px,7vw,70px);
+  aspect-ratio:4/5;
+  background:linear-gradient(160deg,#4c1d95,#7c3aed);
+  border:3px solid rgba(251,191,36,.6);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+  animation:cardFloat linear infinite;
+}
+.fcard span{
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(1.4rem,3.5vw,2.5rem);
+  font-weight:900;color:#fbbf24;
+  animation:qMarkPulse 1.4s ease infinite alternate;
+}
+@keyframes cardFloat{
+  0%{transform:translateY(0) rotate(0deg);}
+  25%{transform:translateY(-18px) rotate(4deg);}
+  50%{transform:translateY(-8px) rotate(-2deg);}
+  75%{transform:translateY(-22px) rotate(3deg);}
+  100%{transform:translateY(0) rotate(0deg);}
+}
+@keyframes qMarkPulse{
+  from{opacity:.6;transform:scale(1);}
+  to{opacity:1;transform:scale(1.15);}
+}
+.fc1{top:8%;left:4%;animation-duration:6s;}
+.fc2{top:15%;right:5%;animation-duration:7.5s;animation-delay:-.5s;}
+.fc3{bottom:18%;left:6%;animation-duration:8s;animation-delay:-2s;}
+.fc4{bottom:12%;right:8%;animation-duration:6.5s;animation-delay:-1s;}
+
+/* Floating emoji */
+.femoji{
+  position:absolute;
+  font-size:clamp(1.2rem,3vw,2rem);
+  opacity:.35;
+  animation:emojiDrift linear infinite;
+  pointer-events:none;
+}
+@keyframes emojiDrift{
+  0%{transform:translateY(0) rotate(-5deg);}
+  50%{transform:translateY(-14px) rotate(5deg);}
+  100%{transform:translateY(0) rotate(-5deg);}
+}
+.fe1{top:30%;left:2%;animation-duration:5s;}
+.fe2{top:55%;right:3%;animation-duration:6s;animation-delay:-.8s;}
+.fe3{top:70%;left:15%;animation-duration:4.5s;animation-delay:-1.5s;}
+.fe4{top:25%;right:15%;animation-duration:7s;animation-delay:-2s;}
+.fe5{bottom:25%;left:40%;animation-duration:5.5s;animation-delay:-1s;}
+
+/* Inner content */
+.land-inner{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  align-items:center;
+  gap:clamp(16px,2.5vh,28px);
+  padding:clamp(20px,4vw,40px) 20px;
+  width:100%;max-width:620px;
+  text-align:center;
+}
+
+/* Logo zone */
+.land-logo-zone{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.land-eyebrow{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(.65rem,1.8vw,.8rem);
+  font-weight:900;letter-spacing:6px;
+  color:var(--pu-l);text-transform:uppercase;
+  background:rgba(124,58,237,.12);
+  border:1.5px solid rgba(124,58,237,.25);
+  border-radius:50px;padding:5px 16px;
+}
+.land-title{
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(3.5rem,14vw,8rem);
+  font-weight:900;line-height:.92;
+  color:#fff;
+  text-shadow:
+    5px 5px 0 var(--pu-d),
+    -2px -2px 0 rgba(124,58,237,.3),
+    0 0 60px rgba(124,58,237,.4);
+  letter-spacing:-1px;
+}
+.land-plus{
+  color:var(--ye);
+  text-shadow:4px 4px 0 var(--ye-d),0 0 30px rgba(251,191,36,.5);
+}
+.land-tagline{
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(.95rem,2.5vw,1.25rem);
+  font-weight:800;
+  color:rgba(255,255,255,.65);
+  letter-spacing:.5px;
+  font-style:italic;
+}
+
+/* Pills row */
+.land-pills{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+}
+.land-pill{
+  background:rgba(255,255,255,.1);
+  border:1.5px solid rgba(255,255,255,.18);
+  border-radius:50px;
+  padding:6px 14px;
+  font-size:clamp(.72rem,1.8vw,.85rem);
+  font-weight:800;
+  color:rgba(255,255,255,.8);
+  backdrop-filter:blur(4px);
+  white-space:nowrap;
+}
+
+/* CTA card */
+.land-cta-card{
+  background:rgba(255,255,255,.95);
+  border:2px solid rgba(124,58,237,.15);
+  border-radius:24px;
+  padding:clamp(20px,4vw,32px);
+  box-shadow:0 20px 60px rgba(76,29,149,.25),0 4px 0 rgba(124,58,237,.2);
+  width:100%;
+}
+.land-cta-title{
+  font-family:'Baloo 2',cursive;
+  font-size:clamp(1.2rem,3.5vw,1.6rem);
+  font-weight:900;color:var(--pu-d);
+  margin-bottom:6px;
+}
+.land-cta-sub{
+  font-size:clamp(.78rem,2vw,.9rem);
+  font-weight:700;color:var(--pu-l);
+  margin-bottom:18px;line-height:1.4;
+}
+.land-main-btn{
+  width:100%;justify-content:center;
+  font-size:clamp(1rem,2.5vw,1.25rem)!important;
+  padding:16px 28px!important;
+  border-radius:16px!important;
+  margin:0 0 4px!important;
+}
+.land-divider{
+  font-size:.82rem;color:var(--pu-l);font-weight:700;margin:10px 0;
+}
+.land-join-btn{
+  width:100%;justify-content:center;
+  background:var(--pu-s)!important;
+  color:var(--pu-d)!important;
+  border-color:var(--pu-l)!important;
+  box-shadow:0 4px 0 var(--pu-l)!important;
+  margin:0!important;
+}
+.land-join-btn:active{box-shadow:0 0 0 var(--pu-l)!important;}
+
+/* Steps strip */
+.land-steps{
+  display:flex;align-items:center;gap:clamp(8px,2vw,16px);
+  flex-wrap:wrap;justify-content:center;
+}
+.land-step{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.land-step-num{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  border:2px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;
+  color:#fff;
+}
+.land-step-txt{
+  font-size:clamp(.7rem,1.8vw,.8rem);font-weight:800;
+  color:rgba(255,255,255,.55);line-height:1.3;text-align:center;
+}
+.land-step-arrow{
+  font-size:1.2rem;color:rgba(255,255,255,.3);
+  margin-bottom:20px;
+}
+
+@media(max-width:500px){
+  .fcard{display:none;}
+  .land-step-arrow{display:none;}
+  .land-steps{gap:12px;}
+}
+
+/* Override body background for landing — make it dark/purple */
+body:has(#s-land:not(.hidden)){
+  background:var(--pu-d);
+}
+@media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:6px;}}
+</style>
+<style>
 /* ═══════ TRASHTALK CHAT ═══════ */
 .chat-fab{
-  position:fixed;bottom:20px;right:20px;z-index:700;
+  position:fixed;bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));right:20px;z-index:700;
   width:54px;height:54px;border-radius:50%;
   background:var(--pu);color:#fff;
   border:3px solid var(--pu-d);
@@ -272,7 +511,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 }
 .chat-badge.show{display:flex;}
 .chat-panel{
-  position:fixed;bottom:84px;right:12px;z-index:700;
+  position:fixed;bottom:max(84px,calc(env(safe-area-inset-bottom) + 76px));right:12px;z-index:700;
   width:min(92vw,320px);
   background:#fff;
   border:3px solid var(--pu-l);
@@ -363,12 +602,68 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   </div>
 </div>
 <div id="s-land" class="screen">
-  <div class="lw"><div class="lb">QUI EST LE <span class="plus">+</span> ?</div><span class="ls">Le jeu qui révèle tout 👀</span></div>
-  <div class="card">
-    <p style="color:var(--pu-l);margin-bottom:18px;font-size:.95rem;font-weight:700;">Lance le salon sur cet écran. Tes amis scannent le QR ou tapent le code.</p>
-    <button class="btn big ye" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
-    <div style="margin:14px 0;font-size:.85rem;color:var(--pu-l);font-weight:700;">— ou —</div>
-    <button class="btn" onclick="gotoCode()">🔑 Rejoindre avec un code</button>
+
+  <!-- Animated background bubbles -->
+  <div class="land-bg" aria-hidden="true">
+    <div class="land-blob b1"></div>
+    <div class="land-blob b2"></div>
+    <div class="land-blob b3"></div>
+    <!-- Floating mystery cards -->
+    <div class="fcard fc1"><span>?</span></div>
+    <div class="fcard fc2"><span>?</span></div>
+    <div class="fcard fc3"><span>?</span></div>
+    <div class="fcard fc4"><span>?</span></div>
+    <!-- Floating emoji labels -->
+    <div class="femoji fe1">🤫</div>
+    <div class="femoji fe2">👀</div>
+    <div class="femoji fe3">🔥</div>
+    <div class="femoji fe4">💀</div>
+    <div class="femoji fe5">😂</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="land-inner">
+    <!-- Logo zone -->
+    <div class="land-logo-zone">
+      <div class="land-eyebrow">Édition Glouton Barjot</div>
+      <div class="land-title" style="font-size:clamp(1.8rem,7vw,4.5rem);line-height:1.05;">QUI EST LA <span class="land-plus">+</span> GROSSE<br>PUTE DE ROUEN ?</div>
+      <div class="land-tagline">Imaginé &amp; développé par Paul Barth</div>
+    </div>
+
+    <!-- Feature pills -->
+    <div class="land-pills">
+      <div class="land-pill">📱 Téléphones uniquement</div>
+      <div class="land-pill">🕵️ Votes anonymes</div>
+      <div class="land-pill">🎰 Roue des pénitences</div>
+      <div class="land-pill">💬 Chat trashtalk</div>
+    </div>
+
+    <!-- CTA card -->
+    <div class="land-cta-card">
+      <div class="land-cta-title">Prêt à jouer ?</div>
+      <div class="land-cta-sub">Lance le salon sur cet écran, tes amis rejoignent depuis leur téléphone.</div>
+      <button class="btn big ye land-main-btn" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
+      <div class="land-divider">— ou —</div>
+      <button class="btn land-join-btn" onclick="gotoCode()">🔑 Rejoindre avec un code</button>
+    </div>
+
+    <!-- How it works strip -->
+    <div class="land-steps">
+      <div class="land-step">
+        <div class="land-step-num">1</div>
+        <div class="land-step-txt">L'hôte ouvre<br>le salon</div>
+      </div>
+      <div class="land-step-arrow">→</div>
+      <div class="land-step">
+        <div class="land-step-num">2</div>
+        <div class="land-step-txt">Tout le monde<br>scanne le QR</div>
+      </div>
+      <div class="land-step-arrow">→</div>
+      <div class="land-step">
+        <div class="land-step-num">3</div>
+        <div class="land-step-txt">Votez &amp;<br>révélez !</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -409,28 +704,60 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   <div class="card"><ul class="sb-list" id="h-sb"></ul><button class="btn ye" onclick="location.reload()" style="margin-top:10px;">🔄 Rejouer</button></div>
 </div>
 
-<!-- PLAYER JOIN -->
+<!-- PLAYER JOIN — onboarding flow -->
 <div id="s-pjoin" class="screen hidden">
-  <div class="lw"><div class="lb" style="font-size:clamp(1.8rem,6vw,3rem);">REJOINDRE</div></div>
   <div class="card" style="max-width:420px;margin:0 auto;">
+
+    <!-- STEP 0: code entry (when arrived without ?room) -->
     <div id="step-code" style="display:none;">
       <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Entre le code affiché sur l'écran principal</p>
       <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase()">
       <button class="btn big" style="width:100%;" onclick="validateCode()">Valider ✓</button>
     </div>
+
+    <!-- STEP 1: "Choisi ton nom beau gosse" -->
     <div id="step-name" style="display:none;">
-      <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Ajoute ta photo et ton prénom</p>
+      <div style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:900;color:var(--pu-d);margin-bottom:6px;">Choisi ton nom beau gosse</div>
       <div class="ph-circle" id="phc" onclick="document.getElementById('fi').click()">
         <span id="php">📷</span><img id="phprev" src="" style="display:none;" alt="">
       </div>
-      <input type="file" id="fi" style="display:none;" accept="image/*" capture="user" onchange="handlePhoto(event)">
-      <div style="font-size:.73rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Photo optionnelle</div>
-
-
-      <input type="text" id="pni" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off">
-      <button class="btn big" style="width:100%;" onclick="playerJoin()">Rejoindre 🚀</button>
+      <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>  <!-- no forced camera on iOS -->
+      <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends ou choisis une photo de toi — c'est mieux, merci pupute 📸</div>
+      <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
+      <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="onboardStep1()">Continuer →</button>
     </div>
-    <div id="jstat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;"></div>
+
+    <!-- STEP 2: "C'est ton nom ?" -->
+    <div id="step-confirm" style="display:none;text-align:center;">
+      <div style="font-size:1rem;font-weight:700;color:var(--pu-l);margin-bottom:8px;">C'est ton nom ?</div>
+      <div id="confirm-name" style="font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu-d);margin-bottom:20px;"></div>
+      <button class="btn big ye" style="width:100%;margin-bottom:8px;" onclick="onboardStep2()">Oui</button>
+      <button class="btn ghost" style="width:100%;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 4px 0 var(--pu-l);" onclick="onboardBack()">← Changer</button>
+    </div>
+
+    <!-- STEP 3: "Ta gueule" -->
+    <div id="step-tagueule" style="display:none;text-align:center;">
+      <div style="font-size:3rem;margin-bottom:8px;">😂</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu-d);margin-bottom:6px;">Ta gueule</div>
+      <button class="btn big ye" style="width:100%;" onclick="onboardStep3()">Pas de problèmes</button>
+    </div>
+
+    <!-- STEP 4: Rules -->
+    <div id="step-rules" style="display:none;">
+      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu-d);margin-bottom:14px;text-align:center;">Les règles sont simples :</div>
+      <div class="rules-list">
+        <div class="rule-item">🎰 À chaque fois que tu es voté majoritairement, tu tournes une roue de défis. L'idée c'est de te faire boire, ou autre, tu verras.</div>
+        <div class="rule-item">📸 Choisi ou prends une photo de toi, ce sera mieux, merci pupute</div>
+        <div class="rule-item">🕵️ Chaque vote est anonyme, pas la peine de débattre, vous êtes sain et sauf.</div>
+        <div class="rule-item">🍺 C'est un JEU. Ne soyez pas frustrés des réponses, l'idée c'est de rigoler et de boire, soit normal</div>
+        <div class="rule-item">🔊 Mettez le son de votre téléphone</div>
+        <div class="rule-item">💬 Le chat Trashtalk est anonyme, AUCUNE modération ne sera faite.</div>
+      </div>
+      <div style="font-size:1rem;font-weight:800;color:var(--pu-d);text-align:center;margin:16px 0 10px;">Est-ce que c'est bon pour vous ?</div>
+      <button class="btn big ye" style="width:100%;" onclick="onboardFinish()">C'est ciao 🤙</button>
+    </div>
+
+    <div id="jstat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;text-align:center;"></div>
   </div>
 </div>
 
@@ -699,7 +1026,10 @@ function gotoCode(){show('s-pjoin');$('step-code').style.display='block';}
 function validateCode(){
   const c=$('code-inp').value.trim().toUpperCase();
   if(c.length!==4){toast('⚠️ Code de 4 lettres !');return;}
-  pRoomId=c;$('step-code').style.display='none';$('step-name').style.display='block';$('pni').focus();
+  pRoomId=c;
+  $('step-code').style.display='none';
+  $('step-name').style.display='block';
+  $('pni').focus();
 }
 
 // ═══════════════════ PHOTO ═══════════════════
@@ -707,22 +1037,50 @@ function handlePhoto(e){
   const file=e.target.files[0];if(!file)return;
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
-    const c=document.createElement('canvas');c.width=80;c.height=80;
-    c.getContext('2d').drawImage(img,0,0,80,80);
-    pPhoto=c.toDataURL('image/jpeg',.7);
+    // Crop to square from center, then resize — better quality on iPhone
+    const c=document.createElement('canvas');
+    const SRC=Math.min(img.width,img.height);
+    const OX=(img.width-SRC)/2,OY=(img.height-SRC)/2;
+    c.width=160;c.height=160;
+    c.getContext('2d').drawImage(img,OX,OY,SRC,SRC,0,0,160,160);
+    pPhoto=c.toDataURL('image/jpeg',.85);
     URL.revokeObjectURL(url);
     $('php').style.display='none';
     const p=$('phprev');p.src=pPhoto;p.style.display='block';
   };img.src=url;
 }
 
-// Videos are configured via VIDEO_MAP at the top of the script — not uploaded by players.
-function playerJoin(){
+
+// ═══════════════════ ONBOARDING STEPS ═══════════════════
+function onboardStep1(){
   const raw=$('pni').value.trim();
-  if(!raw){toast('✏️ Entre ton prénom !');return;}
-  if(!pRoomId){toast('⚠️ Code manquant !');return;}
+  if(!raw){toast('✏️ Entre ton prénom beau gosse !');return;}
   pName=raw.substring(0,12);
-  // Assign anonymous chat identity — random, different from real name
+  $('confirm-name').textContent=pName.toUpperCase();
+  $('step-name').style.display='none';
+  $('step-confirm').style.display='block';
+}
+
+function onboardStep2(){
+  // "Ta gueule"
+  $('step-confirm').style.display='none';
+  $('step-tagueule').style.display='block';
+}
+
+function onboardBack(){
+  $('step-confirm').style.display='none';
+  $('step-name').style.display='block';
+}
+
+function onboardStep3(){
+  // Show rules
+  $('step-tagueule').style.display='none';
+  $('step-rules').style.display='block';
+}
+
+function onboardFinish(){
+  // Actually connect
+  if(!pRoomId){toast('⚠️ Code manquant !');return;}
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
   if(peer&&!isHost){try{peer.destroy();}catch(e){}}
@@ -733,12 +1091,15 @@ function playerJoin(){
     clearTimeout(to1);
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
-    pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';});
+    pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-rules').style.display='none';$('step-name').style.display='block';});
     pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto});});
     pConn.on('data',handlePData);
     pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
 }
+
+// Videos are configured via VIDEO_MAP at the top of the script — not uploaded by players.
+// playerJoin replaced by onboarding flow (onboardStep1 → onboardStep2 → onboardStep3 → onboardFinish)
 
 // ═══════════════════ HOST OPEN ═══════════════════
 function hostOpen(){
@@ -1126,7 +1487,9 @@ function doReveal(data){
 }
 
 function playerAskNext(){
+  clearPTimers();
   hideRev();
+  $('wheel-ov').style.display='none';
   show('s-pbetween');
 }
 
@@ -1200,12 +1563,21 @@ function spinWheel(){
 function wheelNext(){
   wQueue.shift();
   wAngle=0;wSpinning=false;
+  const done=wQueue.length===0;
   if(pConn&&pConn.open){
-    pConn.send(wQueue.length===0
+    pConn.send(done
       ?{type:'WHEEL_QUEUE_DONE'}
       :{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
   }
-  showWheelForTurn();
+  if(done){
+    // All spins complete — close overlay and reveal next-round button
+    $('wheel-ov').style.display='none';
+    // Show rev-ctrl if reveal is still open (it may have arrived via NEXT_ALLOWED already)
+    const revCtrl=$('rev-ctrl');
+    if(revCtrl) revCtrl.style.display='block';
+  } else {
+    showWheelForTurn();
+  }
 }
 
 // Spectator updates
@@ -1348,7 +1720,8 @@ document.addEventListener('keydown',e=>{
   const j=$('s-pjoin');
   if(j&&!j.classList.contains('hidden')){
     if($('step-code').style.display!=='none')validateCode();
-    else if($('step-name').style.display!=='none')playerJoin();
+    else if($('step-name').style.display!=='none')onboardStep1();
+    else if($('step-confirm').style.display!=='none')onboardStep2();
   }
 });
 </script>
