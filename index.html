@@ -15,7 +15,8 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;position:relative;}
-.screen{width:100%;max-width:1100px;position:relative;}
+.screen{width:100%;max-width:1100px;position:relative;z-index:2;}
+#s-land{z-index:5;}
 .screen.hidden{display:none!important;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 .screen:not(.hidden){animation:fadeUp .3s ease;}
@@ -305,10 +306,12 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 /* Animated background layer */
 .land-bg{
   position:fixed;inset:0;
-  pointer-events:none;
+  pointer-events:none!important;
   z-index:0;
   overflow:hidden;
 }
+.land-bg,
+.land-bg *{pointer-events:none!important;}
 
 /* Big color blobs */
 .land-blob{
@@ -407,8 +410,8 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   font-size:.75rem;font-weight:900;
 }
 .score-panel{
-  position:absolute;top:100%;left:50%;
-  transform:translateX(-50%) translateY(-8px);
+  position:absolute;top:calc(100% + 4px);left:50%;
+  transform:translateX(-50%);
   opacity:0;pointer-events:none;
   transition:transform .25s cubic-bezier(.175,.885,.32,1.275), opacity .2s ease;
   width:min(92vw,380px);
@@ -551,7 +554,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 
 /* Inner content */
 .land-inner{
-  position:relative;z-index:1;
+  position:relative;z-index:10;
   display:flex;flex-direction:column;
   align-items:center;
   gap:clamp(16px,2.5vh,28px);
@@ -612,7 +615,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 }
 
 /* CTA card */
-.land-cta-card{
+.land-cta-card{pointer-events:all;position:relative;z-index:11;
   background:rgba(255,255,255,.95);
   border:2px solid rgba(124,58,237,.15);
   border-radius:24px;
@@ -682,6 +685,28 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   .land-steps{gap:12px;}
 }
 
+
+/* ═══ GAME-ONLY UI (hidden on landing) ═══ */
+.game-only{
+  display:none!important;
+  pointer-events:none!important;
+}
+.game-only.game-active{
+  display:block!important;
+  pointer-events:all!important;
+}
+/* Score pin specific */
+#score-pin.game-active{
+  display:block!important;
+}
+/* chat-fab specific */
+#chat-fab.game-active{
+  display:flex!important;
+}
+/* emoji toggle specific */
+#emoji-toggle.game-active{
+  display:flex!important;
+}
 /* body is always dark purple — global background */
 @media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:6px;}}
 
@@ -762,6 +787,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .chat-badge.show{display:flex;}
 .chat-panel{
   position:fixed;bottom:max(84px,calc(env(safe-area-inset-bottom) + 76px));right:12px;z-index:700;
+  pointer-events:none;
   width:min(92vw,320px);
   background:#fff;
   border:3px solid var(--pu-l);
@@ -770,7 +796,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   display:none;flex-direction:column;overflow:hidden;
   max-height:420px;
 }
-.chat-panel.open{display:flex;}
+.chat-panel.open{display:flex;pointer-events:all;}
 .chat-header{
   background:var(--pu);padding:10px 14px;
   display:flex;align-items:center;justify-content:space-between;
@@ -829,7 +855,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 <body>
 <div class="toast" id="toast"></div>
 <!-- 🏆 SCORE PIN — live scoreboard accessible at all times -->
-<div class="score-pin" id="score-pin">
+<div class="score-pin game-only" id="score-pin">
   <button class="score-pin-tab" id="score-pin-tab" onclick="toggleScorePin()">
     🏆 SCORES <span class="spt-count" id="spt-count">0</span>
   </button>
@@ -848,7 +874,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 
 
 <!-- 💬 TRASHTALK CHAT — always visible floating panel -->
-<div class="chat-fab" id="chat-fab" onclick="toggleChat()" title="Trashtalk 🔥">
+<div class="chat-fab game-only" id="chat-fab" onclick="toggleChat()" title="Trashtalk 🔥">
   💬
   <div class="chat-badge" id="chat-badge"></div>
 </div>
@@ -870,7 +896,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   </div>
 </div>
 <!-- 😂 EMOJI REACTION BAR -->
-<div class="emoji-toggle" id="emoji-toggle" onclick="toggleEmojiBar()" title="Réactions">😄</div>
+<div class="emoji-toggle game-only" id="emoji-toggle" onclick="toggleEmojiBar()" title="Réactions">😄</div>
 <div class="emoji-bar hidden-bar" id="emoji-bar">
   <button class="emoji-btn" onclick="sendFloatEmoji('😂')">😂</button>
   <button class="emoji-btn" onclick="sendFloatEmoji('💀')">💀</button>
@@ -935,7 +961,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
       <div class="land-cta-sub">Lance le salon sur cet écran, tes amis rejoignent depuis leur téléphone.</div>
       <button class="btn big ye land-main-btn" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
       <div class="land-divider">— ou —</div>
-      <button class="btn land-join-btn" onclick="gotoCode()">🔑 Rejoindre avec un code</button>
+      <button class="btn land-join-btn" onclick="gotoCodeEntry()">🔑 Rejoindre avec un code</button>
     </div>
 
     <!-- How it works strip -->
@@ -1051,6 +1077,11 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 
 <!-- PLAYER JOIN — onboarding flow -->
 <div id="s-pjoin" class="screen hidden">
+  <!-- Logo always visible on join screens -->
+  <div style="text-align:center;margin-bottom:16px;">
+    <div style="font-family:'Baloo 2',cursive;font-size:clamp(1rem,4vw,1.6rem);font-weight:900;color:var(--ye);text-shadow:3px 3px 0 var(--pu-d);line-height:1.1;">QUI EST LA + GROSSE<br>PUTE DE ROUEN ?</div>
+    <div style="font-size:.7rem;font-weight:800;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:4px;">Édition Glouton Barjot</div>
+  </div>
   <div class="card" style="max-width:420px;margin:0 auto;">
 
     <!-- STEP 0: code entry (when arrived without ?room) -->
@@ -1097,15 +1128,21 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
     <!-- STEP 4: Rules -->
     <div id="step-rules" style="display:none;">
       <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu-d);margin-bottom:14px;text-align:center;">Les règles sont simples :</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:900;color:var(--pu-d);margin-bottom:10px;text-align:center;line-height:1.3;">La règle est simple : on te vote en majorité, tu bois.<br><span style="font-size:.85rem;font-weight:700;color:var(--pu-l);">On commence sobre, on finit bourré.</span></div>
       <div class="rules-list">
-        <div class="rule-item">🎰 À chaque fois que tu es voté majoritairement, tu tournes une roue de défis. L'idée c'est de te faire boire, ou autre, tu verras.</div>
-        <div class="rule-item">📸 Choisi ou prends une photo de toi, ce sera mieux, merci pupute</div>
-        <div class="rule-item">🕵️ Chaque vote est anonyme, pas la peine de débattre, vous êtes sain et sauf.</div>
-        <div class="rule-item">🍺 C'est un JEU. Ne soyez pas frustrés des réponses, l'idée c'est de rigoler et de boire, soit normal</div>
-        <div class="rule-item">🔊 Mettez le son de votre téléphone</div>
-        <div class="rule-item">💬 Le chat Trashtalk est anonyme, AUCUNE modération ne sera faite.</div>
+        <div class="rule-item">🗳️ <b>Vote</b> pour la personne qui correspond le mieux à l'adjectif. Ex : "Qui a l'intestin le plus flingué ?" → naturellement, Gauthier. La personne la plus votée gagne la manche (pas un flex), tourne la roue de l'infortune, et reçoit un défi malicieux.</div>
+        <div class="rule-item">⚖️ Si <b>2 joueurs ou plus</b> sont ex-æquo, ils tournent la roue à tour de rôle.</div>
+        <div class="rule-item">☠️ À la <b>fin du jeu</b>, le joueur ayant remporté le plus de manches tourne la Roue Diabolique des Enfers. Je n'en dis pas plus.</div>
+        <div class="rule-item">🎙️ Après chaque manche, le vainqueur a le droit à quelques instants pour débattre si les votes sont justifiés.</div>
+        <div class="rule-item">📸 <b>Choisis ou prends une photo</b> de toi, ce sera mieux visuellement.</div>
+        <div class="rule-item">🕵️ Chaque vote est <b>anonyme</b>. Pas la peine de débattre ou de vous justifier, vous êtes sains et saufs — c'est une safe place ;)</div>
+        <div class="rule-item">🍺 C'est un <b>JEU</b>. Ne soyez pas frustrés si on vous vote comme ayant la pire hygiène de l'équipe, l'idée c'est de rigoler et de boire, restez souples.</div>
+        <div class="rule-item">🔊 <b>Activez le son</b> de votre téléphone.</div>
+        <div class="rule-item">💬 Le chat Trashtalk est anonyme. <b>AUCUNE modération</b> ne sera faite dans ce dangereux espace.</div>
+        <div class="rule-item">📵 Ne laissez pas votre téléphone <b>tomber en veille</b>, ça risque de vous déconnecter.</div>
       </div>
-      <div style="font-size:1rem;font-weight:800;color:var(--pu-d);text-align:center;margin:16px 0 10px;">Est-ce que c'est bon pour vous ?</div>
+      <div style="font-size:.95rem;font-weight:800;color:var(--pu-d);text-align:center;margin:14px 0 10px;font-style:italic;">On commence sobres, on finit bourré. Pas d'échappatoire.</div>
+      <div style="font-size:1rem;font-weight:900;color:var(--pu-d);text-align:center;margin-bottom:10px;">Est-ce que c'est bon pour vous ?</div>
       <button class="btn big ye" style="width:100%;" onclick="onboardFinish()">C'est ciao 🤙</button>
     </div>
 
@@ -1284,7 +1321,7 @@ const ARC=2*Math.PI/N_SEG;
 
 const COLORS=['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309','#be185d','#065f46'];
 let MAX_ROUNDS=10; // overridden by config UI
-const CONN_TIMEOUT=9000;
+const CONN_TIMEOUT=9000; // alias
 
 // ═══════════════════ UTILS ═══════════════════
 const $=id=>document.getElementById(id);
@@ -1332,7 +1369,7 @@ const roomP=urlP.get('room');
 const baseUrl=window.location.href.split('?')[0];
 
 window.onload=()=>{
-  if(roomP){pRoomId=roomP;show('s-pjoin');$('step-name').style.display='block';}
+  if(roomP){pRoomId=roomP;showGameUI();show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
 };
 
@@ -1341,7 +1378,7 @@ let chatOpen = false;
 let chatUnread = 0;
 
 // ═══════════════════ NAV ═══════════════════
-function gotoCode(){show('s-pjoin');$('step-code').style.display='block';}
+function gotoCodeEntry(){showGameUI();show('s-pjoin');$('step-code').style.display='block';}
 function validateCode(){
   const c=$('code-inp').value.trim().toUpperCase();
   if(c.length!==4){toast('⚠️ Code de 4 lettres !');return;}
@@ -1410,7 +1447,7 @@ function onboardFinish(){
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
-  if(peer&&!isHost){try{peer.destroy();}catch(e){}}
+  if(peer){try{peer.destroy();}catch(e){}}
   peer=new Peer(undefined,{debug:0});
   const to1=setTimeout(()=>{stat.textContent='❌ Impossible de se connecter.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
   peer.on('error',err=>{clearTimeout(to1);stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);});
@@ -1429,7 +1466,7 @@ function onboardFinish(){
 // playerJoin replaced by onboarding flow (onboardStep1 → onboardStep2 → onboardStep3 → onboardFinish)
 
 // ═══════════════════ HOST OPEN ═══════════════════
-function hostOpen(){
+function hostOpen(){ showGameUI();
   const btn=event.target;btn.textContent='⏳…';btn.disabled=true;
   const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
   const rndCode=()=>{let c='';for(let i=0;i<4;i++)c+=alpha[0|Math.random()*alpha.length];return c;};
@@ -1557,27 +1594,54 @@ function cfgBuildList(){
 function renderCfgList(){
   const list=$('cfg-q-list');
   list.innerHTML='';
-  window.cfgQuestions.forEach((q,i)=>{
+  (window.cfgQuestions||[]).forEach((q,i)=>{
     const row=document.createElement('div');
     row.className='cfg-q-row '+(q.active?'active':'inactive');
-    // Split question: extract adjective (first word or two) vs the rest
     const parts=splitQAdj(q.text);
-    row.innerHTML=`
-      <input type="checkbox" class="cfg-q-check" ${q.active?'checked':''} onchange="cfgToggle(${i},this.checked)">
-      <div style="flex:1;">
-        <div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;margin-bottom:4px;">
-          <span style="font-size:.7rem;font-weight:800;color:var(--pu-l);white-space:nowrap;">✏️ adj :</span>
-          <input type="text" class="cfg-adj-inp" value="${escHtml(parts.adj)}"
-            style="flex:1;min-width:80px;max-width:160px;font-weight:900;color:var(--pu-d);background:rgba(124,58,237,.06);border:1.5px solid var(--pu-l);border-radius:7px;padding:3px 8px;font-size:.82rem;outline:none;font-family:'Baloo 2',cursive;"
-            oninput="cfgUpdateAdj(${i},this.value,'${escHtml(parts.rest).replace(/'/g,"\'")}')"
-            onclick="this.select()">
-          <span style="font-size:.78rem;color:var(--pu-l);font-style:italic;">${escHtml(parts.rest)}</span>
-        </div>
-        <input type="text" class="cfg-q-media" placeholder="URL vidéo/son (optionnel)" value="${escHtml(q.media||'')}"
-          oninput="window.cfgQuestions[${i}].media=this.value"
-          onclick="this.select()">
-      </div>
-      <button class="cfg-q-del" onclick="cfgDeleteQ(${i})" title="Supprimer">🗑️</button>`;
+
+    const chk=document.createElement('input');
+    chk.type='checkbox';chk.className='cfg-q-check';chk.checked=q.active;
+    chk.addEventListener('change',function(){cfgToggle(i,this.checked);});
+    row.appendChild(chk);
+
+    const inner=document.createElement('div');inner.style.flex='1';
+
+    const adjRow=document.createElement('div');
+    adjRow.style.cssText='display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;margin-bottom:4px;';
+    const adjLbl=document.createElement('span');
+    adjLbl.style.cssText='font-size:.7rem;font-weight:800;color:var(--pu-l);white-space:nowrap;';
+    adjLbl.textContent='✏️ adj :';
+    adjRow.appendChild(adjLbl);
+
+    const adjInp=document.createElement('input');
+    adjInp.type='text';adjInp.className='cfg-adj-inp';adjInp.value=parts.adj;
+    adjInp.style.cssText="flex:1;min-width:80px;max-width:160px;font-weight:900;color:var(--pu-d);background:rgba(124,58,237,.06);border:1.5px solid var(--pu-l);border-radius:7px;padding:3px 8px;font-size:.82rem;outline:none;font-family:'Baloo 2',cursive;";
+    adjInp.addEventListener('input',(function(idx){return function(){
+      const p=splitQAdj(window.cfgQuestions[idx].text);
+      window.cfgQuestions[idx].text=(this.value.trim()+' '+p.rest).trim();
+    };})(i));
+    adjInp.addEventListener('click',function(){this.select();});
+    adjRow.appendChild(adjInp);
+
+    const restSpan=document.createElement('span');
+    restSpan.style.cssText='font-size:.78rem;color:var(--pu-l);font-style:italic;';
+    restSpan.textContent=parts.rest;
+    adjRow.appendChild(restSpan);
+    inner.appendChild(adjRow);
+
+    const mediaInp=document.createElement('input');
+    mediaInp.type='text';mediaInp.className='cfg-q-media';
+    mediaInp.placeholder='URL vidéo/son (optionnel)';mediaInp.value=q.media||'';
+    mediaInp.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].media=this.value;};})(i));
+    mediaInp.addEventListener('click',function(){this.select();});
+    inner.appendChild(mediaInp);
+    row.appendChild(inner);
+
+    const del=document.createElement('button');
+    del.className='cfg-q-del';del.title='Supprimer';del.textContent='🗑️';
+    del.addEventListener('click',(function(idx){return function(){cfgDeleteQ(idx);};})(i));
+    row.appendChild(del);
+
     list.appendChild(row);
   });
 }
@@ -1587,7 +1651,7 @@ function renderCfgList(){
 // Heuristic: first word up to first space-keyword (quand/capable/de/d'/le/la/qui/en/à/dès)
 function splitQAdj(text){
   // Find the first "connector" word
-  const connectors=['quand','capable','d'','de ','le ','la ','qui ','en ','à ','dès ','pour ','sur ','sans ','par '];
+  const connectors=['quand','capable',"d'",'de ','le ','la ','qui ','en ','à ','dès ','pour ','sur ','sans ','par '];
   let bestIdx=text.length;
   for(const c of connectors){
     const idx=text.toLowerCase().indexOf(c);
@@ -1599,9 +1663,6 @@ function splitQAdj(text){
   return {adj,rest};
 }
 
-function cfgUpdateAdj(i,newAdj,rest){
-  window.cfgQuestions[i].text=(newAdj.trim()+' '+rest).trim();
-}
 
 function cfgToggle(i,val){
   window.cfgQuestions[i].active=val;
@@ -1657,11 +1718,41 @@ function hostLaunchFromConfig(){
   hQs=shuffle(pool).slice(0,MAX_ROUNDS);hQi=-1;
   $('h-lobby').style.display='none';$('h-game').style.display='block';
   $('rth').textContent=Math.min(MAX_ROUNDS,pool.length);
-  show('s-host');showScorePin();updateScorePin();hostNext();
+  show('s-host');showScorePin();updateScorePin();updateRemainingRounds();hostNext();
 }
 
 // Keep old hostLaunch as alias just in case
 function hostLaunch(){hostLaunchFromConfig();}
+
+function hostEndGameNow(){
+  if(!confirm('Terminer la partie maintenant et afficher le classement final ?')) return;
+  hQi=MAX_ROUNDS; // Force end
+  hostFinal();
+}
+
+function updateRemainingRounds(){
+  const list=$('remaining-rounds-list');
+  if(!list) return;
+  list.innerHTML='';
+  for(let i=hQi+1;i<hQs.length;i++){
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:6px;background:var(--pu-s);border-radius:8px;padding:4px 8px;';
+    row.innerHTML=`<span style="font-size:.72rem;font-weight:700;color:var(--pu-d);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(hQs[i])}</span>
+      <button onclick="hostSkipRound(${i})" style="background:none;border:none;color:var(--pk);cursor:pointer;font-size:.9rem;padding:0 2px;flex-shrink:0;" title="Supprimer cette manche">🗑️</button>`;
+    list.appendChild(row);
+  }
+  if(hQi+1>=hQs.length) list.innerHTML='<div style="font-size:.75rem;color:var(--pu-l);text-align:center;padding:4px;">Aucune manche restante</div>';
+}
+
+function hostSkipRound(idx){
+  hQs.splice(idx,1);
+  // Adjust MAX_ROUNDS
+  MAX_ROUNDS=hQs.length;
+  $('rth').textContent=MAX_ROUNDS;
+  updateRemainingRounds();
+  toast('Manche supprimée');
+}
+
 
 
 
@@ -1672,6 +1763,7 @@ function hostNext(){
   hAdj=hQs[hQi];
   $('rnh').textContent=hQi+1;
   $('btn-fr').disabled=false;$('btn-fn').disabled=true;
+  updateRemainingRounds();
   // Force all players to transition immediately
   hBcast({type:'FORCE_NEXT'});
   setTimeout(()=>hBcast({type:'START_ROUND',adjective:hAdj,players:hPList()}),600);
@@ -1684,7 +1776,8 @@ function hostForceReveal(){
 function hostReveal(){
   $('btn-fr').disabled=true;
   const names=Object.keys(hVotes);
-  const maxV=Math.max(...Object.values(hVotes),0);
+  const vvals=Object.values(hVotes);
+  const maxV=vvals.length>0?Math.max(...vvals,0):0;
   const winners=maxV>0?names.filter(n=>hVotes[n]===maxV):[];
   winners.forEach(w=>{
     hScores[w]=(hScores[w]||0)+1;
@@ -1744,15 +1837,19 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
     const ch=champions[0];
     const ph=photos[ch]||'';
     const phEl=ph?`<img class="final-winner-photo" src="${ph}" alt="${ch}">`:`<div class="final-winner-init" style="background:${acol(ch)};">${ini(ch)}</div>`;
+    const FS_SHAMES=["C'est vraiment pas un flex d'être là 😬","Champion·ne de la honte 🏆","La plus grosse pute de Rouen 👑","Ce titre personne le voulait 💀","Vraiment, t'es fier·e là ?"];
     const tags=(tagMap[ch]||[]).map(t=>`<span class="win-tag">${escHtml(t)}</span>`).join('');
     ws.innerHTML=`
       <div class="final-winner-card">
         <div style="font-size:.65rem;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:8px;">👑 Champion·ne de la soirée</div>
         ${phEl}
         <div class="final-winner-name">${escHtml(ch)}</div>
-        <div class="final-winner-sub">${maxPts} victoire${maxPts>1?'s':''} · La plus grosse pute de Rouen</div>
+        <div class="final-winner-sub">${maxPts} victoire${maxPts>1?'s':''}</div>
+        <div style="font-size:.78rem;font-weight:700;color:rgba(255,255,255,.45);margin-top:3px;font-style:italic;" id="fw-shame-el"></div>
         ${tags?`<div class="win-tags">${tags}</div>`:''}
       </div>`;
+    const shEl=ws.querySelector('#fw-shame-el');
+    if(shEl) shEl.textContent=FS_SHAMES[maxPts%FS_SHAMES.length];
   } else if(ws){
     ws.innerHTML='';
   }
@@ -1935,7 +2032,8 @@ function runSlotMachine(players, duration, onDone){
     } else {
       reel.innerHTML=`<div class="slot-init" style="background:${acol(p.name)}">${ini(p.name)}</div>`;
     }
-    setTimeout(nextFrame, frameDurations[fi]);
+    const slotT=setTimeout(nextFrame, frameDurations[fi]);
+    pTimers.push(slotT);
     fi++;
   }
   nextFrame();
@@ -2641,22 +2739,14 @@ function updateBgCards(players){
 
 // ═══════════════════ ☠️ ROUE ABSOLUE DE LA MORT ═══════════════════
 const DEATH_SEGMENTS = [
-  {l:"Cul sec pour
-tout le monde",c:"#dc2626"},
-  {l:"Le perdant
-offre le shot",c:"#9333ea"},
-  {l:"Tous en
-jugement",c:"#db2777"},
-  {l:"Strip-tease
-obligatoire",c:"#d97706"},
-  {l:"Vérité ou
-défi collectif",c:"#059669"},
-  {l:"Cul sec
-pour deux",c:"#2563eb"},
-  {l:"Le champion
-ouvre bouteille",c:"#7c3aed"},
-  {l:"Règle
-maison",c:"#0891b2"},
+  {l:"Cul sec pour tout le monde", c:"#dc2626"},
+  {l:"Le perdant offre le shot",    c:"#9333ea"},
+  {l:"Tous en jugement",            c:"#db2777"},
+  {l:"Strip-tease obligatoire",     c:"#d97706"},
+  {l:"Vérité ou défi collectif",    c:"#059669"},
+  {l:"Cul sec pour deux",           c:"#2563eb"},
+  {l:"Le champion ouvre bouteille", c:"#7c3aed"},
+  {l:"Règle maison",                c:"#0891b2"},
 ];
 const D_ARC = 2*Math.PI/DEATH_SEGMENTS.length;
 let dAngle=0, dSpinning=false, dIsSpinner=false;
@@ -2674,7 +2764,7 @@ function setupDeathWheel(scores,photos){
   sec.style.display='block';
   const whoEl=$('go-death-who');
   if(whoEl){
-    if(dIsSpinner) whoEl.textContent='☠️ C'EST TOI ! Tourne la roue de la mort…';
+    if(dIsSpinner) whoEl.textContent="☠️ C'EST TOI ! Tourne la roue de la mort…";
     else whoEl.textContent=`☠️ ${champion} va tourner la roue de la mort pour tout le monde…`;
   }
   const spinBtn=$('death-spin-btn');
@@ -2747,12 +2837,16 @@ function drawDeathWheel(angle){
 // ═══════════════════ 🏆 SCORE PIN ═══════════════════
 let scorePinOpen = false;
 
+
+function showGameUI(){
+  document.querySelectorAll('.game-only').forEach(el=>el.classList.add('game-active'));
+}
 function showScorePin(){
-  const pin=$('score-pin');
-  if(pin) pin.style.display='block';
+  showGameUI();
 }
 
-function toggleScorePin(){
+function toggleScorePin(e){
+  if(e) e.stopPropagation();
   scorePinOpen=!scorePinOpen;
   const panel=$('score-panel');
   if(panel) panel.classList.toggle('open',scorePinOpen);
@@ -2817,7 +2911,10 @@ function updateScorePin(){
       ?`<img class="sp-photo" src="${ph}" alt="${name}">`
       :`<div class="sp-init" style="background:${acol(name)};">${ini(name)}</div>`;
     const medal=medals[i]||(i+1);
+    const SHAME=["C'est vraiment pas un flex 😬","Champion·ne de la honte","La légende du malaise 💀","Vraiment t'es fier·e ?","Ce titre personne le voulait"];
     const crown=pts>0&&pts===maxPts?' 👑':'';
+    const shameMsg=i===0&&pts>0?SHAME[pts%SHAME.length]:'';
+    const shameTag=shameMsg?('<div style="font-size:.6rem;color:var(--pk);font-weight:700;font-style:italic;margin-top:1px;">'+escHtml(shameMsg)+'</div>'):'';
     // Adjectives — each one a pill
     const adjs=adjMap[name]||[];
     const adjHtml=adjs.length>0
@@ -2828,6 +2925,7 @@ function updateScorePin(){
       ${phEl}
       <div class="sp-info">
         <div class="sp-name">${escHtml(name)}${crown}${name===pName?' <span style="font-size:.6rem;color:var(--pu-l);font-weight:700;">(toi)</span>':''}</div>
+        ${shameTag}
         ${adjHtml}
       </div>
       <div class="sp-pts">${pts} pt${pts>1?'s':''}</div>`;
