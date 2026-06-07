@@ -512,25 +512,41 @@ button.game-only.game-active,
 }
 .hmb-badge.show{display:flex;}
 .score-panel{
-  position:fixed;top:0;left:0;bottom:0;
-  width:min(86vw,330px);
-  background:#fff;
-  box-shadow:4px 0 30px rgba(0,0,0,.4);
+  position:fixed;
+  /* Align left edge with hamburger button (left:12px, width:44px) */
+  top:max(64px,calc(env(safe-area-inset-top,0px)+58px));
+  left:12px;
+  width:min(88vw,300px);
+  max-height:min(68vh,460px);
+  background:rgba(255,255,255,.97);
+  border:2px solid rgba(124,58,237,.2);
+  border-radius:18px;
+  box-shadow:0 8px 32px rgba(0,0,0,.28),0 2px 8px rgba(124,58,237,.12);
   z-index:1000;
   display:flex;flex-direction:column;
-  transform:translateX(-105%);
-  transition:transform .28s cubic-bezier(.22,1,.36,1);
+  opacity:0;pointer-events:none;
+  /* Scale from top-left corner (where the hamburger is) */
+  transform:scale(.92);
+  transform-origin:0 0;
+  transition:opacity .15s ease,transform .18s cubic-bezier(.22,1,.36,1);
   overflow:hidden;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
 }
-.score-panel.open{transform:translateX(0);}
+.score-panel.open{
+  opacity:1;pointer-events:all;
+  transform:scale(1);
+}
+/* No dark overlay — transparent tap-outside to close */
 .score-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.4);
-  z-index:999;opacity:0;pointer-events:none;
-  transition:opacity .25s ease;
+  position:fixed;inset:0;
+  background:transparent;
+  z-index:999;
+  pointer-events:none;
 }
-.score-overlay.open{opacity:1;pointer-events:all;}
+.score-overlay.open{pointer-events:all;}
 .sp-header{
-  background:var(--pu);padding:max(14px,calc(env(safe-area-inset-top)+8px)) 16px 14px;
+  background:var(--pu);padding:10px 14px;
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
 }
 .sp-title{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:#fff;letter-spacing:1px;}
@@ -538,8 +554,8 @@ button.game-only.game-active,
 .sp-close:hover{color:#fff;}
 .sp-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .sp-row{
-  display:flex;align-items:flex-start;gap:10px;
-  padding:11px 14px;
+  display:flex;align-items:flex-start;gap:8px;
+  padding:9px 12px;
   border-bottom:1px solid var(--pu-s);
 }
 .sp-row.sp-me{background:rgba(124,58,237,.04);}
@@ -558,40 +574,40 @@ button.game-only.game-active,
 /* ═══ EMOJI REACTION BAR ═══ */
 .emoji-toggle{
   position:fixed;
-  bottom:max(22px,calc(env(safe-area-inset-bottom)+16px));
+  bottom:max(18px,env(safe-area-inset-bottom,18px));
   right:16px;
-  z-index:751;
-  width:46px;height:46px;border-radius:50%;
+  z-index:1200; /* above everything including score panel (1000) and overlays */
+  width:50px;height:50px;border-radius:50%;
   background:var(--pu);color:#fff;
   border:3px solid var(--pu-d);
-  box-shadow:0 4px 0 var(--pu-d);
+  box-shadow:0 5px 0 var(--pu-d),0 8px 20px rgba(0,0,0,.3);
   display:none;
   align-items:center;justify-content:center;
-  cursor:pointer;font-size:1.3rem;
+  cursor:pointer;font-size:1.4rem;
   -webkit-tap-highlight-color:transparent;
   transition:transform .08s,box-shadow .08s;
 }
-.emoji-toggle:active{transform:translateY(4px);box-shadow:0 0 0 var(--pu-d);}
+.emoji-toggle:active{transform:translateY(5px);box-shadow:0 0 0 var(--pu-d);}
 .emoji-bar{
   position:fixed;
-  bottom:max(78px,calc(env(safe-area-inset-bottom)+72px));
+  bottom:max(80px,calc(env(safe-area-inset-bottom,0px) + 76px));
   right:8px;
-  z-index:750;
+  z-index:1199;
   display:flex;
   gap:6px;
-  background:rgba(255,255,255,.96);
+  background:rgba(255,255,255,.97);
   border:2px solid var(--pu-l);
   border-radius:50px;
-  padding:6px 10px;
+  padding:7px 12px;
   box-shadow:0 4px 20px rgba(124,58,237,.3);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   transition:opacity .2s ease,transform .2s ease;
 }
 .emoji-bar.hidden-bar{
   opacity:0;
   pointer-events:none;
-  transform:translateY(10px);
+  transform:translateY(12px);
 }
 .emoji-btn{
   width:36px;height:36px;border-radius:50%;border:none;
@@ -607,7 +623,7 @@ button.game-only.game-active,
   position:fixed;
   font-size:2.2rem;
   pointer-events:none;
-  z-index:800;
+  z-index:1201;
   animation:floatUp 2.5s ease forwards;
   user-select:none;
 }
@@ -672,6 +688,29 @@ button.game-only.game-active,
 /* ═══ SLOT MACHINE FRAMES ═══ */
 .slot-frame{width:100%;height:100%;object-fit:cover;display:block;}
 .slot-init{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:2.8rem;font-weight:900;color:#fff;}
+
+/* ═══ FLOATING PLAYER PHOTO CARDS (background) ═══ */
+.fbg-card{
+  position:absolute;
+  width:clamp(44px,6vw,68px);
+  aspect-ratio:4/5;
+  border-radius:12px;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,.15);
+  opacity:.13;
+  animation:fbgFloat linear infinite;
+  pointer-events:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+  flex-shrink:0;
+}
+.fbg-card img{width:100%;height:100%;object-fit:cover;display:block;}
+@keyframes fbgFloat{
+  0%  {transform:translateY(0)   rotate(var(--r,0deg));}
+  25% {transform:translateY(-12px) rotate(calc(var(--r,0deg) + 3deg));}
+  50% {transform:translateY(-5px)  rotate(calc(var(--r,0deg) - 2deg));}
+  75% {transform:translateY(-16px) rotate(calc(var(--r,0deg) + 2deg));}
+  100%{transform:translateY(0)   rotate(var(--r,0deg));}
+}
 </style>
 </head>
 <body>
@@ -753,7 +792,7 @@ button.game-only.game-active,
     <div class="land-cta-card">
       <div class="land-cta-title">Prêt à jouer ?</div>
       <div class="land-cta-sub">Lance le salon sur cet écran, tes amis rejoignent depuis leur téléphone.</div>
-      <button class="btn big ye land-main-btn" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
+      <button class="btn big ye land-main-btn" onclick="hostOpen(event)">🎮 Ouvrir le Salon</button>
       <div class="land-divider">— ou —</div>
       <button class="btn land-join-btn" onclick="gotoCodeEntry()">🔑 Rejoindre avec un code</button>
     </div>
@@ -1135,6 +1174,14 @@ let MAX_ROUNDS=10; // overridden by config UI
 const CONN_TIMEOUT=9000; // alias
 
 // ═══════════════════ UTILS ═══════════════════
+
+// Strip question prefix ("Qui est le + ", "Qui a la + ", etc.) to get just the adjective
+function stripPrefix(adj){
+  if(!adj) return adj;
+  // Remove known prefix patterns — case-insensitive, greedy
+  return adj.replace(/^(Qui est celui qui|Qui [a-zàâéèêëîïôùûüç']+ l[ae]?[s']?\s*[-+]?\s*)/i,'').trim()
+            .replace(/^[+\-]\s*/,'').trim();
+}
 // Compose full question text from a question object {p:prefix,t:text} or a plain string
 function qFull(q){
   if(typeof q === 'string') return q;
@@ -1289,8 +1336,9 @@ function onboardFinish(){
 // playerJoin replaced by onboarding flow (onboardStep1 → onboardStep2 → onboardStep3 → onboardFinish)
 
 // ═══════════════════ HOST OPEN ═══════════════════
-function hostOpen(){ showGameUI();
-  const btn=event.target;btn.textContent='⏳…';btn.disabled=true;
+function hostOpen(e){ showGameUI();
+  const btn=(e&&e.currentTarget)||document.querySelector('[onclick*="hostOpen"]');
+  if(btn){btn.textContent='⏳…';btn.disabled=true;}
   const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
   const rndCode=()=>{let c='';for(let i=0;i<4;i++)c+=alpha[0|Math.random()*alpha.length];return c;};
   const attempt=(code)=>{
@@ -1299,7 +1347,7 @@ function hostOpen(){ showGameUI();
     peer=new Peer(code,{debug:0});
     peer.on('error',err=>{
       if(err.type==='unavailable-id'){attempt(rndCode());return;}
-      toast('❌ '+err.message);btn.textContent='🎮 Ouvrir le Salon';btn.disabled=false;
+      toast('❌ '+err.message);if(btn){btn.textContent='🎮 Ouvrir le Salon';btn.disabled=false;}
     });
     peer.on('open',id=>{
       isHost=true;show('s-host');
@@ -1391,7 +1439,7 @@ function handleHConn(conn){
   conn.on('error',()=>{delete hConns[conn.peer];hostLobbyUI();});
 }
 
-function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo,clip:p.clip||''}));}
+function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo}));}
 function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
 function hostLobbyUI(){
@@ -1646,7 +1694,7 @@ function hostSkipRound(idx){
 
 
 function hostNext(){
-  hQi++;if(hQi>=MAX_ROUNDS){hostFinal();return;}
+  hQi++;if(hQi>=hQs.length||hQi>=MAX_ROUNDS){hostFinal();return;}
   hWhoVoted.clear();hVotes={};hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
   hAdj=hQs[hQi];
@@ -1716,7 +1764,8 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
   history.forEach(h=>{
     if(!tagMap[h.name]) tagMap[h.name]=[];
     // Short label: first 3 words of adjective
-    const short = h.adjective.split(' ').slice(0,3).join(' ')+(h.adjective.split(' ').length>3?'…':'');
+    const adj2=stripPrefix(h.adjective);
+    const short=adj2.split(' ').slice(0,4).join(' ')+(adj2.split(' ').length>4?'…':'');
     tagMap[h.name].push(short);
   });
 
@@ -1784,7 +1833,8 @@ function handlePData(data){
       pList=data.players;clearPTimers();
       pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateBgCards(pList);
-      $('v-adj').textContent=data.adjective;
+      const vAdj=$('v-adj');
+      if(vAdj){vAdj.textContent=data.adjective;vAdj.style.fontSize=data.adjective.length>30?'clamp(1rem,3.5vw,1.6rem)':'clamp(1.3rem,5vw,2.2rem)';}
       buildVoteGrid(data.players);show('s-pvote');break;
     case 'ALREADY_VOTED':
       updateVoteCounter(data.done,data.total);show('s-pvoted');break;
@@ -1853,11 +1903,11 @@ function handlePData(data){
         drawDeathWheel(data.angle);
       }
       break;
-    case 'DEATH_WHEEL_RESULT':
-      // Spectators see the death wheel result
+    case 'DEATH_WHEEL_RESULT':{
       const dr=$('death-result');
       if(dr) dr.textContent='☠️ '+data.segment;
       break;
+    }
     case 'GAME_OVER':
       clearPTimers();
       if(data.scores) pScores=data.scores;
@@ -1898,8 +1948,6 @@ function pt(fn,ms){const t=setTimeout(fn,ms);pTimers.push(t);return t;}
 // ═══════════════════ SLOT MACHINE ═══════════════════
 
 function triggerSlot(){
-  const btn=$('slot-lever-btn');
-  if(btn){btn.disabled=true;btn.textContent='🎰 ...';}
   if(window._revealContinue) window._revealContinue();
 }
 function runSlotMachine(players, duration, onDone){
@@ -2177,7 +2225,8 @@ function doReveal(data){
 
   // Reset theatre
   const theatre=$('rev-theatre');
-  theatre.className='reveal-theatre phase-suspense visible';
+  theatre.className='reveal-theatre phase-suspense';
+  theatre.classList.add('visible'); // keep visible
   // Split question into prefix badge + main text
   (function(){
     const pfxMatch=adjective.match(/^(Qui [^+]*[+\-]|Qui est celui qui)/i);
@@ -2368,12 +2417,53 @@ function showWheelForTurn(){
   $('wheel-ov').style.display='flex';
 }
 
+// 🎰 SON DE ROUE — cliquetis rythmés synchronisés avec la vitesse
+function playWheelSound(totalDur){
+  try{
+    const ctx=getAudioCtx();
+    const startT=ctx.currentTime+0.05;
+    // On programme des "ticks" dont l'espacement suit la même courbe ease-out que la roue
+    // Au début: ~12 ticks/s → à la fin: ~1.5 ticks/s
+    let t=startT;
+    const endT=startT+totalDur/1000;
+    while(t<endT){
+      const prog=(t-startT)/(endT-startT);
+      // ease-out: vitesse diminue progressivement
+      const speed=12-10.5*Math.pow(prog,0.6); // 12 → 1.5 ticks/s
+      const gap=1/Math.max(speed,1.5);
+      // Son de tick : bruit bref filtré (wood-block style)
+      const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.022),ctx.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.18));
+      const src=ctx.createBufferSource();src.buffer=buf;
+      const flt=ctx.createBiquadFilter();flt.type='bandpass';flt.frequency.value=1200;flt.Q.value=4;
+      const g=ctx.createGain();
+      // Volume diminue aussi légèrement vers la fin
+      g.gain.setValueAtTime(0.18+0.12*(1-prog),t);
+      src.connect(flt);flt.connect(g);g.connect(ctx.destination);
+      src.start(t);src.stop(t+0.025);
+      t+=gap;
+    }
+    // Dernier tick fort pour marquer l'arrêt
+    const buf2=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.04),ctx.sampleRate);
+    const d2=buf2.getChannelData(0);
+    for(let i=0;i<d2.length;i++) d2[i]=(Math.random()*2-1)*Math.exp(-i/(d2.length*0.22));
+    const src2=ctx.createBufferSource();src2.buffer=buf2;
+    const flt2=ctx.createBiquadFilter();flt2.type='bandpass';flt2.frequency.value=900;flt2.Q.value=3;
+    const g2=ctx.createGain();g2.gain.setValueAtTime(0.45,endT);
+    src2.connect(flt2);flt2.connect(g2);g2.connect(ctx.destination);
+    src2.start(endT);src2.stop(endT+0.045);
+  }catch(e){}
+}
+
 function spinWheel(){
   if(wSpinning||!wIsSpinner)return;
   wSpinning=true;
   $('wspin-btn').disabled=true;$('w-result').textContent='';
   const totalRot=2*Math.PI*(6+Math.random()*6);
   const dur=4000+Math.random()*1000;
+  // 🔊 Son de roue synchronisé avec la durée réelle
+  playWheelSound(dur);
   const t0=performance.now(),a0=wAngle;
   function frame(now){
     const el=now-t0;
@@ -2521,15 +2611,7 @@ function toggleChat(){
   }
 }
 
-function updateChatBadge(){
-  const badge=$('chat-badge');
-  if(chatUnread>0){
-    badge.textContent=chatUnread>9?'9+':chatUnread;
-    badge.classList.add('show');
-  } else {
-    badge.classList.remove('show');
-  }
-}
+function updateChatBadge(){/* chat removed */}
 
 function sendChat(){
   const inp=$('chat-inp');
@@ -2549,6 +2631,8 @@ function sendChat(){
 
 const _sentKeys=new Set();
 function appendChatMsg(nick,msg,isMine=false){
+  // Chat UI removed — relay still works for future use
+  return;
   const msgs=$('chat-msgs');
   if(!msgs)return;
   const key=nick+'|'+msg;
@@ -2570,9 +2654,7 @@ function escHtml(s){
 }
 
 // Show chat nick once player is connected
-function initChatNick(){
-  if(pAnonNick&&$('chat-my-nick'))$('chat-my-nick').textContent=pAnonNick;
-}
+function initChatNick(){/* chat removed */}
 
 
 // ═══════════════════ 😂 EMOJI REACTIONS ═══════════════════
@@ -2635,10 +2717,10 @@ function updateBgCards(players){
     {top:'28%', left:'2%'}, {top:'22%', right:'3%'},
     {top:'48%', left:'1%'}, {top:'52%', right:'1%'},
     {top:'68%', left:'3%'}, {top:'72%', right:'2%'},
-    {top:'85%', left:'10%'},{top:'82%', right:'10%'},
-    {top:'15%', left:'15%'},{top:'12%', right:'18%'},
-    {top:'38%', left:'88%'},{top:'60%', right:'88%'},
-    {top:'90%', left:'40%'},{top:'92%', right:'45%'},
+    {top:'85%', left:'8%'}, {top:'82%', right:'8%'},
+    {top:'15%', left:'12%'},{top:'12%', right:'14%'},
+    {top:'38%', left:'75%'},{top:'60%', right:'75%'},
+    {top:'90%', left:'38%'},{top:'92%', right:'40%'},
   ];
 
   const usedPositions = positions.slice(0, Math.min(COUNT, positions.length));
@@ -2826,7 +2908,7 @@ function updateScorePin(){
   const adjMap={};
   history.forEach(h=>{
     if(!adjMap[h.name]) adjMap[h.name]=[];
-    adjMap[h.name].push(h.adjective);
+    adjMap[h.name].push(stripPrefix(h.adjective));
   });
 
   const body=$('sp-body');
