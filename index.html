@@ -419,12 +419,13 @@ button.game-only.game-active,
 .land-logo-zone{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .land-eyebrow{
   font-family:'Nunito',sans-serif;
-  font-size:clamp(.62rem,1.8vw,.78rem);
-  font-weight:900;letter-spacing:5px;
+  font-size:clamp(.55rem,1.4vw,.68rem);
+  font-weight:900;letter-spacing:2px;
   color:rgba(255,255,255,.5);text-transform:uppercase;
   background:rgba(124,58,237,.18);
   border:1.5px solid rgba(124,58,237,.3);
-  border-radius:50px;padding:5px 16px;
+  border-radius:50px;padding:4px 12px;
+  white-space:nowrap;
 }
 .land-title{
   font-family:'Baloo 2',cursive;
@@ -781,9 +782,8 @@ button.game-only.game-active,
   <div class="land-inner">
     <!-- Logo zone -->
     <div class="land-logo-zone">
-      <div class="land-eyebrow">Édition Glouton Barjot</div>
+      <div class="land-eyebrow">Imaginé &amp; développé par Paul Barth</div>
       <div class="land-title" style="font-size:clamp(1.8rem,7vw,4.5rem);line-height:1.05;">QUI EST LA <span class="land-plus">+</span> GROSSE<br>PUTE DE ROUEN ?</div>
-      <div class="land-tagline">Imaginé &amp; développé par Paul Barth</div>
     </div>
 
     <div class="land-slogan">On commence sobre, on finit bourré.<br><span style="font-size:.85em;opacity:.7;">Pas d'échappatoire.</span></div>
@@ -899,12 +899,14 @@ button.game-only.game-active,
 
 <!-- PLAYER JOIN — onboarding flow -->
 <div id="s-pjoin" class="screen hidden">
-  <!-- Logo always visible on join screens -->
-  <div style="text-align:center;margin-bottom:16px;">
-    <div style="font-family:'Baloo 2',cursive;font-size:clamp(1rem,4vw,1.6rem);font-weight:900;color:var(--ye);text-shadow:3px 3px 0 var(--pu-d);line-height:1.1;">QUI EST LA + GROSSE<br>PUTE DE ROUEN ?</div>
-    <div style="font-size:.7rem;font-weight:800;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:4px;">Édition Glouton Barjot</div>
+  <!-- Same logo zone as landing -->
+  <div class="land-inner" style="gap:16px;padding-bottom:8px;">
+    <div class="land-logo-zone">
+      <div class="land-eyebrow">Imaginé &amp; développé par Paul Barth</div>
+      <div class="land-title" style="font-size:clamp(1.6rem,6vw,3.8rem);line-height:1.05;">QUI EST LA <span class="land-plus">+</span> GROSSE<br>PUTE DE ROUEN ?</div>
+    </div>
   </div>
-  <div class="card" style="max-width:420px;margin:0 auto;">
+  <div class="card" style="max-width:420px;margin:0 auto;width:100%;">
 
     <!-- STEP 0: code entry (when arrived without ?room) -->
     <div id="step-code" style="display:none;">
@@ -919,7 +921,7 @@ button.game-only.game-active,
       <div class="ph-circle" id="phc" onclick="document.getElementById('fi').click()">
         <span id="php">📷</span><img id="phprev" src="" style="display:none;" alt="">
       </div>
-      <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>  <!-- no forced camera on iOS -->
+      <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>
       <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends toi en photo, c'est obligatoire pour le jeu mon coco 📸</div>
       <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
       <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="onboardStep1()">Continuer →</button>
@@ -933,13 +935,13 @@ button.game-only.game-active,
       <button class="btn ghost" style="width:100%;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 4px 0 var(--pu-l);" onclick="onboardBack()">← Changer</button>
     </div>
 
-    <!-- STEP 2b: "C'est flingué" — emoji appears AFTER text -->
+    <!-- STEP 2b: "C'est flingué" -->
     <div id="step-flingue" style="display:none;text-align:center;">
       <div style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:900;color:var(--pu-d);margin-bottom:10px;">C'est flingué <span style="display:inline-block;">😂🫵</span></div>
       <button class="btn big ye" style="width:100%;margin-top:10px;" onclick="onboardStep2b()">Eh oh</button>
     </div>
 
-    <!-- STEP 3: "Ta gueule" — no emoji -->
+    <!-- STEP 3: "Ta gueule" -->
     <div id="step-tagueule" style="display:none;text-align:center;">
       <div style="font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu-d);margin-bottom:6px;">Ta gueule</div>
       <button class="btn big ye" style="width:100%;margin-top:10px;" onclick="onboardStep3()">Pas de problèmes</button>
@@ -1380,7 +1382,11 @@ function handleHConn(conn){
           conn.send({type:'REVEAL',votes:{...hVotes},winners:_winners,adjective:hAdj,players:hPList()});
         } else {
           conn.send({type:'START_ROUND',adjective:hAdj,players:hPList()});
-          if(hWhoVoted.has(oldPeer||'__none__')){
+          // Reconnecting player: transfer their vote status to new peer
+          if(oldPeer&&hWhoVoted.has(oldPeer)){
+            hWhoVoted.add(conn.peer);
+          }
+          if(hWhoVoted.has(conn.peer)){
             conn.send({type:'ALREADY_VOTED',done:hWhoVoted.size,total:Object.keys(hConns).length});
           }
         }
@@ -1775,7 +1781,7 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
     const ch=champions[0];
     const ph=photos[ch]||'';
     const phEl=ph?`<img class="final-winner-photo" src="${ph}" alt="${ch}">`:`<div class="final-winner-init" style="background:${acol(ch)};">${ini(ch)}</div>`;
-    const FS_SHAMES=["C'est vraiment pas un flex d'être là 😬","Champion·ne de la honte 🏆","La plus grosse pute de Rouen 👑","Ce titre personne le voulait 💀","Vraiment, t'es fier·e là ?"];
+    const FS_SHAMES=["C'est vraiment pas un flex d'être là 😬","Champion de la honte 🏆","La plus grosse pute de Rouen 👑","Ce titre personne le voulait 💀","Vraiment, t'es fier là ?"];
     const tags=(tagMap[ch]||[]).map(t=>`<span class="win-tag">${escHtml(t)}</span>`).join('');
     ws.innerHTML=`
       <div class="final-winner-card">
@@ -2474,8 +2480,10 @@ function spinWheel(){
       const ptr=((-Math.PI/2 - wAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
       const idx=Math.floor(ptr/ARC)%N_SEG;
       const seg=WS[idx];
-      // Broadcast to all via host relay
-      if(pConn&&pConn.open){
+      // Broadcast result
+      if(isHost){
+        hBcast({type:'WHEEL_LANDED',segment:seg.l,spinner:pName});
+      } else if(pConn&&pConn.open){
         pConn.send({type:'WHEEL_RESULT',segment:seg.l,spinner:pName});
       }
       const wFun=WHEEL_FUN[seg.l]||'Bonne chance 😈';
@@ -2489,11 +2497,13 @@ function spinWheel(){
     const cur=(a0+totalRot*eased)%(2*Math.PI);
     wAngle=cur;
     drawWheel(cur);
-    // Broadcast angle for spectators — throttled to 15fps to avoid P2P flood
-    if(pConn&&pConn.open){
-      const nowMs=performance.now();
-      if(!spinWheel._lastBcast||nowMs-spinWheel._lastBcast>66){
-        spinWheel._lastBcast=nowMs;
+    // Broadcast angle for spectators — throttled to 15fps
+    const nowMs=performance.now();
+    if(!spinWheel._lastBcast||nowMs-spinWheel._lastBcast>66){
+      spinWheel._lastBcast=nowMs;
+      if(isHost){
+        hBcast({type:'WHEEL_SPINNING',angle:cur,spinner:pName});
+      } else if(pConn&&pConn.open){
         pConn.send({type:'WHEEL_SPIN',angle:cur,spinner:pName});
       }
     }
@@ -2506,10 +2516,10 @@ function wheelNext(){
   wQueue.shift();
   wAngle=0;wSpinning=false;
   const done=wQueue.length===0;
-  if(pConn&&pConn.open){
-    pConn.send(done
-      ?{type:'WHEEL_QUEUE_DONE'}
-      :{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
+  if(isHost){
+    hBcast(done?{type:'WHEEL_QUEUE_DONE'}:{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
+  } else if(pConn&&pConn.open){
+    pConn.send(done?{type:'WHEEL_QUEUE_DONE'}:{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
   }
   if(done){
     // All spins complete — close overlay and reveal next-round button
@@ -2538,7 +2548,8 @@ function updateWheelDisplay(angle,spinner){
 }
 
 function spectatorWheelLanded(segment,spinner){
-  $('w-result').textContent='👉 '+segment;
+  const wFun2=WHEEL_FUN[segment]||'Bonne chance 😈';
+  $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+segment+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun2+'</div>';
   $('wt').textContent='🎰 '+spinner+' a eu : '+segment;
 }
 
@@ -2816,8 +2827,8 @@ function spinDeathWheel(){
     const nowMs2=performance.now();
     if(!frame._lb||nowMs2-frame._lb>66){
       frame._lb=nowMs2;
-      if(pConn&&pConn.open) pConn.send({type:'DEATH_SPIN',angle:cur});
       if(isHost) hBcast({type:'DEATH_SPIN',angle:cur});
+      else if(pConn&&pConn.open) pConn.send({type:'DEATH_SPIN',angle:cur});
     }
     requestAnimationFrame(frame);
   }
@@ -2939,7 +2950,7 @@ function updateScorePin(){
       ?`<img class="sp-photo" src="${ph}" alt="${name}">`
       :`<div class="sp-init" style="background:${acol(name)};">${ini(name)}</div>`;
     const medal=medals[i]||(i+1);
-    const SHAME=["C'est vraiment pas un flex 😬","Champion·ne de la honte","La légende du malaise 💀","Vraiment t'es fier·e ?","Ce titre personne le voulait"];
+    const SHAME=["C'est vraiment pas un flex 😬","Champion de la honte","La légende du malaise 💀","Vraiment t'es fier ?","Ce titre personne le voulait"];
     const crown=pts>0&&pts===maxPts?' 👑':'';
     const shameMsg=i===0&&pts>0?SHAME[pts%SHAME.length]:'';
     const shameTag=shameMsg?('<div style="font-size:.6rem;color:var(--pk);font-weight:700;font-style:italic;margin-top:1px;">'+escHtml(shameMsg)+'</div>'):'';
