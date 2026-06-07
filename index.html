@@ -14,7 +14,7 @@
   --gr:#10b981;--gr-d:#065f46;--tx:#1e1b4b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;}
+body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;position:relative;}
 .screen{width:100%;max-width:1100px;position:relative;}
 .screen.hidden{display:none!important;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
@@ -25,7 +25,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .lw{text-align:center;margin-bottom:20px;}
 .ls{display:block;font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.4rem);font-weight:800;color:var(--pu);margin-top:8px;font-style:italic;}
 /* CARD */
-.card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 4px 30px rgba(124,58,237,.1);border:2px solid rgba(124,58,237,.08);text-align:center;}
+.card{background:rgba(255,255,255,.93);border-radius:24px;padding:26px;box-shadow:0 4px 30px rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.15);text-align:center;}
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pu);color:#fff;border:3px solid var(--pu-d);padding:13px 26px;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;border-radius:14px;cursor:pointer;box-shadow:0 5px 0 var(--pu-d);transition:transform .08s,box-shadow .08s;text-transform:uppercase;letter-spacing:1px;margin:5px;-webkit-tap-highlight-color:transparent;user-select:none;}
 .btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--pu-d);}
@@ -251,6 +251,35 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 @keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}};
 .em-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
 hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
+
+/* ═══════ HOST CONFIG ═══════ */
+.cfg-q-row{
+  display:flex;align-items:flex-start;gap:8px;
+  background:var(--pu-s);border:2px solid var(--pu-l);
+  border-radius:12px;padding:8px 10px;
+  transition:border-color .15s;
+}
+.cfg-q-row.active{border-color:var(--pu);background:rgba(124,58,237,.08);}
+.cfg-q-row.inactive{opacity:.55;}
+.cfg-q-check{
+  width:22px;height:22px;flex-shrink:0;
+  accent-color:var(--pu);cursor:pointer;margin-top:1px;
+}
+.cfg-q-text{flex:1;font-size:.85rem;font-weight:700;color:var(--pu-d);line-height:1.35;cursor:pointer;}
+.cfg-q-media{
+  width:100%;background:rgba(255,255,255,.7);
+  border:1.5px solid var(--pu-l);border-radius:8px;
+  padding:5px 8px;font-family:'Nunito',sans-serif;font-size:.75rem;
+  color:var(--pu-d);outline:none;margin-top:5px;
+}
+.cfg-q-media:focus{border-color:var(--pu);}
+.cfg-q-media::placeholder{color:var(--pu-l);}
+.cfg-q-del{
+  background:none;border:none;cursor:pointer;font-size:1rem;
+  color:rgba(236,72,153,.5);padding:2px;flex-shrink:0;line-height:1;
+  transition:color .1s;
+}
+.cfg-q-del:hover{color:var(--pk);}
 .rules-list{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
 .rule-item{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:12px;padding:10px 14px;font-size:.88rem;font-weight:700;color:var(--pu-d);line-height:1.4;}
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--pu);color:#fff;padding:10px 22px;border-radius:50px;font-weight:800;font-size:1rem;box-shadow:0 5px 0 var(--pu-d),0 8px 30px rgba(0,0,0,.2);transition:transform .3s cubic-bezier(.175,.885,.32,1.275);z-index:9999;white-space:nowrap;pointer-events:none;}
@@ -346,6 +375,17 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .fe3{top:70%;left:15%;animation-duration:4.5s;animation-delay:-1.5s;}
 .fe4{top:25%;right:15%;animation-duration:7s;animation-delay:-2s;}
 .fe5{bottom:25%;left:40%;animation-duration:5.5s;animation-delay:-1s;}
+.fe6{top:12%;left:22%;animation-duration:6.5s;animation-delay:-3s;}
+.fe7{top:38%;right:8%;animation-duration:7s;animation-delay:-1.2s;}
+.fe8{bottom:35%;left:28%;animation-duration:5.5s;animation-delay:-4s;}
+.fe9{top:60%;right:22%;animation-duration:8s;animation-delay:-.3s;}
+.fe10{bottom:8%;left:50%;animation-duration:5s;animation-delay:-2.5s;}
+.fe11{top:20%;left:45%;animation-duration:9s;animation-delay:-1s;}
+.fe12{bottom:42%;right:5%;animation-duration:6s;animation-delay:-3.5s;}
+.fe13{top:75%;left:8%;animation-duration:7.5s;animation-delay:-2s;}
+.fe14{top:45%;left:60%;animation-duration:8.5s;animation-delay:-.7s;}
+.fe15{bottom:20%;right:30%;animation-duration:6.2s;animation-delay:-1.8s;}
+
 
 /* Inner content */
 .land-inner{
@@ -480,11 +520,59 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   .land-steps{gap:12px;}
 }
 
-/* Override body background for landing — make it dark/purple */
-body:has(#s-land:not(.hidden)){
-  background:var(--pu-d);
-}
+/* body is always dark purple — global background */
 @media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:6px;}}
+
+/* ═══════ FLOATING EMOJI REACTIONS ═══════ */
+.float-emoji{
+  position:fixed;
+  font-size:2.2rem;
+  pointer-events:none;
+  z-index:800;
+  animation:floatUp 2.5s ease forwards;
+  user-select:none;
+}
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1) rotate(var(--rot));}
+  60%{opacity:1;transform:translateY(-180px) scale(1.3) rotate(calc(var(--rot)*-1));}
+  100%{opacity:0;transform:translateY(-300px) scale(.8) rotate(var(--rot));}
+}
+.emoji-bar{
+  position:fixed;bottom:max(80px,calc(env(safe-area-inset-bottom)+72px));
+  left:50%;transform:translateX(-50%);
+  z-index:750;
+  display:flex;gap:6px;
+  background:rgba(255,255,255,.92);
+  border:2px solid var(--pu-l);
+  border-radius:50px;
+  padding:6px 10px;
+  box-shadow:0 4px 20px rgba(124,58,237,.25);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:opacity .3s,transform .3s;
+}
+.emoji-bar.hidden-bar{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(20px);}
+.emoji-btn{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:none;font-size:1.4rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .1s;
+  padding:0;
+}
+.emoji-btn:active{transform:scale(1.4);}
+.emoji-toggle{
+  position:fixed;
+  bottom:max(80px,calc(env(safe-area-inset-bottom)+72px));
+  right:80px;
+  z-index:751;
+  width:42px;height:42px;border-radius:50%;
+  background:white;border:2px solid var(--pu-l);
+  box-shadow:0 3px 10px rgba(124,58,237,.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1.2rem;
+  -webkit-tap-highlight-color:transparent;
+}
 </style>
 <style>
 /* ═══════ TRASHTALK CHAT ═══════ */
@@ -601,25 +689,48 @@ body:has(#s-land:not(.hidden)){
     <button class="chat-send" onclick="sendChat()">➤</button>
   </div>
 </div>
+<!-- 😂 EMOJI REACTION BAR -->
+<div class="emoji-toggle" id="emoji-toggle" onclick="toggleEmojiBar()" title="Réactions">😄</div>
+<div class="emoji-bar hidden-bar" id="emoji-bar">
+  <button class="emoji-btn" onclick="sendFloatEmoji('😂')">😂</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('💀')">💀</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('🔥')">🔥</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('👀')">👀</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('🫵')">🫵</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('🍺')">🍺</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('💅')">💅</button>
+  <button class="emoji-btn" onclick="sendFloatEmoji('🤡')">🤡</button>
+</div>
+<!-- ═══ GLOBAL ANIMATED BACKGROUND (visible on all screens) ═══ -->
+<div class="land-bg" id="global-bg" aria-hidden="true">
+  <div class="land-blob b1"></div>
+  <div class="land-blob b2"></div>
+  <div class="land-blob b3"></div>
+  <!-- Floating mystery cards -->
+  <div class="fcard fc1"><span>?</span></div>
+  <div class="fcard fc2"><span>?</span></div>
+  <div class="fcard fc3"><span>?</span></div>
+  <div class="fcard fc4"><span>?</span></div>
+  <!-- Floating naughty emojis 😈 -->
+  <div class="femoji fe1">🤫</div>
+  <div class="femoji fe2">👀</div>
+  <div class="femoji fe3">🔥</div>
+  <div class="femoji fe4">💀</div>
+  <div class="femoji fe5">😂</div>
+  <div class="femoji fe6">💩</div>
+  <div class="femoji fe7">🍆</div>
+  <div class="femoji fe8">🍑</div>
+  <div class="femoji fe9">🌶️</div>
+  <div class="femoji fe10">💦</div>
+  <div class="femoji fe11">🍒</div>
+  <div class="femoji fe12">🍌</div>
+  <div class="femoji fe13">🫦</div>
+  <div class="femoji fe14">🫀</div>
+  <div class="femoji fe15">😈</div>
+</div>
 <div id="s-land" class="screen">
 
-  <!-- Animated background bubbles -->
-  <div class="land-bg" aria-hidden="true">
-    <div class="land-blob b1"></div>
-    <div class="land-blob b2"></div>
-    <div class="land-blob b3"></div>
-    <!-- Floating mystery cards -->
-    <div class="fcard fc1"><span>?</span></div>
-    <div class="fcard fc2"><span>?</span></div>
-    <div class="fcard fc3"><span>?</span></div>
-    <div class="fcard fc4"><span>?</span></div>
-    <!-- Floating emoji labels -->
-    <div class="femoji fe1">🤫</div>
-    <div class="femoji fe2">👀</div>
-    <div class="femoji fe3">🔥</div>
-    <div class="femoji fe4">💀</div>
-    <div class="femoji fe5">😂</div>
-  </div>
+  <!-- background moved to global level -->
 
   <!-- Main content -->
   <div class="land-inner">
@@ -678,7 +789,7 @@ body:has(#s-land:not(.hidden)){
       <div id="lstat" style="font-size:1rem;font-weight:800;color:var(--pu);margin-bottom:6px;">0 joueur connecté</div>
       <div class="chips" id="lchips"></div>
       <hr class="div">
-      <button class="btn big" id="btn-launch" onclick="hostLaunch()" disabled>🚀 Lancer la Partie</button>
+      <button class="btn big" id="btn-launch" onclick="openConfig()" disabled>⚙️ Configurer &amp; Lancer</button>
       <div style="font-size:.75rem;color:var(--pu-l);margin-top:6px;">2 joueurs minimum</div>
     </div>
     <div id="h-game" style="display:none;">
@@ -698,6 +809,56 @@ body:has(#s-land:not(.hidden)){
   </div>
 </div>
 
+
+<!-- HOST CONFIG SCREEN -->
+<div id="s-hconfig" class="screen hidden">
+  <div class="lw"><div class="lb" style="font-size:clamp(1.3rem,3.5vw,2rem);transform:rotate(0);padding:6px 20px 8px;">⚙️ CONFIGURATION DE LA PARTIE</div></div>
+  <div class="card" style="max-width:720px;margin:0 auto;">
+
+    <!-- Rounds count -->
+    <div style="margin-bottom:20px;">
+      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:8px;">🔢 Nombre de manches</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <input type="range" id="cfg-rounds" min="3" max="25" value="10" step="1"
+          style="flex:1;height:8px;border-radius:99px;accent-color:var(--pu);cursor:pointer;"
+          oninput="$('cfg-rounds-val').textContent=this.value">
+        <div id="cfg-rounds-val" style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu);min-width:40px;text-align:center;">10</div>
+      </div>
+    </div>
+
+    <hr class="div">
+
+    <!-- Question list -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+        <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);">📝 Questions</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn" style="font-size:.75rem;padding:5px 12px;" onclick="cfgSelectAll()">✅ Tout</button>
+          <button class="btn" style="font-size:.75rem;padding:5px 12px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="cfgSelectNone()">✕ Aucun</button>
+          <button class="btn" style="font-size:.75rem;padding:5px 12px;" onclick="showAddQuestion()">+ Ajouter</button>
+        </div>
+      </div>
+      <div id="cfg-q-list" style="max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px;"></div>
+    </div>
+
+    <!-- Add custom question -->
+    <div id="cfg-add-q" style="display:none;margin-bottom:16px;background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:12px;">
+      <div style="font-size:.8rem;font-weight:800;color:var(--pu-d);margin-bottom:6px;">Nouvelle question :</div>
+      <input type="text" id="cfg-new-q-inp" class="inp" placeholder="Le/la plus… (ex: Mytho en soirée)" maxlength="60" style="margin-bottom:8px;">
+      <div style="font-size:.78rem;font-weight:800;color:var(--pu-d);margin-bottom:4px;">🎬 URL vidéo/son pour cette question (optionnel) :</div>
+      <input type="text" id="cfg-new-q-media" class="inp" placeholder="https://... (MP4 ou MP3)" maxlength="200" style="font-size:.85rem;margin-bottom:8px;">
+      <div style="display:flex;gap:6px;">
+        <button class="btn ye" style="flex:1;font-size:.85rem;padding:9px;" onclick="cfgAddQuestion()">Ajouter ✓</button>
+        <button class="btn" style="font-size:.85rem;padding:9px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('cfg-add-q').style.display='none'">Annuler</button>
+      </div>
+    </div>
+
+    <hr class="div">
+    <div id="cfg-count-info" style="font-size:.82rem;color:var(--pu-l);font-weight:700;margin-bottom:12px;"></div>
+    <button class="btn big ye" style="width:100%;" onclick="hostLaunchFromConfig()">🚀 Lancer la Partie !</button>
+    <button class="btn" style="width:100%;margin-top:6px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('s-hconfig').classList.add('hidden');$('s-host').classList.remove('hidden');">← Retour au salon</button>
+  </div>
+</div>
 <!-- HOST FINAL -->
 <div id="s-hfinal" class="screen hidden">
   <div class="lw"><div class="lb" style="transform:rotate(0);">🏆 CLASSEMENT FINAL</div></div>
@@ -733,6 +894,13 @@ body:has(#s-land:not(.hidden)){
       <div id="confirm-name" style="font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu-d);margin-bottom:20px;"></div>
       <button class="btn big ye" style="width:100%;margin-bottom:8px;" onclick="onboardStep2()">Oui</button>
       <button class="btn ghost" style="width:100%;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 4px 0 var(--pu-l);" onclick="onboardBack()">← Changer</button>
+    </div>
+
+    <!-- STEP 2b: "C'est flingué 😂🫵" -->
+    <div id="step-flingue" style="display:none;text-align:center;">
+      <div style="font-size:3rem;margin-bottom:10px;">😂🫵</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu-d);margin-bottom:20px;">C'est flingué 😂🫵</div>
+      <button class="btn big ye" style="width:100%;" onclick="onboardStep2b()">Eh oh</button>
     </div>
 
     <!-- STEP 3: "Ta gueule" -->
@@ -848,6 +1016,8 @@ body:has(#s-land:not(.hidden)){
   <button class="btn ye big" id="wspin-btn" onclick="spinWheel()" style="margin-top:18px;">🎰 Tourner !</button>
   <div class="wheel-result" id="w-result"></div>
   <button class="btn" id="wdone-btn" style="display:none;margin-top:8px;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 3px 0 rgba(0,0,0,.3);" onclick="wheelNext()">✅ OK !</button>
+  <!-- Spectator dismiss — always visible after result shown -->
+  <button class="btn" id="wdismiss-btn" style="display:none;margin-top:6px;background:transparent;color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.15);box-shadow:none;font-size:.8rem;padding:8px 16px;" onclick="spectatorDismissWheel()">✕ Fermer la roue</button>
 </div>
 
 <script>
@@ -880,64 +1050,12 @@ const QUESTIONS=[
   "Accro aux réseaux dès le réveil"
 ];
 
-// ════════════════════════════════════════════════
-// 🎬 VIDEO MAP — associe une URL MP4 à chaque question
+// 🎬 VIDEO_MAP is now built dynamically by the config UI (see cfgBuildVideoMap)
 // Ajoute ou modifie les URLs ci-dessous avant ta soirée.
 // La clé doit correspondre EXACTEMENT à la question dans QUESTIONS.
 // Si une question n'a pas de vidéo, elle ne s'affiche pas.
 // ════════════════════════════════════════════════
-const VIDEO_MAP = {
-  "Radin quand c'est son tour de payer":
-    "", // ex: "https://drive.google.com/uc?export=download&id=TON_ID"
-  "Susceptible quand on le vanne":
-    "",
-  "Mauvais perdant sur un jeu de société":
-    "",
-  "Capable d'arriver en retard à son propre mariage":
-    "",
-  "Gaffeur qui lâche des secrets sans faire exprès":
-    "",
-  "Flambeur qui n'a plus une thune le 5 du mois":
-    "",
-  "Capable d'oublier ses clés à l'intérieur":
-    "",
-  "Prêt à survivre le plus longtemps sur une île déserte":
-    "",
-  "Râleur dès le matin sans café":
-    "",
-  "Gros mytho quand il raconte une anecdote":
-    "",
-  "Accro à son téléphone même au ciné":
-    "",
-  "Capable de manger seul toute une pizza sans honte":
-    "",
-  "Dramatique pour une simple égratignure":
-    "",
-  "Toujours en retard mais jamais gêné":
-    "",
-  "Charmeur quand il veut quelque chose":
-    "",
-  "Malin pour s'éclipser quand il y a la vaisselle":
-    "",
-  "Nostalgique du « avant c'était mieux »":
-    "",
-  "Convaincu d'avoir toujours raison":
-    "",
-  "Capable de roter en public sans honte":
-    "",
-  "Le plus probable à pleurer devant un Disney":
-    "",
-  "Celui qui parle le plus fort dans un resto":
-    "",
-  "Capable de zapper une soirée pour une série":
-    "",
-  "Le premier à s'endormir à une soirée":
-    "",
-  "Capable de mentir avec le sourire":
-    "",
-  "Accro aux réseaux dès le réveil":
-    "",
-};
+let VIDEO_MAP = {}; // populated from config UI
 
 // ════════════════════════════════════════════════
 // 💬 CHAT — pseudos anonymes aléatoires
@@ -968,7 +1086,7 @@ const N_SEG=WS.length;
 const ARC=2*Math.PI/N_SEG;
 
 const COLORS=['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309','#be185d','#065f46'];
-const MAX_ROUNDS=10;
+let MAX_ROUNDS=10; // overridden by config UI
 const CONN_TIMEOUT=9000;
 
 // ═══════════════════ UTILS ═══════════════════
@@ -1062,13 +1180,21 @@ function onboardStep1(){
 }
 
 function onboardStep2(){
-  // "Ta gueule"
+  // "C'est flingué"
   $('step-confirm').style.display='none';
+  $('step-flingue').style.display='block';
+}
+
+function onboardStep2b(){
+  // "Ta gueule"
+  $('step-flingue').style.display='none';
   $('step-tagueule').style.display='block';
 }
 
 function onboardBack(){
   $('step-confirm').style.display='none';
+  $('step-flingue').style.display='none';
+  $('step-tagueule').style.display='none';
   $('step-name').style.display='block';
 }
 
@@ -1174,6 +1300,11 @@ function handleHConn(conn){
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
       return;
     }
+    if(data.type==='EMOJI_REACT'){
+      hBcast({type:'EMOJI_REACT',emoji:data.emoji});
+      spawnFloatEmoji(data.emoji);
+      return;
+    }
     if(data.type==='CHAT'){
       if(!data.nick||!data.msg)return;
       const _m=String(data.msg).substring(0,200);
@@ -1203,11 +1334,100 @@ function hostLobbyUI(){
 }
 
 // ═══════════════════ HOST GAME ═══════════════════
-function hostLaunch(){
-  hQs=shuffle(QUESTIONS).slice(0,MAX_ROUNDS);hQi=-1;
-  $('h-lobby').style.display='none';$('h-game').style.display='block';
-  $('rth').textContent=MAX_ROUNDS;hostNext();
+function openConfig(){
+  cfgBuildList();
+  show('s-hconfig');
 }
+
+function cfgBuildList(){
+  // Merge QUESTIONS with any custom questions already added
+  if(!window.cfgQuestions){
+    window.cfgQuestions = QUESTIONS.map(q=>({text:q,active:true,media:VIDEO_MAP[q]||''}));
+  }
+  renderCfgList();
+  updateCfgInfo();
+}
+
+function renderCfgList(){
+  const list=$('cfg-q-list');
+  list.innerHTML='';
+  window.cfgQuestions.forEach((q,i)=>{
+    const row=document.createElement('div');
+    row.className='cfg-q-row '+(q.active?'active':'inactive');
+    row.innerHTML=`
+      <input type="checkbox" class="cfg-q-check" ${q.active?'checked':''} onchange="cfgToggle(${i},this.checked)">
+      <div style="flex:1;">
+        <div class="cfg-q-text" onclick="cfgToggle(${i},!window.cfgQuestions[${i}].active)">${escHtml(q.text)}</div>
+        <input type="text" class="cfg-q-media" placeholder="URL vidéo/son (optionnel)" value="${escHtml(q.media||'')}"
+          oninput="window.cfgQuestions[${i}].media=this.value"
+          onclick="this.select()">
+      </div>
+      <button class="cfg-q-del" onclick="cfgDeleteQ(${i})" title="Supprimer">🗑️</button>`;
+    list.appendChild(row);
+  });
+}
+
+function cfgToggle(i,val){
+  window.cfgQuestions[i].active=val;
+  renderCfgList();updateCfgInfo();
+}
+
+function cfgDeleteQ(i){
+  window.cfgQuestions.splice(i,1);
+  renderCfgList();updateCfgInfo();
+}
+
+function cfgSelectAll(){window.cfgQuestions.forEach(q=>q.active=true);renderCfgList();updateCfgInfo();}
+function cfgSelectNone(){window.cfgQuestions.forEach(q=>q.active=false);renderCfgList();updateCfgInfo();}
+
+function showAddQuestion(){
+  $('cfg-add-q').style.display='block';
+  $('cfg-new-q-inp').focus();
+}
+
+function cfgAddQuestion(){
+  const txt=$('cfg-new-q-inp').value.trim();
+  if(!txt){toast('✏️ Entre la question !');return;}
+  const media=$('cfg-new-q-media').value.trim();
+  window.cfgQuestions.push({text:txt,active:true,media});
+  $('cfg-new-q-inp').value='';
+  $('cfg-new-q-media').value='';
+  $('cfg-add-q').style.display='none';
+  renderCfgList();updateCfgInfo();
+  // Scroll to bottom of list
+  const list=$('cfg-q-list');list.scrollTop=list.scrollHeight;
+}
+
+function updateCfgInfo(){
+  const active=window.cfgQuestions.filter(q=>q.active).length;
+  const rounds=parseInt($('cfg-rounds').value)||10;
+  const will=Math.min(active,rounds);
+  $('cfg-count-info').textContent=`${active} question${active>1?'s':''} sélectionnée${active>1?'s':''} · ${will} manche${will>1?'s':''} seront jouées`;
+}
+
+function cfgBuildVideoMap(){
+  VIDEO_MAP={};
+  (window.cfgQuestions||[]).forEach(q=>{
+    if(q.media&&q.media.trim()) VIDEO_MAP[q.text]=q.media.trim();
+  });
+}
+
+function hostLaunchFromConfig(){
+  const activeQs=(window.cfgQuestions||QUESTIONS.map(q=>({text:q,active:true,media:''}))).filter(q=>q.active);
+  if(activeQs.length===0){toast('⚠️ Sélectionne au moins une question !');return;}
+  MAX_ROUNDS=parseInt($('cfg-rounds').value)||10;
+  cfgBuildVideoMap();
+  const pool=activeQs.map(q=>q.text);
+  hQs=shuffle(pool).slice(0,MAX_ROUNDS);hQi=-1;
+  $('h-lobby').style.display='none';$('h-game').style.display='block';
+  $('rth').textContent=Math.min(MAX_ROUNDS,pool.length);
+  show('s-host');hostNext();
+}
+
+// Keep old hostLaunch as alias just in case
+function hostLaunch(){hostLaunchFromConfig();}
+
+
 
 function hostNext(){
   hQi++;if(hQi>=MAX_ROUNDS){hostFinal();return;}
@@ -1286,7 +1506,15 @@ function handlePData(data){
       if(data.spinner!==pName) spectatorWheelLanded(data.segment,data.spinner);
       break;
     case 'WHEEL_QUEUE_DONE':
-      setTimeout(()=>{ const ov=$('wheel-ov');if(ov)ov.style.display='none'; },1800);
+      // Show dismiss button and then rev-ctrl for spectators
+      $('wdismiss-btn').style.display='';
+      setTimeout(()=>{
+        const ov=$('wheel-ov');
+        if(ov)ov.style.display='none';
+        // Show next-round button for spectators (same as winner gets from wheelNext())
+        const rc=$('rev-ctrl');
+        if(rc) rc.style.display='block';
+      },2000);
       break;
     case 'WHEEL_NEXT':
       if(data.nextSpinner!==pName){
@@ -1305,6 +1533,8 @@ function handlePData(data){
         show('s-pbetween');
       }
       break;
+    case 'EMOJI_REACT':
+      spawnFloatEmoji(data.emoji);break;
     case 'CHAT':
       appendChatMsg(data.nick,data.msg);
       if(!chatOpen){chatUnread++;updateChatBadge();}
@@ -1385,7 +1615,7 @@ function doReveal(data){
     hintIdx=(hintIdx+1)%hints.length;
     const el=$('suspense-hint');
     if(el){el.style.opacity='0';setTimeout(()=>{if(el)el.textContent=hints[hintIdx];el.style.opacity='1';},400);}
-  },1800);
+  },1200);
   window._revealHintTimer = hintTimer; // stored separately — must use clearInterval
 
   pt(()=>{
@@ -1437,26 +1667,39 @@ function doReveal(data){
         lbl.style.display='block';
         confetti();
 
-        // Show victory video if one is configured for this question in VIDEO_MAP
-        const videoUrl=VIDEO_MAP[adjective]||'';
+        // Show victory media if configured for this question in VIDEO_MAP
+        const mediaUrl=(VIDEO_MAP[adjective]||'').trim();
         const clipWrap=$('rev-clip-wrap');
         clipWrap.innerHTML='';
-        if(videoUrl&&videoUrl.trim()!==''){
+        if(mediaUrl){
+          const isAudio=/\.(mp3|ogg|wav|aac|m4a)(\?.*)?$/i.test(mediaUrl);
           const d=document.createElement('div');
           d.style.cssText='display:flex;flex-direction:column;align-items:center;opacity:0;transition:opacity .8s ease;';
-          d.innerHTML=`<div class="clip-bubble" style="width:110px;height:110px;">
-            <video src="${videoUrl.trim()}" autoplay loop playsinline
-              style="width:100%;height:100%;object-fit:cover;"
-              onerror="this.parentElement.parentElement.style.display='none'">
-            </video>
-          </div>`;
+          if(isAudio){
+            // Audio — show a pulsing speaker icon + play audio
+            d.innerHTML=`<div class="clip-bubble" style="width:90px;height:90px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,#4c1d95,#7c3aed);">🔊</div>`;
+            const aud=document.createElement('audio');
+            aud.src=mediaUrl;aud.autoplay=true;aud.loop=false;
+            aud.onerror=()=>{d.style.display='none';};
+            document.body.appendChild(aud);
+            // Clean up after reveal
+            setTimeout(()=>{try{aud.pause();aud.remove();}catch(e){}},30000);
+          } else {
+            // Video
+            d.innerHTML=`<div class="clip-bubble" style="width:120px;height:120px;">
+              <video src="${mediaUrl}" autoplay loop playsinline
+                style="width:100%;height:100%;object-fit:cover;"
+                onerror="this.parentElement.parentElement.style.display='none'">
+              </video>
+            </div>`;
+          }
           clipWrap.appendChild(d);
           clipWrap.style.display='flex';
           requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';}));
         }
-      },900);
+      },500);
 
-      // Others after 5 more seconds
+      // Others after 2.5 more seconds
       const others=players
         .filter(p=>votes[p.name]>0&&!winners.includes(p.name))
         .sort((a,b)=>votes[b.name]-votes[a.name]);
@@ -1472,18 +1715,18 @@ function doReveal(data){
             const ph=p.photo?`<img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div class="pcard-init" style="background:${c};">${ini(p.name)}</div>`;
             d.innerHTML=`<div class="pcard-pa">${ph}</div><div class="pcard-nb"><div class="pcard-name">${p.name}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
             grid.appendChild(d);
-            pt(()=>d.style.opacity='1',80+idx*450);
+            pt(()=>d.style.opacity='1',50+idx*250);
           });
           // Controls: do NOT show yet — wait for host's NEXT_ALLOWED signal
-        },5000);
+        },2500);
       }
 
       // If I'm a winner → trigger wheel queue after winner is shown
       if(iAmWinner){
-        pt(()=>startWheelQueue(winners),2200);
+        pt(()=>startWheelQueue(winners),1200);
       }
-    },750);
-  },6000); // 6 seconds of pure suspense
+    },400);
+  },3000); // 3 seconds of suspense
 }
 
 function playerAskNext(){
@@ -1512,6 +1755,7 @@ function showWheelForTurn(){
   $('ws').textContent=wIsSpinner?'Tu as été désigné(e) !':'Regarde en direct !';
   $('wspin-btn').style.display=wIsSpinner?'':'none';
   $('wdone-btn').style.display='none';
+  $('wdismiss-btn').style.display='none';
   $('w-result').textContent='';
   drawWheel(wAngle);
   $('wheel-ov').style.display='flex';
@@ -1598,6 +1842,15 @@ function updateWheelDisplay(angle,spinner){
 function spectatorWheelLanded(segment,spinner){
   $('w-result').textContent='👉 '+segment;
   $('wt').textContent='🎰 '+spinner+' a eu : '+segment;
+  $('wdismiss-btn').style.display='';
+}
+
+function spectatorDismissWheel(){
+  $('wheel-ov').style.display='none';
+  $('wdismiss-btn').style.display='none';
+  // Show rev-ctrl if reveal is still open
+  const rc=$('rev-ctrl');
+  if(rc) rc.style.display='block';
 }
 
 // ═══════════════════ DRAW WHEEL ═══════════════════
@@ -1713,6 +1966,46 @@ function escHtml(s){
 function initChatNick(){
   if(pAnonNick&&$('chat-my-nick'))$('chat-my-nick').textContent=pAnonNick;
 }
+
+
+// ═══════════════════ 😂 EMOJI REACTIONS ═══════════════════
+let emojiBarOpen = false;
+
+function toggleEmojiBar(){
+  emojiBarOpen = !emojiBarOpen;
+  $('emoji-bar').classList.toggle('hidden-bar', !emojiBarOpen);
+}
+
+function sendFloatEmoji(emoji){
+  // Show locally
+  spawnFloatEmoji(emoji);
+  // Broadcast to all via peer
+  if(isHost){
+    hBcast({type:'EMOJI_REACT',emoji});
+  } else if(pConn&&pConn.open){
+    pConn.send({type:'EMOJI_REACT',emoji});
+  }
+  // Auto-close bar after sending
+  emojiBarOpen=false;
+  $('emoji-bar').classList.add('hidden-bar');
+}
+
+function spawnFloatEmoji(emoji){
+  const el=document.createElement('div');
+  el.className='float-emoji';
+  el.textContent=emoji;
+  // Random horizontal position and rotation
+  const x=10+Math.random()*80; // % of viewport width
+  const rot=(-15+Math.random()*30)+'deg';
+  el.style.cssText=`left:${x}vw;bottom:140px;--rot:${rot};`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2600);
+}
+
+// Update cfg info when slider changes
+document.addEventListener('input',e=>{
+  if(e.target.id==='cfg-rounds') updateCfgInfo();
+});
 
 // ═══════════════════ KEYBOARD ═══════════════════
 document.addEventListener('keydown',e=>{
