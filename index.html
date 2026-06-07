@@ -8,468 +8,255 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f0eeff;
-  --purple: #7c3aed;
-  --purple-l: #a78bfa;
-  --purple-d: #4c1d95;
-  --purple-s: #ede9fe;
-  --purple-c: #8b5cf6;
-  --pink: #ec4899;
-  --yellow: #fbbf24;
-  --yellow-d: #d97706;
-  --green: #10b981;
-  --green-d: #065f46;
-  --text: #1e1b4b;
-  --white: #fff;
+:root{
+  --bg:#f0eeff; --white:#fff;
+  --pu:#7c3aed; --pu-l:#a78bfa; --pu-d:#4c1d95; --pu-s:#ede9fe; --pu-c:#8b5cf6;
+  --pk:#ec4899; --pk-d:#be185d;
+  --ye:#fbbf24; --ye-d:#d97706;
+  --gr:#10b981; --gr-d:#065f46;
+  --tx:#1e1b4b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{
-  font-family:'Nunito',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:16px;overflow-x:hidden;
-}
-
-.screen{width:100%;max-width:1050px;position:relative;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;}
+.screen{width:100%;max-width:1100px;position:relative;}
 .screen.hidden{display:none!important;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 .screen:not(.hidden){animation:fadeUp .3s ease;}
 
 /* LOGO */
-.logo-brush{
-  display:inline-block;
-  background:var(--purple);color:white;
-  font-family:'Baloo 2',cursive;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;
-  padding:8px 32px 12px;
-  border-radius:16px 20px 18px 14px/14px 18px 20px 16px;
-  letter-spacing:2px;transform:rotate(-1.5deg);
-  box-shadow:5px 5px 0 var(--purple-d);
-}
-.logo-brush .plus{color:var(--yellow);}
+.logo-brush{display:inline-block;background:var(--pu);color:#fff;font-family:'Baloo 2',cursive;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;padding:8px 32px 12px;border-radius:16px 20px 18px 14px/14px 18px 20px 16px;letter-spacing:2px;transform:rotate(-1.5deg);box-shadow:5px 5px 0 var(--pu-d);}
+.logo-brush .plus{color:var(--ye);}
 .logo-wrap{text-align:center;margin-bottom:20px;}
-.logo-sub{display:block;font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.4rem);font-weight:800;color:var(--purple);margin-top:8px;font-style:italic;}
+.logo-sub{display:block;font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.4rem);font-weight:800;color:var(--pu);margin-top:8px;font-style:italic;}
 
 /* CARD */
-.card{
-  background:white;border-radius:24px;padding:26px;
-  box-shadow:0 4px 30px rgba(124,58,237,.1);
-  border:2px solid rgba(124,58,237,.08);text-align:center;
-}
+.card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 4px 30px rgba(124,58,237,.1);border:2px solid rgba(124,58,237,.08);text-align:center;}
 
 /* BUTTONS */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  background:var(--purple);color:white;
-  border:3px solid var(--purple-d);padding:13px 26px;
-  font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;
-  border-radius:14px;cursor:pointer;
-  box-shadow:0 5px 0 var(--purple-d);
-  transition:transform .08s,box-shadow .08s;
-  text-transform:uppercase;letter-spacing:1px;margin:5px;
-  -webkit-tap-highlight-color:transparent;user-select:none;
-}
-.btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--purple-d);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pu);color:#fff;border:3px solid var(--pu-d);padding:13px 26px;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;border-radius:14px;cursor:pointer;box-shadow:0 5px 0 var(--pu-d);transition:transform .08s,box-shadow .08s;text-transform:uppercase;letter-spacing:1px;margin:5px;-webkit-tap-highlight-color:transparent;user-select:none;}
+.btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--pu-d);}
 .btn:disabled{opacity:.35;pointer-events:none;}
-.btn.yellow{background:var(--yellow);color:var(--text);border-color:var(--yellow-d);box-shadow:0 5px 0 var(--yellow-d);}
-.btn.yellow:active{box-shadow:0 0 0 var(--yellow-d);}
-.btn.pink{background:var(--pink);color:white;border-color:#be185d;box-shadow:0 5px 0 #be185d;}
-.btn.pink:active{box-shadow:0 0 0 #be185d;}
-.btn.green{background:var(--green);color:white;border-color:var(--green-d);box-shadow:0 5px 0 var(--green-d);}
-.btn.green:active{box-shadow:0 0 0 var(--green-d);}
+.btn.ye{background:var(--ye);color:var(--tx);border-color:var(--ye-d);box-shadow:0 5px 0 var(--ye-d);}
+.btn.ye:active{box-shadow:0 0 0 var(--ye-d);}
+.btn.pk{background:var(--pk);color:#fff;border-color:var(--pk-d);box-shadow:0 5px 0 var(--pk-d);}
+.btn.pk:active{box-shadow:0 0 0 var(--pk-d);}
+.btn.gr{background:var(--gr);color:#fff;border-color:var(--gr-d);box-shadow:0 5px 0 var(--gr-d);}
+.btn.gr:active{box-shadow:0 0 0 var(--gr-d);}
 .btn.big{font-size:1.25rem;padding:15px 34px;border-radius:16px;}
 
-/* INPUT */
-.inp{
-  width:100%;background:var(--purple-s);
-  border:3px solid var(--purple-l);border-radius:14px;
-  padding:14px 18px;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:700;
-  color:var(--text);outline:none;text-align:center;transition:border-color .2s;margin-bottom:12px;
-}
-.inp:focus{border-color:var(--purple);}
-.inp::placeholder{color:var(--purple-l);}
+/* INPUTS */
+.inp{width:100%;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:700;color:var(--tx);outline:none;text-align:center;transition:border-color .2s;margin-bottom:12px;}
+.inp:focus{border-color:var(--pu);}
+.inp::placeholder{color:var(--pu-l);}
+.code-inp{width:100%;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:16px;padding:16px;font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu);outline:none;text-align:center;letter-spacing:8px;transition:border-color .2s;text-transform:uppercase;margin-bottom:14px;}
+.code-inp:focus{border-color:var(--pu);}
+.code-inp::placeholder{color:var(--pu-l);letter-spacing:4px;}
 
-/* ── ROOM CODE DISPLAY ── */
-.room-code-big{
-  font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;
-  color:var(--purple);letter-spacing:10px;
-  background:var(--purple-s);border:4px solid var(--purple-l);
-  border-radius:20px;padding:12px 28px;display:inline-block;
-  box-shadow:0 5px 0 var(--purple-l);margin:10px 0;
-}
-.room-code-label{font-size:.75rem;font-weight:900;letter-spacing:5px;color:var(--purple-l);text-transform:uppercase;margin-bottom:4px;}
-
-/* ── CODE ENTRY (join by code) ── */
-.code-inp{
-  width:100%;background:var(--purple-s);
-  border:4px solid var(--purple-l);border-radius:16px;
-  padding:16px;font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;
-  color:var(--purple);outline:none;text-align:center;letter-spacing:8px;
-  transition:border-color .2s;text-transform:uppercase;margin-bottom:14px;
-}
-.code-inp:focus{border-color:var(--purple);}
-.code-inp::placeholder{color:var(--purple-l);letter-spacing:4px;}
+/* ROOM CODE */
+.room-code-big{font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;color:var(--pu);letter-spacing:10px;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:20px;padding:12px 28px;display:inline-block;box-shadow:0 5px 0 var(--pu-l);margin:10px 0;}
+.rc-label{font-size:.72rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
 
 /* CHIPS */
-.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;min-height:38px;}
-.chip{
-  background:var(--purple-s);border:2px solid var(--purple-l);
-  border-radius:50px;padding:6px 14px;
-  font-weight:800;font-size:.9rem;color:var(--purple-d);
-  display:flex;align-items:center;gap:6px;
-  animation:popIn .3s cubic-bezier(.175,.885,.32,1.275);
-}
-.dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:blink 1.2s infinite;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;min-height:36px;}
+.chip{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:50px;padding:6px 14px;font-weight:800;font-size:.9rem;color:var(--pu-d);display:flex;align-items:center;gap:6px;animation:popIn .3s cubic-bezier(.175,.885,.32,1.275);}
+.dot{width:8px;height:8px;background:var(--gr);border-radius:50%;animation:blink 1.2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
 @keyframes popIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
 
 /* QR */
 .qr-block{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0;}
-#qrcode{background:white;padding:12px;border-radius:14px;border:3px solid var(--purple);box-shadow:5px 5px 0 var(--purple-d);}
-.room-url-small{font-size:.7rem;color:var(--purple-l);word-break:break-all;max-width:320px;}
+#qrcode{background:#fff;padding:12px;border-radius:14px;border:3px solid var(--pu);box-shadow:5px 5px 0 var(--pu-d);}
+.room-url-small{font-size:.7rem;color:var(--pu-l);word-break:break-all;max-width:320px;}
 
 /* QUESTION BANNER */
-.q-banner{
-  background:var(--purple);border-radius:20px 24px 22px 18px/18px 22px 24px 20px;
-  padding:20px 24px;margin-bottom:20px;transform:rotate(-.5deg);position:relative;overflow:hidden;
-}
-.q-label{font-size:.7rem;font-weight:900;letter-spacing:6px;color:var(--purple-l);text-transform:uppercase;margin-bottom:5px;}
-.q-text{font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.6rem);font-weight:900;color:white;line-height:1.2;}
+.q-banner{background:var(--pu);border-radius:20px 24px 22px 18px/18px 22px 24px 20px;padding:18px 22px;margin-bottom:18px;transform:rotate(-.5deg);position:relative;overflow:hidden;}
+.q-label{font-size:.7rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:5px;}
+.q-text{font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.6rem);font-weight:900;color:#fff;line-height:1.2;}
 
 /* VOTE BAR */
 .vbar-wrap{display:flex;align-items:center;gap:10px;margin:0 0 14px;}
-.vbar-track{flex:1;height:12px;background:var(--purple-s);border-radius:99px;overflow:hidden;border:2px solid var(--purple-l);}
-.vbar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:99px;transition:width .5s ease;width:0%;}
-.vbar-lbl{font-size:.9rem;font-weight:800;color:var(--purple);white-space:nowrap;}
+.vbar-track{flex:1;height:12px;background:var(--pu-s);border-radius:99px;overflow:hidden;border:2px solid var(--pu-l);}
+.vbar-fill{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .5s ease;width:0%;}
+.vbar-lbl{font-size:.9rem;font-weight:800;color:var(--pu);white-space:nowrap;}
 
-/* ════════════════════════════════════
+/* ═══════════════════════════════
    PLAYER CARDS — Cacabox style
-════════════════════════════════════ */
-.pgrid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
-  gap:16px;
-}
-
-.pcard{
-  background:var(--purple-c);
-  border:4px solid white;border-radius:22px;
-  padding:0;overflow:hidden;
-  box-shadow:0 8px 0 rgba(0,0,0,.25);
-  position:relative;
-  aspect-ratio:4/5;
-  display:flex;flex-direction:column;
-}
-.pcard.voted-in{border-color:var(--green);box-shadow:0 8px 0 var(--green-d);}
-.pcard.winner{
-  border-color:var(--yellow)!important;
-  animation:winnerGlow .55s ease infinite alternate;z-index:5;
-}
-@keyframes winnerGlow{
-  from{box-shadow:0 8px 0 var(--yellow-d),0 0 20px rgba(251,191,36,.5);}
-  to{box-shadow:0 8px 0 var(--yellow-d),0 0 55px rgba(251,191,36,.95),0 0 90px rgba(251,191,36,.3);}
-}
-.winner-crown{
-  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-  font-size:1.8rem;animation:crownFloat .4s ease infinite alternate;z-index:10;
-}
+═══════════════════════════════ */
+/* Responsive grid: auto-fills, works for 4 to 20 players */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(90px,12vw,145px),1fr));gap:clamp(8px,1.5vw,16px);}
+.pcard{background:var(--pu-c);border:4px solid #fff;border-radius:22px;padding:0;overflow:hidden;box-shadow:0 7px 0 rgba(0,0,0,.22);position:relative;aspect-ratio:4/5;display:flex;flex-direction:column;transition:border-color .3s,box-shadow .3s;}
+.pcard.voted-in{border-color:var(--gr);box-shadow:0 7px 0 var(--gr-d);}
+.pcard.winner{border-color:var(--ye)!important;animation:winnerGlow .55s ease infinite alternate;z-index:5;}
+@keyframes winnerGlow{from{box-shadow:0 8px 0 var(--ye-d),0 0 20px rgba(251,191,36,.4);}to{box-shadow:0 8px 0 var(--ye-d),0 0 55px rgba(251,191,36,.9),0 0 90px rgba(251,191,36,.25);}}
+.winner-crown{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:1.7rem;animation:crownFloat .4s ease infinite alternate;z-index:10;}
 @keyframes crownFloat{from{transform:translateX(-50%) translateY(0);}to{transform:translateX(-50%) translateY(-7px);}}
+.pcard-pa{flex:1;position:relative;overflow:hidden;background:linear-gradient(135deg,#6d28d9,#8b5cf6,#a78bfa);}
+.pcard-pa img,.pcard-init{width:100%;height:100%;object-fit:cover;display:block;}
+.pcard-init{display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.8rem);font-weight:900;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);}
+.pcard-nb{background:#fff;padding:7px 8px 5px;text-align:center;flex-shrink:0;}
+.pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.75rem,.9rem,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.pcard-votes{display:none;font-family:'Baloo 2',cursive;font-size:clamp(.75rem,.85rem,1rem);font-weight:900;color:var(--pu);margin-top:2px;}
 
-/* Photo area */
-.pcard-photo-area{
-  flex:1;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,#6d28d9,#8b5cf6,#a78bfa);
-}
-.pcard-photo-area img,.p-init{
-  width:100%;height:100%;object-fit:cover;display:block;
-}
-.p-init{
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Baloo 2',cursive;font-size:2.8rem;font-weight:900;
-  color:white;text-shadow:2px 2px 0 rgba(0,0,0,.3);
-}
+/* REVEAL MASK — sits over photo, fades out slowly */
+.rmask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3;}
+.rmask-bg{position:absolute;inset:0;background:linear-gradient(160deg,#3b0764,#5b21b6);transition:opacity 3s ease;opacity:1;}
+.rmask-q{position:relative;z-index:2;font-family:'Baloo 2',cursive;font-size:clamp(2rem,5vw,4rem);font-weight:900;color:var(--ye);text-shadow:3px 3px 0 rgba(0,0,0,.3);animation:qPulse .9s ease infinite alternate;transition:opacity 1s ease;}
+@keyframes qPulse{from{transform:scale(1);}to{transform:scale(1.12) rotate(5deg);}}
 
-/* THE REVEAL MASK */
-.rmask{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:3;
-  /* The mask IS the purple overlay that fades out */
-  transition:none;
-}
-/* Dark gradient over the photo — this is what we fade */
-.rmask-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(160deg,#3b0764,#5b21b6,#7c3aed);
-  transition:opacity 2.5s ease;
-  opacity:1;
-}
-.rmask-q{
-  position:relative;z-index:2;
-  font-family:'Baloo 2',cursive;font-size:4rem;font-weight:900;
-  color:var(--yellow);text-shadow:3px 3px 0 rgba(0,0,0,.3);
-  animation:qPulse .9s ease infinite alternate;
-  transition:opacity 1s ease;
-}
-@keyframes qPulse{from{transform:scale(1);}to{transform:scale(1.1) rotate(4deg);}}
-
-/* Name bar */
-.pcard-name-bar{
-  background:white;padding:8px 10px 6px;text-align:center;flex-shrink:0;
-  /* Name fades in during reveal */
-  transition:opacity 2s ease;
-}
-.pcard-name{
-  font-family:'Baloo 2',cursive;font-size:1rem;font-weight:900;
-  color:var(--text);text-transform:uppercase;letter-spacing:.5px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;
-  /* Hidden until reveal */
-  transition:opacity 1.5s ease;
-}
-.pcard-votes{
-  display:none;
-  font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--purple);margin-top:2px;
-}
-
-/* Scoreboard */
-.sb-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin:14px 0;}
-.sb-row{
-  display:flex;align-items:center;gap:12px;
-  background:var(--purple-s);border:3px solid var(--purple-l);
-  border-radius:16px;padding:12px 16px;
-  animation:slideIn .35s ease both;
-}
-.sb-row.gold{border-color:var(--yellow);background:#fffbeb;}
+/* SCOREBOARD */
+.sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;}
+.sb-row{display:flex;align-items:center;gap:12px;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:16px;padding:11px 15px;animation:slideIn .35s ease both;}
+.sb-row.gold{border-color:var(--ye);background:#fffbeb;}
 .sb-row.silver{border-color:#9ca3af;background:#f9fafb;}
-.sb-row.bronze{border-color:var(--yellow-d);background:#fff7ed;}
+.sb-row.bronze{border-color:var(--ye-d);background:#fff7ed;}
 @keyframes slideIn{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:translateX(0);}}
-.sb-rank{font-family:'Baloo 2',cursive;font-size:1.5rem;width:32px;text-align:center;}
-.sb-photo{width:46px;height:46px;border-radius:50%;object-fit:cover;border:3px solid var(--purple-l);flex-shrink:0;}
-.sb-init{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:white;flex-shrink:0;}
-.sb-name{flex:1;font-weight:900;font-size:1rem;text-transform:uppercase;color:var(--text);}
-.sb-pts{font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:900;color:var(--purple);}
-.sb-sub{font-size:.65rem;color:var(--purple-l);font-weight:700;text-align:right;}
+.sb-rank{font-family:'Baloo 2',cursive;font-size:1.4rem;width:30px;text-align:center;}
+.sb-ph{width:44px;height:44px;border-radius:50%;object-fit:cover;border:3px solid var(--pu-l);flex-shrink:0;}
+.sb-in{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:#fff;flex-shrink:0;}
+.sb-name{flex:1;font-weight:900;font-size:.95rem;text-transform:uppercase;color:var(--tx);}
+.sb-pts{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:900;color:var(--pu);}
+.sb-sub{font-size:.62rem;color:var(--pu-l);font-weight:700;text-align:right;}
 
-/* Vote screen */
-.vote-banner{
-  background:var(--purple);border-radius:18px;padding:16px 20px;margin-bottom:14px;transform:rotate(-.5deg);
-}
-.vote-banner-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:var(--purple-l);text-transform:uppercase;margin-bottom:4px;}
-.vote-banner-txt{font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:900;color:white;line-height:1.25;}
+/* VOTE BUTTONS */
+.vote-banner{background:var(--pu);border-radius:18px;padding:15px 18px;margin-bottom:14px;transform:rotate(-.5deg);}
+.vote-banner-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
+.vote-banner-txt{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:#fff;line-height:1.25;}
 .vote-grid{display:flex;flex-direction:column;gap:9px;}
-.vote-btn{
-  background:white;border:3px solid var(--purple-l);
-  border-radius:16px;padding:11px 14px;
-  display:flex;align-items:center;gap:12px;
-  cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;
-  -webkit-tap-highlight-color:transparent;user-select:none;text-align:left;
-  box-shadow:0 3px 0 var(--purple-l);
-}
-.vote-btn:hover{border-color:var(--purple);box-shadow:0 3px 0 var(--purple-d);}
-.vote-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--purple);}
-.vb-photo{width:44px;height:44px;border-radius:12px;object-fit:cover;border:2px solid var(--purple-l);flex-shrink:0;}
-.vb-init{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:900;color:white;flex-shrink:0;}
-.vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:1.1rem;text-transform:uppercase;color:var(--text);}
+.vote-btn{background:#fff;border:3px solid var(--pu-l);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;text-align:left;box-shadow:0 3px 0 var(--pu-l);}
+.vote-btn:hover{border-color:var(--pu);box-shadow:0 3px 0 var(--pu-d);}
+.vote-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu);}
+.vb-ph{width:42px;height:42px;border-radius:10px;object-fit:cover;border:2px solid var(--pu-l);flex-shrink:0;}
+.vb-in{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0;}
+.vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:1.05rem;text-transform:uppercase;color:var(--tx);}
 
 /* PHOTO PICKER */
-.photo-circle{
-  width:86px;height:86px;border-radius:20px;margin:0 auto 12px;
-  border:3px dashed var(--purple-l);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;cursor:pointer;
-  background:var(--purple-s);overflow:hidden;position:relative;
-  transition:border-color .2s,transform .15s;
-}
-.photo-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:16px;}
-.photo-circle:hover{border-color:var(--purple);transform:scale(1.04);}
-#file-inp{display:none;}
+.photo-circle{width:84px;height:84px;border-radius:18px;margin:0 auto 12px;border:3px dashed var(--pu-l);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;background:var(--pu-s);overflow:hidden;position:relative;transition:border-color .2s,transform .15s;}
+.photo-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
+.photo-circle:hover{border-color:var(--pu);transform:scale(1.04);}
+.file-inp{display:none;}
+
+/* ════════════════════════════════════
+   SPINNING WHEEL
+════════════════════════════════════ */
+.wheel-overlay{position:fixed;inset:0;background:rgba(76,29,149,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+.wheel-title{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:900;color:var(--ye);margin-bottom:16px;text-align:center;text-transform:uppercase;letter-spacing:2px;}
+.wheel-wrap{position:relative;width:min(80vw,320px);height:min(80vw,320px);}
+.wheel-canvas{border-radius:50%;border:5px solid #fff;box-shadow:0 0 30px rgba(255,225,53,.4);}
+.wheel-pointer{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:32px solid #fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+.wheel-btn{margin-top:20px;font-size:1.3rem;}
+.wheel-result{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:900;color:#fff;text-align:center;margin-top:14px;min-height:2.2rem;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
+.wheel-close{margin-top:12px;font-size:.9rem;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 3px 0 rgba(0,0,0,.3);}
 
 /* MISC */
-.m-title{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--purple);margin-bottom:6px;}
+.m-title{font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:900;color:var(--pu);margin-bottom:6px;}
 .big-emoji{font-size:3rem;margin-bottom:10px;display:block;animation:bounce .5s ease infinite alternate;}
 @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-8px);}}
 .wait-dots::after{content:'';animation:dots 1.5s infinite;}
 @keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}};
-.tag{display:inline-block;padding:5px 14px;border-radius:50px;font-size:.85rem;font-weight:800;background:var(--purple-s);color:var(--purple-d);border:2px solid var(--purple-l);margin-bottom:10px;}
-hr.div{border:none;border-top:2px solid var(--purple-s);margin:14px 0;}
-
-/* HOST EMERGENCY */
-.emergency-box{background:var(--purple-s);border:2px solid var(--purple-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
-.emergency-title{font-size:.7rem;letter-spacing:4px;color:var(--purple-l);text-transform:uppercase;font-weight:900;margin-bottom:10px;}
-
-/* REVEAL SCREEN */
-.reveal-winner-only{
-  display:flex;flex-direction:column;align-items:center;gap:0;
-  margin:0 auto;max-width:400px;
-}
-.reveal-winner-card{
-  background:var(--purple-c);
-  border:5px solid var(--yellow);border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 10px 0 var(--yellow-d),0 0 60px rgba(251,191,36,.4);
-  width:200px;
-  aspect-ratio:4/5;
-  position:relative;
-  animation:winnerGlow .55s ease infinite alternate;
-}
-.reveal-winner-label{
-  font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:900;
-  color:var(--purple);text-transform:uppercase;letter-spacing:2px;
-  margin-top:14px;text-align:center;
-}
-.reveal-others-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-  gap:12px;margin-top:18px;width:100%;max-width:600px;
-  margin-left:auto;margin-right:auto;
-}
-.reveal-others-grid .pcard{aspect-ratio:4/5;}
-
-/* TOAST */
-.toast{
-  position:fixed;top:16px;left:50%;
-  transform:translateX(-50%) translateY(-80px);
-  background:var(--purple);color:white;
-  padding:10px 22px;border-radius:50px;
-  font-weight:800;font-size:1rem;
-  box-shadow:0 5px 0 var(--purple-d),0 8px 30px rgba(0,0,0,.2);
-  transition:transform .3s cubic-bezier(.175,.885,.32,1.275);
-  z-index:9999;white-space:nowrap;pointer-events:none;
-}
+.tag{display:inline-block;padding:5px 14px;border-radius:50px;font-size:.85rem;font-weight:800;background:var(--pu-s);color:var(--pu-d);border:2px solid var(--pu-l);}
+.emergency-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
+hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--pu);color:#fff;padding:10px 22px;border-radius:50px;font-weight:800;font-size:1rem;box-shadow:0 5px 0 var(--pu-d),0 8px 30px rgba(0,0,0,.2);transition:transform .3s cubic-bezier(.175,.885,.32,1.275);z-index:9999;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-
-/* CONFETTI */
 .cp{position:fixed;pointer-events:none;z-index:9998;border-radius:2px;animation:fall linear forwards;}
 @keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:1;}100%{transform:translateY(105vh) rotate(800deg);opacity:0;}}
-
-@media(max-width:600px){
-  .card{padding:18px 12px;}
-  .pgrid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px;}
-  .reveal-others-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
-}
+@media(max-width:600px){.card{padding:18px 12px;}.pgrid{gap:8px;}}
 </style>
 </head>
 <body>
-
 <div class="toast" id="toast"></div>
 
-<!-- HOST: LANDING -->
+<!-- ═══════════════ HOST LANDING ═══════════════ -->
 <div id="s-land" class="screen">
   <div class="logo-wrap">
     <div class="logo-brush">QUI EST LE <span class="plus">+</span> ?</div>
     <span class="logo-sub">Le jeu qui révèle tout 👀</span>
   </div>
   <div class="card">
-    <p style="color:var(--purple-l);margin-bottom:18px;font-size:.95rem;font-weight:700;">Lance un salon sur cet écran. Tes amis scannent le QR code ou entrent le code de salon. Tout se passe automatiquement.</p>
-    <button class="btn big yellow" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
+    <p style="color:var(--pu-l);margin-bottom:18px;font-size:.95rem;font-weight:700;">Lance un salon sur cet écran.<br>Tes amis scannent le QR ou entrent le code de salon.</p>
+    <button class="btn big ye" onclick="hostOpen()">🎮 Ouvrir le Salon</button>
+    <div style="margin:14px 0;font-size:.85rem;color:var(--pu-l);font-weight:700;">— ou —</div>
+    <button class="btn" onclick="gotoCodeEntry()">🔑 Rejoindre avec un code</button>
   </div>
 </div>
 
-<!-- HOST: LOBBY + GAME -->
+<!-- ═══════════════ HOST SCREEN ═══════════════ -->
 <div id="s-host" class="screen hidden">
-  <div class="logo-wrap">
-    <div class="logo-brush" style="font-size:clamp(1.4rem,4vw,2.2rem);transform:rotate(0deg);padding:6px 22px 8px;">QUI EST LE <span class="plus">+</span> ?</div>
-  </div>
+  <div class="logo-wrap"><div class="logo-brush" style="font-size:clamp(1.4rem,4vw,2.2rem);transform:rotate(0);padding:6px 22px 8px;">QUI EST LE <span class="plus">+</span> ?</div></div>
   <div class="card">
     <!-- LOBBY -->
-    <div id="h-lobby-section">
-      <div class="room-code-label">Code de salon</div>
-      <div class="room-code-big" id="room-code-display">----</div>
-      <div class="qr-block" style="margin-top:10px;">
-        <div id="qrcode"></div>
-        <div class="room-url-small" id="room-url"></div>
-      </div>
-      <div id="lobby-stat" style="font-size:1rem;font-weight:800;color:var(--purple);margin-bottom:6px;">0 joueur connecté</div>
+    <div id="h-lobby">
+      <div class="rc-label">Code de salon — à rentrer depuis n'importe quel téléphone</div>
+      <div class="room-code-big" id="rc-display">----</div>
+      <div class="qr-block"><div id="qrcode"></div><div class="room-url-small" id="room-url"></div></div>
+      <div id="lobby-stat" style="font-size:1rem;font-weight:800;color:var(--pu);margin-bottom:6px;">0 joueur connecté</div>
       <div class="chips" id="lobby-chips"></div>
       <hr class="div">
       <button class="btn big" id="btn-launch" onclick="hostLaunch()" disabled>🚀 Lancer la Partie</button>
-      <div style="font-size:.75rem;color:var(--purple-l);margin-top:6px;">2 joueurs minimum</div>
+      <div style="font-size:.75rem;color:var(--pu-l);margin-top:6px;">2 joueurs minimum</div>
     </div>
-    <!-- GAME CONTROLS (emergency only) -->
-    <div id="h-game-section" style="display:none;">
-      <div class="room-code-label">Code de salon (reconnexion)</div>
-      <div class="room-code-big" id="room-code-display2">----</div>
-      <div id="lobby-stat2" style="font-size:.9rem;font-weight:800;color:var(--purple);margin:8px 0 4px;">0 joueur connecté</div>
+    <!-- GAME (emergency only) -->
+    <div id="h-game" style="display:none;">
+      <div class="rc-label">Code de reconnexion</div>
+      <div class="room-code-big" id="rc-display2">----</div>
+      <div id="lobby-stat2" style="font-size:.9rem;font-weight:800;color:var(--pu);margin:6px 0 4px;"></div>
       <div class="chips" id="lobby-chips2"></div>
       <div class="emergency-box">
-        <div class="emergency-title">⚡ Contrôles d'urgence</div>
+        <div style="font-size:.7rem;letter-spacing:4px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:10px;">⚡ Contrôles d'urgence</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
-          <button class="btn pink" id="btn-force-reveal" onclick="hostForceReveal()" style="font-size:.88rem;padding:9px 16px;">💥 Forcer le reveal</button>
-          <button class="btn green" id="btn-force-next" onclick="hostNext()" style="font-size:.88rem;padding:9px 16px;" disabled>⏭ Manche suivante</button>
+          <button class="btn pk" id="btn-freveal" onclick="hostForceReveal()" style="font-size:.88rem;padding:9px 16px;">💥 Forcer le reveal</button>
+          <button class="btn gr" id="btn-fnext" onclick="hostNext()" style="font-size:.88rem;padding:9px 16px;" disabled>⏭ Manche suivante</button>
         </div>
-        <div style="font-size:.78rem;color:var(--purple-l);margin-top:8px;font-weight:700;">Manche <span id="rnum-host">0</span> / <span id="rtot-host">10</span></div>
+        <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnum-h">0</span> / <span id="rtot-h">10</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- HOST: FINAL -->
+<!-- ═══════════════ HOST FINAL ═══════════════ -->
 <div id="s-hfinal" class="screen hidden">
   <div class="logo-wrap"><div class="logo-brush" style="transform:rotate(0);">🏆 CLASSEMENT FINAL</div></div>
-  <div class="card">
-    <ul class="sb-list" id="h-sb"></ul>
-    <button class="btn yellow" onclick="location.reload()" style="margin-top:10px;">🔄 Rejouer</button>
-  </div>
+  <div class="card"><ul class="sb-list" id="h-sb"></ul><button class="btn ye" onclick="location.reload()" style="margin-top:10px;">🔄 Rejouer</button></div>
 </div>
 
-<!-- PLAYER: JOIN (also used for code entry) -->
+<!-- ═══════════════ PLAYER JOIN ═══════════════ -->
 <div id="s-pjoin" class="screen hidden">
   <div class="logo-wrap"><div class="logo-brush" style="font-size:clamp(1.8rem,6vw,3rem);">REJOINDRE</div></div>
   <div class="card" style="max-width:420px;margin:0 auto;">
-
-    <!-- If arrived via QR (?room=xxx), show name+photo only -->
-    <div id="join-via-qr" style="display:none;">
-      <p style="color:var(--purple-l);margin-bottom:16px;font-size:.9rem;font-weight:700;">Ajoute ta photo et ton prénom</p>
+    <!-- Step A: code entry (no ?room param) -->
+    <div id="step-code" style="display:none;">
+      <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Entre le code affiché sur l'écran principal</p>
+      <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase()" onkeydown="if(event.key==='Enter')validateCode()">
+      <button class="btn big" style="width:100%;" onclick="validateCode()">Valider ✓</button>
+    </div>
+    <!-- Step B: name + photo -->
+    <div id="step-name" style="display:none;">
+      <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Ajoute ta photo et ton prénom</p>
       <div class="photo-circle" id="photo-circle" onclick="document.getElementById('file-inp').click()">
         <span id="photo-ph">📷</span>
         <img id="photo-prev" src="" style="display:none;" alt="">
       </div>
-      <input type="file" id="file-inp" accept="image/*" capture="user" onchange="handlePhoto(event)">
-      <div style="font-size:.75rem;color:var(--purple-l);margin-bottom:14px;font-weight:700;">Photo optionnelle</div>
-      <input type="text" id="pname-inp" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off">
+      <input type="file" id="file-inp" class="file-inp" accept="image/*" capture="user" onchange="handlePhoto(event)">
+      <div style="font-size:.73rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Photo optionnelle — clique pour choisir</div>
+      <input type="text" id="pname-inp" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off" onkeydown="if(event.key==='Enter')playerJoin()">
       <button class="btn big" style="width:100%;" onclick="playerJoin()">Rejoindre 🚀</button>
     </div>
-
-    <!-- If arrived on base URL, show code entry first -->
-    <div id="join-via-code" style="display:none;">
-      <p style="color:var(--purple-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Entre le code de salon affiché sur l'écran principal</p>
-      <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
-      <button class="btn big" style="width:100%;" onclick="joinByCode()">Valider le code ✓</button>
-      <div style="margin:12px 0;color:var(--purple-l);font-weight:700;">— ou —</div>
-      <p style="font-size:.82rem;color:var(--purple-l);font-weight:700;">Scanne le QR code sur l'écran pour rejoindre directement</p>
-    </div>
-
-    <!-- Name + photo step (after code validated) -->
-    <div id="join-name-step" style="display:none;">
-      <p style="color:var(--purple-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Ajoute ta photo et ton prénom</p>
-      <div class="photo-circle" id="photo-circle2" onclick="document.getElementById('file-inp2').click()">
-        <span id="photo-ph2">📷</span>
-        <img id="photo-prev2" src="" style="display:none;" alt="">
-      </div>
-      <input type="file" id="file-inp2" accept="image/*" capture="user" onchange="handlePhoto2(event)">
-      <div style="font-size:.75rem;color:var(--purple-l);margin-bottom:14px;font-weight:700;">Photo optionnelle</div>
-      <input type="text" id="pname-inp2" class="inp" placeholder="Ton prénom ✍️" maxlength="12" autocomplete="off">
-      <button class="btn big" style="width:100%;" onclick="playerJoinByCode()">Rejoindre 🚀</button>
-    </div>
-
-    <div id="join-stat" style="margin-top:10px;color:var(--purple-l);font-size:.82rem;min-height:18px;font-weight:700;"></div>
+    <div id="join-stat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;"></div>
   </div>
 </div>
 
-<!-- PLAYER: WAIT -->
+<!-- ═══════════════ PLAYER WAIT ═══════════════ -->
 <div id="s-pwait" class="screen hidden">
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji">👀</span>
     <div class="m-title" id="p-name-disp">...</div>
-    <p style="color:var(--purple);font-weight:800;font-size:1.05rem;">Tu es dans le salon !</p>
-    <p style="color:var(--purple-l);margin-top:8px;font-size:.9rem;font-weight:700;">La partie va commencer<span class="wait-dots"></span></p>
+    <p style="color:var(--pu);font-weight:800;font-size:1rem;">Tu es dans le salon !</p>
+    <p style="color:var(--pu-l);margin-top:8px;font-size:.9rem;font-weight:700;">La partie commence bientôt<span class="wait-dots"></span></p>
     <div class="chips" id="p-chips" style="margin-top:14px;"></div>
   </div>
 </div>
 
-<!-- PLAYER: VOTE -->
+<!-- ═══════════════ PLAYER VOTE ═══════════════ -->
 <div id="s-pvote" class="screen hidden">
   <div style="max-width:440px;margin:0 auto;">
     <div class="vote-banner">
@@ -480,78 +267,76 @@ hr.div{border:none;border-top:2px solid var(--purple-s);margin:14px 0;}
   </div>
 </div>
 
-<!-- PLAYER: VOTED -->
+<!-- ═══════════════ PLAYER VOTED ═══════════════ -->
 <div id="s-pvoted" class="screen hidden">
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji">🤫</span>
     <div class="m-title">VOTÉ !</div>
-    <p style="color:var(--pink);font-weight:800;font-size:1rem;">Vote bien enregistré</p>
-    <p style="color:var(--purple-l);margin-top:8px;font-weight:700;">En attente des autres<span class="wait-dots"></span></p>
+    <p style="color:var(--pk);font-weight:800;">Vote bien enregistré</p>
+    <p style="color:var(--pu-l);margin-top:8px;font-weight:700;">Révélation bientôt<span class="wait-dots"></span></p>
   </div>
 </div>
 
-<!-- PLAYER: REVEAL -->
+<!-- ═══════════════ PLAYER REVEAL ═══════════════ -->
 <div id="s-preveal" class="screen hidden">
-  <div style="max-width:660px;margin:0 auto;text-align:center;">
+  <div style="max-width:700px;margin:0 auto;text-align:center;">
     <div class="q-banner">
       <div class="q-label">Qui est le plus...</div>
       <div class="q-text" id="reveal-adj">...</div>
     </div>
-
-    <!-- Step 1: winner only (big) -->
-    <div id="reveal-step1" style="display:none;">
-      <div style="font-size:.7rem;font-weight:900;letter-spacing:5px;color:var(--purple-l);text-transform:uppercase;margin-bottom:12px;">Et c'est...</div>
-      <div style="display:flex;justify-content:center;">
-        <div class="reveal-winner-card" id="winner-big-card">
-          <div style="width:100%;height:100%;position:relative;">
-            <div id="winner-photo-area" style="width:100%;height:80%;position:relative;overflow:hidden;background:linear-gradient(135deg,#6d28d9,#8b5cf6);">
-              <!-- photo or initials injected here -->
-            </div>
-            <div id="winner-name-bar" style="background:white;padding:8px 10px 6px;text-align:center;opacity:0;transition:opacity 2s ease 1.5s;">
-              <div id="winner-name-txt" style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--text);text-transform:uppercase;"></div>
-            </div>
-            <!-- mask over photo -->
-            <div id="winner-mask" style="position:absolute;inset:0 0 20% 0;background:linear-gradient(160deg,#3b0764,#5b21b6);display:flex;align-items:center;justify-content:center;transition:opacity 3s ease;">
-              <div style="font-family:'Baloo 2',cursive;font-size:4rem;font-weight:900;color:var(--yellow);animation:qPulse .9s ease infinite alternate;">?</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="winner-label" style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--purple);text-transform:uppercase;letter-spacing:2px;margin-top:14px;opacity:0;transition:opacity 1.5s ease 3s;">
-        👑 <span id="winner-name-label"></span> remporte ce round !
-      </div>
+    <!-- Step 1: winner(s) only, big card -->
+    <div id="rev-s1" style="display:none;">
+      <div style="font-size:.68rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:12px;">Et c'est…</div>
+      <!-- winner card injected here -->
+      <div id="rev-winner-wrap" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;"></div>
+      <div id="rev-winner-label" style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu);text-transform:uppercase;letter-spacing:2px;margin-top:14px;opacity:0;transition:opacity 1.5s ease;"></div>
     </div>
-
-    <!-- Step 2: others with vote counts -->
-    <div id="reveal-step2" style="display:none;margin-top:24px;">
-      <div style="font-size:.7rem;font-weight:900;letter-spacing:5px;color:var(--purple-l);text-transform:uppercase;margin-bottom:10px;">Les autres votes</div>
-      <div class="reveal-others-grid" id="reveal-others-grid"></div>
+    <!-- Step 2: others (only those with votes > 0, excluding winner) -->
+    <div id="rev-s2" style="display:none;margin-top:22px;">
+      <div style="font-size:.68rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:10px;">Les autres votes</div>
+      <div class="pgrid" id="rev-others"></div>
     </div>
-
-    <div id="reveal-status" style="margin-top:16px;color:var(--purple-l);font-weight:700;font-size:.9rem;"></div>
+    <!-- Host controls for next round — visible once reveal complete -->
+    <div id="rev-controls" style="display:none;margin-top:20px;">
+      <button class="btn gr big" onclick="playerRequestNext()">Manche suivante ➡</button>
+    </div>
   </div>
 </div>
 
-<!-- PLAYER: BETWEEN -->
+<!-- ═══════════════ PLAYER BETWEEN ═══════════════ -->
 <div id="s-pbetween" class="screen hidden">
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji">⏳</span>
     <div class="m-title">MANCHE TERMINÉE</div>
-    <p style="color:var(--purple-l);font-weight:700;">Prochaine manche en cours<span class="wait-dots"></span></p>
+    <p style="color:var(--pu-l);font-weight:700;">Prochaine manche en cours<span class="wait-dots"></span></p>
   </div>
 </div>
 
-<!-- GAME OVER -->
+<!-- ═══════════════ GAME OVER ═══════════════ -->
 <div id="s-gameover" class="screen hidden">
   <div class="logo-wrap"><div class="logo-brush" style="transform:rotate(0);">🎊 FIN DU JEU !</div></div>
   <div class="card" style="max-width:700px;margin:0 auto;">
     <ul class="sb-list" id="go-sb"></ul>
-    <button class="btn yellow" onclick="location.reload()" style="margin-top:12px;">🔄 Rejouer</button>
+    <button class="btn ye" onclick="location.reload()" style="margin-top:12px;">🔄 Rejouer</button>
   </div>
 </div>
 
+<!-- ═══════════════ SPIN WHEEL OVERLAY ═══════════════ -->
+<div id="wheel-overlay" class="wheel-overlay" style="display:none;">
+  <div class="wheel-title" id="wheel-title">🎰 TOURNE LA ROUE !</div>
+  <div class="wheel-wrap">
+    <div class="wheel-pointer"></div>
+    <canvas id="wheel-canvas" class="wheel-canvas"></canvas>
+  </div>
+  <button class="btn ye big wheel-btn" id="wheel-spin-btn" onclick="spinWheel()">🎰 Tourner !</button>
+  <div class="wheel-result" id="wheel-result"></div>
+  <button class="btn wheel-close" id="wheel-next-btn" style="display:none;" onclick="wheelDone()">✅ Ok, manche suivante ➡</button>
+</div>
+
 <script>
-// ═══════════════════ QUESTIONS ═══════════════════
+// ══════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════
 const QUESTIONS = [
   "Radin quand c'est son tour de payer",
   "Susceptible quand on le vanne",
@@ -559,7 +344,7 @@ const QUESTIONS = [
   "Capable d'arriver en retard à son propre mariage",
   "Gaffeur qui lâche des secrets sans faire exprès",
   "Flambeur qui n'a plus une thune le 5 du mois",
-  "Susceptible d'oublier ses clés à l'intérieur",
+  "Capable d'oublier ses clés à l'intérieur",
   "Prêt à survivre le plus longtemps sur une île déserte",
   "Râleur dès le matin sans café",
   "Gros mytho quand il raconte une anecdote",
@@ -568,64 +353,73 @@ const QUESTIONS = [
   "Dramatique pour une simple égratignure",
   "Toujours en retard mais jamais gêné",
   "Charmeur quand il veut quelque chose",
-  "Malin pour s'éclipser quand il y a la vaisselle à faire",
-  "Nostalgique qui ramène tout à avant c'était mieux",
+  "Malin pour s'éclipser quand il y a la vaisselle",
+  "Nostalgique du « avant c'était mieux »",
   "Convaincu d'avoir toujours raison",
-  "Capable de roter en public sans une once de honte",
-  "Le plus probable à pleurer devant un film Disney",
+  "Capable de roter en public sans honte",
+  "Le plus probable à pleurer devant un Disney",
   "Celui qui parle le plus fort dans un resto",
-  "Capable de zapper une soirée pour regarder une série",
+  "Capable de zapper une soirée pour une série",
   "Le premier à s'endormir à une soirée",
   "Capable de mentir avec le sourire",
-  "Accro aux réseaux sociaux dès le réveil"
+  "Accro aux réseaux dès le réveil"
 ];
 
-const COLORS = ['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309'];
-const MAX_ROUNDS = 10;
+const WHEEL_SEGMENTS = [
+  { label: "1 gorgée",       color: "#7c3aed" },
+  { label: "3 gorgées",      color: "#db2777" },
+  { label: "Donne 4 gorgées",color: "#d97706" },
+  { label: "Cul sec !",      color: "#dc2626" },
+  { label: "Cul rouge 🍑",   color: "#059669" },
+  { label: "Cul sec pour\nmoi",   color: "#2563eb" },
+  { label: "Cul sec pour\ntoi",   color: "#9333ea" },
+  { label: "2 gorgées",      color: "#0891b2" },
+];
 
-// ═══════════════════ UTILS ═══════════════════
+const COLORS = ['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309','#be185d','#065f46'];
+const MAX_ROUNDS = 10;
+const CONN_TIMEOUT_MS = 9000;
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
-function toast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),dur);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));const el=document.getElementById(id);if(el)el.classList.remove('hidden');}
+function toast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tt);t._tt=setTimeout(()=>t.classList.remove('show'),dur);}
 function acol(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))&0xffffffff;return COLORS[Math.abs(h)%COLORS.length];}
 function ini(n){return n.substring(0,2).toUpperCase();}
-function sid(n){return 'c_'+n.replace(/[^a-zA-Z0-9]/g,'_');}
-
-// Generate a 4-letter code from peer ID
-function makeRoomCode(peerId){
-  const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
-  let h=0;
-  for(const c of peerId) h=(h*31+c.charCodeAt(0))&0x7fffffff;
-  let code='';
-  for(let i=0;i<4;i++){code+=alpha[h%alpha.length];h=0|h/alpha.length;}
-  return code;
-}
+function sid(n){return 'q'+btoa(n).replace(/[^a-zA-Z0-9]/g,'').substring(0,12);}
 
 function confetti(){
-  const cols=['#7c3aed','#ec4899','#fbbf24','#10b981','#3b82f6','#f97316'];
-  for(let i=0;i<80;i++){
-    setTimeout(()=>{
-      const el=document.createElement('div');el.className='cp';
-      const size=6+Math.random()*10;
-      el.style.cssText=`left:${Math.random()*100}vw;top:-30px;background:${cols[0|Math.random()*cols.length]};width:${size}px;height:${size}px;border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${1.5+Math.random()*2.5}s;`;
-      document.body.appendChild(el);setTimeout(()=>el.remove(),4200);
-    },i*30);
-  }
+  const cols=['#7c3aed','#ec4899','#fbbf24','#10b981','#3b82f6','#f97316','#fff'];
+  for(let i=0;i<70;i++)setTimeout(()=>{
+    const el=document.createElement('div');el.className='cp';const s=6+Math.random()*10;
+    el.style.cssText=`left:${Math.random()*100}vw;top:-30px;background:${cols[0|Math.random()*cols.length]};width:${s}px;height:${s}px;border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${1.5+Math.random()*2.5}s;`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),4200);
+  },i*30);
 }
 
-// ═══════════════════ STATE ═══════════════════
-let peer=null,isHost=false;
-let hConns={};   // peerId → {name,conn,photo}
-let hScores={};  // name → total
-let hVotes={};   // name → votes this round
-let hWhoVoted=new Set();
-let hQuestions=[],hQIdx=-1,hRevealed=false;
-let hCurrentAdj='';
-let hRoomId='';
-let hRoomCode='';
+function photoEl(photo,name,classes,size){
+  if(photo)return `<img class="${classes}" src="${photo}" alt="${name}" style="width:${size}px;height:${size}px;">`;
+  return `<div class="${classes}" style="background:${acol(name)};width:${size}px;height:${size}px;">${ini(name)}</div>`;
+}
 
-let pName='',pPhoto='',pConn=null,pList=[],pPhotos={};
-let pendingRoomId=''; // used when joining via code
+// ══════════════════════════════════════════════
+// GLOBAL STATE
+// ══════════════════════════════════════════════
+let peer=null, isHost=false;
+// Host
+let hConns={};        // peerId → {name, conn, photo}
+let hScores={};       // name → cumulative points
+let hVotes={};        // name → vote count this round
+let hWhoVoted=new Set();
+let hQuestions=[], hQIdx=-1;
+let hRevealed=false;  // prevents double-reveal
+let hCurrentAdj='';
+let hRoomCode='';
+// Player
+let pName='', pPhoto='', pConn=null, pList=[], pRoomId='';
+let pRevealTimers=[];  // track all reveal timeouts so we can clear on reconnect
 
 const urlP=new URLSearchParams(window.location.search);
 const roomP=urlP.get('room');
@@ -633,404 +427,584 @@ const baseUrl=window.location.href.split('?')[0];
 
 window.onload=()=>{
   if(roomP){
-    // Arrived via QR: show direct join
+    // Arrived via QR → skip code, go straight to name
+    pRoomId=roomP;
     show('s-pjoin');
-    document.getElementById('join-via-qr').style.display='block';
+    document.getElementById('step-name').style.display='block';
   } else {
-    // Arrived on base URL: show code entry
     show('s-land');
   }
 };
 
-// ═══════════════════ PHOTO HANDLERS ═══════════════════
-function handlePhoto(e){ _handlePhotoInto(e,'photo-ph','photo-prev',v=>{pPhoto=v;}); }
-function handlePhoto2(e){ _handlePhotoInto(e,'photo-ph2','photo-prev2',v=>{pPhoto=v;}); }
-function _handlePhotoInto(e,phId,prevId,cb){
-  const file=e.target.files[0]; if(!file)return;
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function gotoCodeEntry(){
+  show('s-pjoin');
+  document.getElementById('step-code').style.display='block';
+}
+
+function validateCode(){
+  const code=document.getElementById('code-inp').value.trim().toUpperCase();
+  if(code.length!==4){toast('⚠️ Code de 4 lettres !');return;}
+  pRoomId=code;
+  document.getElementById('step-code').style.display='none';
+  document.getElementById('step-name').style.display='block';
+  document.getElementById('pname-inp').focus();
+}
+
+// ══════════════════════════════════════════════
+// PHOTO HANDLER
+// ══════════════════════════════════════════════
+function handlePhoto(e){
+  const file=e.target.files[0];if(!file)return;
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
-    const c=document.createElement('canvas');c.width=120;c.height=120;
-    c.getContext('2d').drawImage(img,0,0,120,120);
-    const data=c.toDataURL('image/jpeg',.75);
-    URL.revokeObjectURL(url);cb(data);
-    document.getElementById(phId).style.display='none';
-    const prev=document.getElementById(prevId);prev.src=data;prev.style.display='block';
+    // Compress to 80x80 — sufficient for cards, much lighter for P2P transfer
+    const c=document.createElement('canvas');c.width=80;c.height=80;
+    c.getContext('2d').drawImage(img,0,0,80,80);
+    pPhoto=c.toDataURL('image/jpeg',.7);
+    URL.revokeObjectURL(url);
+    document.getElementById('photo-ph').style.display='none';
+    const p=document.getElementById('photo-prev');p.src=pPhoto;p.style.display='block';
   };
   img.src=url;
 }
 
-// ═══════════════════ JOIN VIA CODE ═══════════════════
-// Code → PeerID lookup: we store a global map on the window of the HOST
-// Since P2P, the code IS derivable from the peer id deterministically.
-// But we can't reverse it. Instead: we put the full peer ID in the URL as ?room=
-// and the CODE is shown as a SHORT alias. For reconnection, we store the peerId in sessionStorage.
-
-// Strategy: room code entry → we need the full peer ID.
-// Solution: store peerId in a tiny URL hash. The code entry screen will try to
-// brute-force? No. Better: we embed a lookup endpoint... 
-// Simplest real solution: display BOTH the 4-letter code AND let entering the code
-// redirect to ?room=FULL_PEER_ID. We store the mapping in localStorage keyed by code.
-// When host opens: localStorage['room_'+code] = peerId
-// When player enters code: read localStorage['room_'+code] — works if same device, but not cross-device.
-// REAL solution for cross-device: use a tiny server. Since we're serverless P2P, 
-// we use PeerJS's own infrastructure: the host creates a peer with ID = CODE (4 uppercase letters)
-// so players can connect directly with just the code!
-
-function joinFromHomePage(){
-  show('s-pjoin');
-  document.getElementById('join-via-code').style.display='block';
-}
-
-function joinByCode(){
-  const code=document.getElementById('code-inp').value.trim().toUpperCase();
-  if(code.length!==4){toast('Entre un code de 4 lettres !');return;}
-  pendingRoomId=code; // The peer ID IS the code
-  document.getElementById('join-via-code').style.display='none';
-  document.getElementById('join-name-step').style.display='block';
-}
-
-function playerJoinByCode(){
-  const nameRaw=document.getElementById('pname-inp2').value.trim();
-  if(!nameRaw){toast('✏️ Entre ton prénom !');return;}
-  pName=nameRaw.substring(0,12);
-  _doPlayerConnect(pendingRoomId);
-}
-
+// ══════════════════════════════════════════════
+// PLAYER JOIN
+// ══════════════════════════════════════════════
 function playerJoin(){
   const nameRaw=document.getElementById('pname-inp').value.trim();
   if(!nameRaw){toast('✏️ Entre ton prénom !');return;}
+  if(!pRoomId){toast('⚠️ Code manquant !');return;}
   pName=nameRaw.substring(0,12);
-  _doPlayerConnect(roomP);
-}
-
-function _doPlayerConnect(roomId){
   const stat=document.getElementById('join-stat');
   stat.textContent='🔄 Connexion…';
+
+  // Destroy previous peer if reconnecting
+  if(peer&&!isHost){try{peer.destroy();}catch(e){}}
+
   peer=new Peer(undefined,{debug:0});
-  peer.on('error',err=>{stat.textContent='❌ '+err.message;});
+
+  // Timeout if PeerJS server never responds
+  const openTimeout=setTimeout(()=>{
+    stat.textContent='❌ Impossible de se connecter. Vérifie ta connexion.';
+    try{peer.destroy();}catch(e){}
+  },CONN_TIMEOUT_MS);
+
+  peer.on('error',err=>{
+    clearTimeout(openTimeout);
+    stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);
+  });
+
   peer.on('open',()=>{
-    pConn=peer.connect(roomId,{reliable:true});
-    pConn.on('error',()=>{stat.textContent='❌ Code invalide ou salon introuvable.';});
-    pConn.on('open',()=>{ pConn.send({type:'JOIN',name:pName,photo:pPhoto}); });
-    pConn.on('data',data=>{ handlePlayerData(data); });
-    pConn.on('close',()=>{ toast('🔌 Connexion perdue'); });
+    clearTimeout(openTimeout);
+    pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
+
+    const connTimeout=setTimeout(()=>{
+      stat.textContent='❌ Code invalide ou salon introuvable.';
+      try{peer.destroy();}catch(e){}
+    },CONN_TIMEOUT_MS);
+
+    pConn.on('error',()=>{
+      clearTimeout(connTimeout);
+      stat.textContent='❌ Connexion refusée.';
+    });
+    pConn.on('open',()=>{
+      clearTimeout(connTimeout);
+      pConn.send({type:'JOIN',name:pName,photo:pPhoto});
+    });
+    pConn.on('data',data=>handlePlayerData(data));
+    pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
 }
 
-// ═══════════════════ HOST ═══════════════════
+// ══════════════════════════════════════════════
+// HOST OPEN
+// ══════════════════════════════════════════════
 function hostOpen(){
   const btn=event.target;btn.textContent='⏳ Connexion…';btn.disabled=true;
-  // Use a short 4-letter peer ID so players can type it!
-  const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
-  let code='';
-  for(let i=0;i<4;i++) code+=alpha[0|Math.random()*alpha.length];
-  hRoomCode=code;
-  hRoomId=code;
 
-  peer=new Peer(code,{debug:0});
-  peer.on('error',err=>{
-    // If code taken, retry with new code
-    if(err.type==='unavailable-id'){
-      btn.disabled=false;btn.textContent='🎮 Ouvrir le Salon';
-      hostOpen();return;
+  // Generate 4-letter code = the peer ID
+  const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const tryCode=()=>{
+    let code='';for(let i=0;i<4;i++)code+=alpha[0|Math.random()*alpha.length];
+    return code;
+  };
+
+  const attemptOpen=(code)=>{
+    hRoomCode=code;
+    if(peer){try{peer.destroy();}catch(e){}}
+    peer=new Peer(code,{debug:0});
+    peer.on('error',err=>{
+      if(err.type==='unavailable-id'){
+        // Code taken — try another
+        attemptOpen(tryCode());return;
+      }
+      toast('❌ '+err.message);btn.textContent='🎮 Ouvrir le Salon';btn.disabled=false;
+    });
+    peer.on('open',id=>{
+      isHost=true;show('s-host');
+      const url=baseUrl+'?room='+id;
+      document.getElementById('rc-display').textContent=code;
+      document.getElementById('rc-display2').textContent=code;
+      document.getElementById('room-url').textContent=url;
+      document.getElementById('qrcode').innerHTML='';
+      new QRCode(document.getElementById('qrcode'),{text:url,width:190,height:190,colorDark:'#4c1d95',colorLight:'#ffffff'});
+    });
+    peer.on('connection',handleHostConnection);
+  };
+
+  attemptOpen(tryCode());
+}
+
+function handleHostConnection(conn){
+  conn.on('data',data=>{
+    // ─── JOIN ───
+    if(data.type==='JOIN'){
+      const name=data.name.trim().substring(0,12);
+      // Allow reconnection: if same name already exists, replace its connection
+      const existingPeer=Object.keys(hConns).find(k=>hConns[k].name===name);
+      if(existingPeer) delete hConns[existingPeer];
+
+      hConns[conn.peer]={name,conn,photo:data.photo||''};
+      if(hScores[name]===undefined) hScores[name]=0;
+
+      hostLobbyUI();
+      hBroadcast({type:'LOBBY_UPDATE',players:hPList()});
+      toast(`${name} ${existingPeer?'reconnecté':'a rejoint'} ! 🎉`);
+
+      // If game running, send current state
+      if(hQIdx>=0&&!hRevealed){
+        conn.send({type:'START_ROUND',adjective:hCurrentAdj,players:hPList()});
+        // If already voted, send straight to voted screen
+        if(hWhoVoted.has(existingPeer)){
+          conn.send({type:'ALREADY_VOTED'});
+        }
+      }
+      return;
     }
-    toast('❌ '+err.message);btn.textContent='🎮 Ouvrir le Salon';btn.disabled=false;
+    // ─── VOTE ───
+    if(data.type==='SUBMIT_VOTE'){
+      if(hRevealed)return; // ignore late votes after reveal
+      const voter=hConns[conn.peer]?.name;
+      const target=data.target;
+      if(!voter||hVotes[target]===undefined)return;
+      // Prevent double vote from same player
+      if(hWhoVoted.has(conn.peer))return;
+      hWhoVoted.add(conn.peer);
+      hVotes[target]++;
+      hostVBarUI();
+      // Auto-reveal when every connected player voted
+      if(!hRevealed&&hWhoVoted.size>=Object.keys(hConns).length){
+        hRevealed=true;
+        setTimeout(hostReveal,500);
+      }
+      return;
+    }
+    // ─── REQUEST NEXT (from host-player's wheel done) ───
+    if(data.type==='WHEEL_DONE'){
+      // Just ignore — host controls next
+      return;
+    }
   });
-  peer.on('open',id=>{
-    isHost=true;show('s-host');
-    const url=baseUrl+'?room='+id;
-    document.getElementById('room-code-display').textContent=code;
-    document.getElementById('room-code-display2').textContent=code;
-    document.getElementById('room-url').textContent=url;
-    document.getElementById('qrcode').innerHTML='';
-    new QRCode(document.getElementById('qrcode'),{text:url,width:190,height:190,colorDark:'#4c1d95',colorLight:'#ffffff'});
+  conn.on('close',()=>{
+    const info=hConns[conn.peer];
+    if(info){
+      toast(`${info.name} a quitté`);
+      delete hConns[conn.peer];
+      hostLobbyUI();
+      hBroadcast({type:'LOBBY_UPDATE',players:hPList()});
+    }
   });
-  peer.on('connection',conn=>{
-    conn.on('data',data=>{
-      if(data.type==='JOIN'){
-        const name=data.name.trim().substring(0,12);
-        if(hConns[conn.peer])return;
-        if(Object.values(hConns).some(p=>p.name===name)){conn.send({type:'NAME_TAKEN'});return;}
-        hConns[conn.peer]={name,conn,photo:data.photo||''};
-        hScores[name]=0;
-        hostLobbyUI();
-        hBroadcast({type:'LOBBY_UPDATE',players:hPList()});
-        toast(`${name} a rejoint ! 🎉`);
-        // If game already running, send current round state
-        if(hQIdx>=0 && !hRevealed){
-          conn.send({type:'START_ROUND',adjective:hCurrentAdj,players:hPList()});
-        }
-      }
-      if(data.type==='SUBMIT_VOTE'){
-        if(hWhoVoted.has(conn.peer)||hRevealed)return;
-        const voter=hConns[conn.peer]?.name;
-        const target=data.target;
-        if(!voter||!hVotes.hasOwnProperty(target))return;
-        hWhoVoted.add(conn.peer);
-        hVotes[target]++;
-        hostVBarUI();
-        if(hWhoVoted.size===Object.keys(hConns).length&&!hRevealed){
-          hRevealed=true;setTimeout(()=>hostReveal(),500);
-        }
-      }
-    });
-    conn.on('close',()=>{
-      const info=hConns[conn.peer];
-      if(info){
-        toast(`${info.name} a quitté`);
-        delete hConns[conn.peer];
-        hostLobbyUI();
-        hBroadcast({type:'LOBBY_UPDATE',players:hPList()});
-      }
-    });
+  conn.on('error',()=>{
+    delete hConns[conn.peer];
+    hostLobbyUI();
   });
 }
 
+// ══════════════════════════════════════════════
+// HOST UTILS
+// ══════════════════════════════════════════════
 function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo}));}
-function hBroadcast(msg){Object.values(hConns).forEach(p=>{try{p.conn.send(msg);}catch(e){}});}
+function hBroadcast(msg){
+  Object.values(hConns).forEach(p=>{
+    if(p.conn.open) try{p.conn.send(msg);}catch(e){}
+  });
+}
 
 function hostLobbyUI(){
-  const players=Object.values(hConns);
-  const n=players.length;
-  const txt=n===0?'0 joueur':n===1?'1 joueur':`${n} joueurs`;
-  ['lobby-stat','lobby-stat2'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.textContent=txt+' connecté'+(n>1?'s':'');
-  });
+  const players=Object.values(hConns);const n=players.length;
+  const txt=`${n} joueur${n>1?'s':''} connecté${n>1?'s':''}`;
+  ['lobby-stat','lobby-stat2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
   document.getElementById('btn-launch').disabled=n<2;
-  const chipsHtml=players.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${p.name}</span></div>`).join('');
-  document.getElementById('lobby-chips').innerHTML=chipsHtml;
-  const lc2=document.getElementById('lobby-chips2');
-  if(lc2)lc2.innerHTML=chipsHtml;
+  const html=players.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${p.name}</span></div>`).join('');
+  document.getElementById('lobby-chips').innerHTML=html;
+  const c2=document.getElementById('lobby-chips2');if(c2)c2.innerHTML=html;
 }
 
+function hostVBarUI(){
+  const total=Object.keys(hConns).length,done=hWhoVoted.size;
+  // Broadcast vote count to players so they can see progress on their screens
+  hBroadcast({type:'VOTE_PROGRESS',done,total});
+}
+
+// ══════════════════════════════════════════════
+// HOST GAME FLOW
+// ══════════════════════════════════════════════
 function hostLaunch(){
   hQuestions=shuffle(QUESTIONS).slice(0,MAX_ROUNDS);
   hQIdx=-1;
-  document.getElementById('h-lobby-section').style.display='none';
-  document.getElementById('h-game-section').style.display='block';
-  document.getElementById('rtot-host').textContent=MAX_ROUNDS;
+  document.getElementById('h-lobby').style.display='none';
+  document.getElementById('h-game').style.display='block';
+  document.getElementById('rtot-h').textContent=MAX_ROUNDS;
   hostNext();
 }
 
 function hostNext(){
   hQIdx++;
   if(hQIdx>=MAX_ROUNDS){hostFinal();return;}
-  hWhoVoted.clear();hVotes={};hRevealed=false;
+  // Reset round state
+  hWhoVoted.clear();
+  hVotes={};
+  hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
   hCurrentAdj=hQuestions[hQIdx];
-  document.getElementById('rnum-host').textContent=hQIdx+1;
-  document.getElementById('btn-force-reveal').disabled=false;
-  document.getElementById('btn-force-next').disabled=true;
-  hostVBarUI();
+  document.getElementById('rnum-h').textContent=hQIdx+1;
+  document.getElementById('btn-freveal').disabled=false;
+  document.getElementById('btn-fnext').disabled=true;
   hBroadcast({type:'START_ROUND',adjective:hCurrentAdj,players:hPList()});
-}
-
-function hostVBarUI(){
-  // minimal host display — not needed in this version
 }
 
 function hostForceReveal(){
   if(hRevealed)return;
   hRevealed=true;
+  document.getElementById('btn-freveal').disabled=true;
   hostReveal();
 }
 
 function hostReveal(){
-  document.getElementById('btn-force-reveal').disabled=true;
+  document.getElementById('btn-freveal').disabled=true;
   const names=Object.keys(hVotes);
   const maxV=Math.max(...Object.values(hVotes),0);
   const winners=maxV>0?names.filter(n=>hVotes[n]===maxV):[];
+  // Award points
   winners.forEach(w=>hScores[w]=(hScores[w]||0)+1);
-  hBroadcast({
-    type:'REVEAL',
-    votes:hVotes,
-    winners,
-    adjective:hCurrentAdj,
-    players:hPList()
-  });
-  setTimeout(()=>{document.getElementById('btn-force-next').disabled=false;},8000);
+  // Send reveal data to all players
+  hBroadcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hCurrentAdj,players:hPList()});
+  // Enable next round button after reveal animation has time to play
+  setTimeout(()=>document.getElementById('btn-fnext').disabled=false, 1000);
 }
 
 function hostFinal(){
-  const photosMap=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]));
-  renderSB('h-sb',hScores,photosMap);
+  const photos=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]));
+  renderSB('h-sb',hScores,photos);
   show('s-hfinal');
-  hBroadcast({type:'GAME_OVER',scores:hScores,photos:photosMap});
+  hBroadcast({type:'GAME_OVER',scores:hScores,photos});
+  confetti();
 }
 
-// ═══════════════════ SCOREBOARD ═══════════════════
-function renderSB(containerId,scores,photosMap={}){
+// ══════════════════════════════════════════════
+// SCOREBOARD
+// ══════════════════════════════════════════════
+function renderSB(id,scores,photos={}){
   const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  const el=document.getElementById(containerId);el.innerHTML='';
-  const cls=['gold','silver','bronze'];const medals=['🥇','🥈','🥉'];
+  const el=document.getElementById(id);el.innerHTML='';
+  const cls=['gold','silver','bronze'],medals=['🥇','🥈','🥉'];
   sorted.forEach(([name,pts],i)=>{
     const li=document.createElement('li');
-    li.className='sb-row '+(cls[i]||'');
-    li.style.animationDelay=i*.09+'s';
-    const photo=photosMap[name]||'';
-    const pEl=photo?`<img class="sb-photo" src="${photo}" alt="${name}">`:`<div class="sb-init" style="background:${acol(name)};">${ini(name)}</div>`;
-    li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${pEl}<div class="sb-name">${name}</div><div style="text-align:right;"><div class="sb-pts">${pts}</div><div class="sb-sub">point${pts!==1?'s':''}</div></div>`;
+    li.className='sb-row '+(cls[i]||'');li.style.animationDelay=i*.08+'s';
+    const ph=photos[name]||'';
+    const phEl=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
+    li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${phEl}<div class="sb-name">${name}</div><div><div class="sb-pts">${pts}</div><div class="sb-sub">pt${pts>1?'s':''}</div></div>`;
     el.appendChild(li);
   });
 }
 
-// ═══════════════════ PLAYER DATA HANDLER ═══════════════════
+// ══════════════════════════════════════════════
+// PLAYER DATA HANDLER
+// ══════════════════════════════════════════════
 function handlePlayerData(data){
-  if(data.type==='NAME_TAKEN'){document.getElementById('join-stat').textContent='❌ Ce prénom est déjà pris !';return;}
-  if(data.type==='LOBBY_UPDATE'){
-    pList=data.players;pPhotos={};pList.forEach(p=>pPhotos[p.name]=p.photo||'');
-    document.getElementById('p-name-disp').textContent=pName.toUpperCase();
-    document.getElementById('p-chips').innerHTML=pList.map(p=>`<div class="chip" style="color:${acol(p.name)};">${p.name}</div>`).join('');
-    show('s-pwait');
-  }
-  if(data.type==='START_ROUND'){
-    pList=data.players;pPhotos={};pList.forEach(p=>pPhotos[p.name]=p.photo||'');
-    document.getElementById('vote-adj').textContent=data.adjective;
-    const grid=document.getElementById('vote-grid');grid.innerHTML='';
-    pList.forEach(p=>{
-      const btn=document.createElement('button');btn.className='vote-btn';
-      const color=acol(p.name);
-      const pEl=p.photo?`<img class="vb-photo" src="${p.photo}" alt="${p.name}">`:`<div class="vb-init" style="background:${color};">${ini(p.name)}</div>`;
-      btn.innerHTML=`${pEl}<div class="vb-name">${p.name}</div>`;
-      btn.onclick=()=>{pConn.send({type:'SUBMIT_VOTE',target:p.name});show('s-pvoted');};
-      grid.appendChild(btn);
-    });
-    show('s-pvote');
-  }
-  if(data.type==='REVEAL'){playerDoReveal(data);}
-  if(data.type==='GAME_OVER'){
-    renderSB('go-sb',data.scores,data.photos||{});
-    confetti();show('s-gameover');
+  switch(data.type){
+    case 'NAME_TAKEN':
+      document.getElementById('join-stat').textContent='❌ Ce prénom est déjà pris !';
+      break;
+
+    case 'LOBBY_UPDATE':
+      pList=data.players;
+      document.getElementById('p-name-disp').textContent=pName.toUpperCase();
+      document.getElementById('p-chips').innerHTML=pList.map(p=>`<div class="chip" style="color:${acol(p.name)};">${p.name}</div>`).join('');
+      show('s-pwait');
+      break;
+
+    case 'START_ROUND':
+      pList=data.players;
+      clearRevealTimers();
+      document.getElementById('vote-adj').textContent=data.adjective;
+      buildVoteGrid(data.players);
+      show('s-pvote');
+      break;
+
+    case 'ALREADY_VOTED':
+      show('s-pvoted');
+      break;
+
+    case 'VOTE_PROGRESS': {
+      // Update a small counter on the voted screen
+      const el=document.getElementById('voted-progress');
+      if(el) el.textContent=`${data.done} / ${data.total} votes`;
+      break;
+    }
+
+    case 'REVEAL':
+      clearRevealTimers();
+      playerDoReveal(data);
+      break;
+
+    case 'GAME_OVER':
+      clearRevealTimers();
+      renderSB('go-sb',data.scores,data.photos||{});
+      confetti();
+      show('s-gameover');
+      break;
   }
 }
 
-// ═══════════════════ THE REVEAL ═══════════════════
+function buildVoteGrid(players){
+  const grid=document.getElementById('vote-grid');grid.innerHTML='';
+  players.forEach(p=>{
+    const btn=document.createElement('button');btn.className='vote-btn';
+    const color=acol(p.name);
+    const pEl=p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${color};">${ini(p.name)}</div>`;
+    btn.innerHTML=`${pEl}<div class="vb-name">${p.name}</div>`;
+    btn.onclick=()=>{
+      // Disable all buttons to prevent double vote
+      grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
+      pConn.send({type:'SUBMIT_VOTE',target:p.name});
+      show('s-pvoted');
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function clearRevealTimers(){
+  pRevealTimers.forEach(t=>clearTimeout(t));
+  pRevealTimers=[];
+}
+function rt(fn,ms){const t=setTimeout(fn,ms);pRevealTimers.push(t);return t;}
+
+// ══════════════════════════════════════════════
+// PLAYER — REVEAL ANIMATION
+// ══════════════════════════════════════════════
 function playerDoReveal(data){
   const {votes,winners,adjective,players}=data;
   const maxV=Math.max(...Object.values(votes),0);
+  const iAmWinner=winners.includes(pName);
 
   document.getElementById('reveal-adj').textContent=adjective.toUpperCase();
-  document.getElementById('reveal-step1').style.display='none';
-  document.getElementById('reveal-step2').style.display='none';
-  document.getElementById('reveal-status').textContent='';
+  document.getElementById('rev-s1').style.display='none';
+  document.getElementById('rev-s2').style.display='none';
+  document.getElementById('rev-controls').style.display='none';
+  document.getElementById('rev-winner-wrap').innerHTML='';
+  document.getElementById('rev-winner-label').style.opacity='0';
+  document.getElementById('rev-winner-label').textContent='';
+  document.getElementById('rev-others').innerHTML='';
   show('s-preveal');
 
-  const hasWinner=winners.length===1; // single clear winner
-  const hasTie=winners.length>1&&maxV>0;
+  if(maxV===0){
+    // Nobody voted — show "Égalité / Aucun vote"
+    document.getElementById('rev-s1').style.display='block';
+    document.getElementById('rev-winner-label').textContent='🤷 Aucun vote…';
+    document.getElementById('rev-winner-label').style.opacity='1';
+    rt(()=>document.getElementById('rev-controls').style.display='block',1500);
+    return;
+  }
 
-  // Players with votes > 0, excluding winner(s) for step 2
-  const others=players.filter(p=>votes[p.name]>0&&!winners.includes(p.name));
+  // ── Step 1: reveal winner(s) ──
+  document.getElementById('rev-s1').style.display='block';
+  const wrap=document.getElementById('rev-winner-wrap');
 
-  // ── STEP 1: reveal winner (or tie) ──
-  setTimeout(()=>{
-    if(maxV===0){
-      // No votes at all — skip to between
-      setTimeout(()=>show('s-pbetween'),2000);
-      return;
-    }
+  winners.forEach((wname,wi)=>{
+    const wPlayer=players.find(p=>p.name===wname);
+    if(!wPlayer)return;
+    const color=acol(wname);
+    // Build a big winner card
+    const cardId='wcard-'+wi;
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;flex-direction:column;align-items:center;';
+    const cardHtml=`
+      <div id="${cardId}" style="width:min(45vw,180px);aspect-ratio:4/5;background:${color};border:5px solid var(--ye);border-radius:22px;overflow:hidden;position:relative;box-shadow:0 10px 0 var(--ye-d),0 0 40px rgba(251,191,36,.3);">
+        <div id="${cardId}-pa" style="width:100%;height:80%;position:relative;overflow:hidden;background:linear-gradient(135deg,#3b0764,#5b21b6);">
+          ${wPlayer.photo?`<img src="${wPlayer.photo}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="${wname}">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${color};font-family:'Baloo 2',cursive;font-size:clamp(2rem,8vw,3.5rem);font-weight:900;color:white;">${ini(wname)}</div>`}
+          <div id="${cardId}-mask" style="position:absolute;inset:0;background:linear-gradient(160deg,#3b0764,#5b21b6);display:flex;align-items:center;justify-content:center;transition:opacity 3.5s ease;opacity:1;">
+            <span style="font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,4rem);font-weight:900;color:var(--ye);animation:qPulse .9s ease infinite alternate;">?</span>
+          </div>
+        </div>
+        <div id="${cardId}-nb" style="background:white;padding:7px 8px 5px;height:20%;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 2s ease 2s;">
+          <div style="font-family:'Baloo 2',cursive;font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:900;color:var(--tx);text-transform:uppercase;">${wname}</div>
+          <div style="font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:900;color:var(--pu);">${votes[wname]} vote${votes[wname]!==1?'s':''}</div>
+        </div>
+      </div>`;
+    div.innerHTML=cardHtml;
+    wrap.appendChild(div);
 
-    const winnerPlayer=players.find(p=>p.name===winners[0]);
-    if(!winnerPlayer)return;
+    // Trigger fade-in
+    rt(()=>{
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        const mask=document.getElementById(cardId+'-mask');
+        const nb=document.getElementById(cardId+'-nb');
+        if(mask){mask.style.opacity='0';}
+        if(nb){nb.style.opacity='1';}
+      }));
+    },300+wi*400);
+  });
 
-    // Fill winner card
-    const photoArea=document.getElementById('winner-photo-area');
-    if(winnerPlayer.photo){
-      photoArea.innerHTML=`<img src="${winnerPlayer.photo}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="${winnerPlayer.name}">`;
-    } else {
-      photoArea.innerHTML=`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${acol(winnerPlayer.name)};font-family:'Baloo 2',cursive;font-size:3.5rem;font-weight:900;color:white;">${ini(winnerPlayer.name)}</div>`;
-    }
-    document.getElementById('winner-name-txt').textContent=winnerPlayer.name.toUpperCase();
-    if(hasTie){
-      document.getElementById('winner-name-label').textContent=winners.join(' & ');
-    } else {
-      document.getElementById('winner-name-label').textContent=winnerPlayer.name;
-    }
+  // Winner label appears after reveal
+  rt(()=>{
+    const lbl=document.getElementById('rev-winner-label');
+    lbl.innerHTML='👑 <strong>'+winners.join(' &amp; ')+'</strong> remporte ce round !';
+    lbl.style.opacity='1';
+    confetti();
+    // If current player is a winner → show wheel
+    if(iAmWinner) rt(()=>showWheel(winners),800);
+  },4000);
 
-    document.getElementById('reveal-step1').style.display='block';
+  // ── Step 2: others (votes > 0, not winner) ──
+  const others=players.filter(p=>votes[p.name]>0&&!winners.includes(p.name))
+                       .sort((a,b)=>votes[b.name]-votes[a.name]);
 
-    // Start the slow fade: mask fades out revealing photo beneath
-    const mask=document.getElementById('winner-mask');
-    const nameBar=document.getElementById('winner-name-bar');
-    const winnerLabel=document.getElementById('winner-label');
-
-    // Trigger fade after a small delay (browser needs a frame)
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        mask.style.opacity='0'; // 3s transition defined inline
-        // Name bar fades in at 1.5s delay (via CSS transition-delay)
-        nameBar.style.opacity='1';
-        // Winner label appears after 3s
-        setTimeout(()=>{
-          winnerLabel.style.opacity='1';
-          confetti();
-        },3200);
+  if(others.length>0){
+    rt(()=>{
+      const grid=document.getElementById('rev-others');grid.innerHTML='';
+      others.forEach((p,idx)=>{
+        const color=acol(p.name);
+        const d=document.createElement('div');
+        d.className='pcard';d.style.cssText='opacity:0;transition:opacity .8s ease;';
+        const phEl=p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">`:`<div class="pcard-init" style="background:${color};">${ini(p.name)}</div>`;
+        d.innerHTML=`<div class="pcard-pa">${phEl}</div><div class="pcard-nb"><div class="pcard-name">${p.name}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
+        grid.appendChild(d);
+        rt(()=>{d.style.opacity='1';},idx*500);
       });
-    });
+      document.getElementById('rev-s2').style.display='block';
+    },5500);
+  }
 
-    // ── STEP 2: show other players with votes ──
-    if(others.length>0){
-      setTimeout(()=>{
-        const grid=document.getElementById('reveal-others-grid');
-        grid.innerHTML='';
-        others.forEach((p,idx)=>{
-          const color=acol(p.name);
-          const cardDiv=document.createElement('div');
-          cardDiv.className='pcard';
-          cardDiv.style.opacity='0';
-          cardDiv.style.transition='opacity .8s ease';
-          const photoHtml=p.photo
-            ?`<img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`
-            :`<div class="p-init" style="background:${color};">${ini(p.name)}</div>`;
-          cardDiv.innerHTML=`
-            <div class="pcard-photo-area">${photoHtml}</div>
-            <div class="pcard-name-bar">
-              <div class="pcard-name">${p.name}</div>
-              <div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div>
-            </div>`;
-          grid.appendChild(cardDiv);
-          setTimeout(()=>{cardDiv.style.opacity='1';},idx*600);
-        });
-        document.getElementById('reveal-step2').style.display='block';
-        // Go to next round after showing all
-        setTimeout(()=>show('s-pbetween'),others.length*600+3500);
-      },5500); // wait 5.5s before showing others
-    } else {
-      // No others, go to between after winner display
-      setTimeout(()=>show('s-pbetween'),6000);
-    }
-
-    // If tie, show tie players side by side instead
-    if(hasTie && winners.length>1){
-      // Override: show all winners in step1 area (simple list)
-      // already handled by winner label showing all names
-    }
-
-  },400);
+  // Show "manche suivante" controls for everyone — but only host can actually advance
+  // (here the button sends a signal to host; host decides)
+  rt(()=>{
+    if(!iAmWinner) document.getElementById('rev-controls').style.display='block';
+  }, others.length>0 ? 5500+others.length*500+1500 : 5000);
 }
 
-// ═══════════════════ KEYBOARD ═══════════════════
+function playerRequestNext(){
+  // Only the host advances — this btn is just cosmetic for non-winners
+  // For the host's own player view, clicking this sends "next" request
+  if(pConn&&pConn.open) pConn.send({type:'REQUEST_NEXT'});
+  show('s-pbetween');
+}
+
+// ══════════════════════════════════════════════
+// SPINNING WHEEL
+// ══════════════════════════════════════════════
+const W_SIZE=Math.min(window.innerWidth*0.8,320);
+let wheelSpinning=false;
+let wheelAngle=0;
+let wheelWinners=[];
+
+function drawWheel(angle){
+  const canvas=document.getElementById('wheel-canvas');
+  if(!canvas)return;
+  canvas.width=W_SIZE;canvas.height=W_SIZE;
+  const ctx=canvas.getContext('2d');
+  const n=WHEEL_SEGMENTS.length;
+  const arc=2*Math.PI/n;
+  const cx=W_SIZE/2,cy=W_SIZE/2,r=W_SIZE/2-4;
+  WHEEL_SEGMENTS.forEach((seg,i)=>{
+    const start=angle+i*arc,end=start+arc;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,end);ctx.closePath();
+    ctx.fillStyle=seg.color;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();
+    // Label
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(start+arc/2);ctx.textAlign='right';
+    ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(10,W_SIZE*0.048)}px 'Nunito',sans-serif`;
+    const lines=seg.label.split('\n');
+    lines.forEach((line,li)=>{
+      ctx.fillText(line,r-12,(li-(lines.length-1)/2)*16);
+    });
+    ctx.restore();
+  });
+  // Center circle
+  ctx.beginPath();ctx.arc(cx,cy,W_SIZE*0.08,0,2*Math.PI);
+  ctx.fillStyle='#fff';ctx.fill();
+  ctx.strokeStyle='#ccc';ctx.lineWidth=2;ctx.stroke();
+}
+
+function showWheel(winners){
+  wheelWinners=winners;
+  wheelSpinning=false;
+  wheelAngle=0;
+  document.getElementById('wheel-result').textContent='';
+  document.getElementById('wheel-spin-btn').style.display='';
+  document.getElementById('wheel-next-btn').style.display='none';
+  document.getElementById('wheel-title').textContent=(winners.length>1?'🎰 ÉGALITÉ — chacun tourne !':'🎰 '+(winners[0]===pName?'TOI ! Tourne la roue !':winners[0]+' tourne la roue !'));
+  drawWheel(0);
+  document.getElementById('wheel-overlay').style.display='flex';
+}
+
+function spinWheel(){
+  if(wheelSpinning)return;
+  wheelSpinning=true;
+  document.getElementById('wheel-spin-btn').disabled=true;
+  document.getElementById('wheel-result').textContent='';
+
+  const totalRotation=2*Math.PI*(5+Math.random()*5);
+  const duration=3500;
+  const start=performance.now();
+  const startAngle=wheelAngle;
+
+  function frame(now){
+    const elapsed=now-start;
+    if(elapsed>=duration){
+      wheelAngle=(startAngle+totalRotation)%(2*Math.PI);
+      drawWheel(wheelAngle);
+      // Determine winning segment: pointer is at top (−π/2)
+      const n=WHEEL_SEGMENTS.length,arc=2*Math.PI/n;
+      const normalized=(((-wheelAngle%(2*Math.PI))+(2*Math.PI))%(2*Math.PI));
+      const idx=Math.floor(normalized/arc)%n;
+      const seg=WHEEL_SEGMENTS[idx];
+      document.getElementById('wheel-result').textContent='👉 '+seg.label.replace('\n',' ');
+      document.getElementById('wheel-spin-btn').style.display='none';
+      document.getElementById('wheel-next-btn').style.display='';
+      wheelSpinning=false;
+      return;
+    }
+    // Ease out cubic
+    const t=elapsed/duration;
+    const eased=1-Math.pow(1-t,3);
+    const current=(startAngle+totalRotation*eased)%(2*Math.PI);
+    drawWheel(current);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function wheelDone(){
+  document.getElementById('wheel-overlay').style.display='none';
+  document.getElementById('rev-controls').style.display='block';
+  if(pConn&&pConn.open) pConn.send({type:'WHEEL_DONE'});
+}
+
+// ══════════════════════════════════════════════
+// KEYBOARD
+// ══════════════════════════════════════════════
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
-  if(!document.getElementById('s-pjoin').classList.contains('hidden')){
-    const codeVisible=document.getElementById('join-via-code').style.display!=='none';
-    const nameViaQR=document.getElementById('join-via-qr').style.display!=='none';
-    const nameViaCode=document.getElementById('join-name-step').style.display!=='none';
-    if(codeVisible)joinByCode();
-    else if(nameViaQR)playerJoin();
-    else if(nameViaCode)playerJoinByCode();
+  const join=document.getElementById('s-pjoin');
+  if(join&&!join.classList.contains('hidden')){
+    if(document.getElementById('step-code').style.display!=='none') validateCode();
+    else if(document.getElementById('step-name').style.display!=='none') playerJoin();
   }
-});
-
-// ═══════════════════ SHOW CODE ENTRY FROM LANDING ═══════════════════
-document.getElementById('s-land').querySelector('.btn').addEventListener('click',()=>{},false);
-// Override landing to also show a "Join by code" option
-window.addEventListener('DOMContentLoaded',()=>{
-  // Add join button to landing
-  const card=document.querySelector('#s-land .card');
-  const joinBtn=document.createElement('div');
-  joinBtn.style.cssText='margin-top:14px;';
-  joinBtn.innerHTML=`<button class="btn ghost" onclick="joinFromHomePage()" style="background:var(--purple-s);color:var(--purple-d);border-color:var(--purple-l);box-shadow:0 4px 0 var(--purple-l);">🔑 Rejoindre avec un code</button>`;
-  card.appendChild(joinBtn);
 });
 </script>
 </body>
