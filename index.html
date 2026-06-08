@@ -930,6 +930,7 @@ button.game-only.game-active,
           <button class="btn pk" id="btn-fr" onclick="hostForceReveal()" style="font-size:.88rem;padding:9px 16px;">💥 Forcer le reveal</button>
           <button class="btn gr" id="btn-fn" onclick="hostNext()" style="font-size:.88rem;padding:9px 16px;" disabled>⏭ Manche suivante</button>
           <button class="btn" onclick="openConfigDuringGame()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">⚙️ Manches</button>
+          <button class="btn" onclick="hostSkipSpinner()" id="btn-skip-spin" style="font-size:.88rem;padding:9px 16px;display:none;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">⏭ Passer roue</button>
           <button class="btn" onclick="hostEndGameNow()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">🏁 Terminer</button>
         </div>
         <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnh">0</span>/<span id="rth">10</span></div>
@@ -1334,11 +1335,12 @@ function acol(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))&0xffffffff;re
 function ini(n){return n.substring(0,2).toUpperCase();}
 function confetti(){
   const cols=['#7c3aed','#ec4899','#fbbf24','#10b981','#3b82f6','#f97316'];
-  for(let i=0;i<70;i++)setTimeout(()=>{
+  const N=window.innerWidth<600?25:40; // fewer on mobile
+  for(let i=0;i<N;i++)setTimeout(()=>{
     const el=document.createElement('div');el.className='cp';const s=6+Math.random()*10;
     el.style.cssText=`left:${Math.random()*100}vw;top:-30px;background:${cols[0|Math.random()*cols.length]};width:${s}px;height:${s}px;border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${1.5+Math.random()*2.5}s;`;
     document.body.appendChild(el);setTimeout(()=>el.remove(),4200);
-  },i*30);
+  },i*28);
 }
 
 // ═══════════════════ STATE ═══════════════════
@@ -1349,7 +1351,9 @@ let hScores={};  // name → points
 let hVotes={};   // name → votes this round
 let hWhoVoted=new Set();
 let hQs=[],hQi=-1,hRevealed=false,hAdj='';
-let hWinHistory=[]; // [{name,adjective}]
+let hExpectedVoters=0;
+let hWinHistory=[];
+let hLastHistoryLen=0; // track sent history length // [{name,adjective}]
 let hCode='';
 // Player
 let pName='',pPhoto='',pConn=null,pList=[],pRoomId='';
@@ -1421,6 +1425,10 @@ function selectSound(n){
   }
   // Preview
   try{ playSoundById(n); }catch(e){}
+  // Tell host about updated sound choice
+  if(pConn&&pConn.open){
+    try{pConn.send({type:'UPDATE_SOUND',sound:n});}catch(e){}
+  }
 }
 
 // Play a sound by its index (1-5), using CUSTOM_SOUNDS URL if set
@@ -1562,8 +1570,13 @@ function handleHConn(conn){
       if(oldPeer)delete hConns[oldPeer];
       hConns[conn.peer]={name,conn,photo:data.photo||'',sound:data.sound||1};
       if(hScores[name]===undefined)hScores[name]=0;
+      // Add to hVotes if mid-round so auto-reveal count stays correct
+      if(hQi>=0&&!hRevealed&&hVotes[name]===undefined){
+        hVotes[name]=0;
+        hExpectedVoters=Object.keys(hConns).length; // update expected
+      }
       hostLobbyUI();
-      hBcast({type:'LOBBY_UPDATE',players:hPList()});
+      hBcast({type:'LOBBY_UPDATE',players:hPListMeta()}); // no photos = lightweight
       setTimeout(()=>hSendSounds(conn),200); // send sounds after connection is stable
       updateBgCards(hPList());
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
@@ -1593,7 +1606,10 @@ function handleHConn(conn){
       hVotes[target]++;
       // Broadcast vote progress to all
       hBcast({type:'VOTE_PROGRESS',done:hWhoVoted.size,total:Object.keys(hConns).length});
-      if(!hRevealed&&hWhoVoted.size>=Object.keys(hConns).length){
+      // Use hExpectedVoters (set at round start) not live hConns count
+      // to avoid disconnect-triggered false auto-reveal
+      const expected=hExpectedVoters||Object.keys(hConns).length;
+      if(!hRevealed&&hWhoVoted.size>=expected){
         hRevealed=true;setTimeout(hostReveal,600);
       }
       return;
@@ -1606,6 +1622,10 @@ function handleHConn(conn){
     if(data.type==='WHEEL_RESULT'){
       // Relay result to all
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
+      return;
+    }
+    if(data.type==='UPDATE_SOUND'){
+      if(hConns[conn.peer]) hConns[conn.peer].sound=data.sound||1;
       return;
     }
     if(data.type==='EMOJI_REACT'){
@@ -1637,7 +1657,14 @@ function handleHConn(conn){
   conn.on('error',()=>{delete hConns[conn.peer];hostLobbyUI();});
 }
 
-function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo,sound:p.sound||1}));}
+function hPList(includePhotos=true){
+  return Object.values(hConns).map(p=>({
+    name:p.name,
+    photo:includePhotos?p.photo:'', // omit photos in LOBBY_UPDATE to reduce payload
+    sound:p.sound||1
+  }));
+}
+function hPListMeta(){return hPList(false);} // lightweight: no photos
 function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
 function hResendSounds(){
@@ -1647,10 +1674,12 @@ function hResendSounds(){
   toast('📡 Sons envoyés à '+n+' joueur'+(n>1?'s':'')+' !');
 }
 
-function hSendSounds(conn){
+function hSendSounds(conn,_retry=0){
   if(!conn) return;
-  // Wait for conn to be open if not yet
-  if(!conn.open){setTimeout(()=>hSendSounds(conn),300);return;}
+  if(!conn.open){
+    if(_retry>5) return; // max 5 retries = 1.5s
+    setTimeout(()=>hSendSounds(conn,_retry+1),300);return;
+  }
   // Send sounds one at a time to avoid PeerJS 256KB chunk limit
   CUSTOM_SOUNDS.forEach((s,i)=>{
     if(!s.url) return; // skip empty slots
@@ -1986,6 +2015,7 @@ function hostNext(){
   hQi++;if(hQi>=hQs.length||hQi>=MAX_ROUNDS){hostFinal();return;}
   hWhoVoted.clear();hVotes={};hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
+  hExpectedVoters=Object.keys(hConns).length; // snapshot
   hAdj=hQs[hQi];
   $('rnh').textContent=hQi+1;
   $('btn-fr').disabled=false;$('btn-fn').disabled=true;
@@ -2010,7 +2040,10 @@ function hostReveal(){
     hScores[w]=(hScores[w]||0)+1;
     hWinHistory.push({name:w,adjective:hAdj});
   });
-  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,players:hPList(),scores:{...hScores},history:[...hWinHistory]});
+  // Only send new history entries (delta) to reduce payload size
+  const historyDelta=hWinHistory.slice(hLastHistoryLen);
+  hLastHistoryLen=hWinHistory.length;
+  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,players:hPList(),scores:{...hScores},historyDelta,history:[...hWinHistory]});
   // Update host's own score pin
   pScores={...hScores};
   pHistory=[...hWinHistory];
@@ -2182,7 +2215,8 @@ function handlePData(data){
     case 'REVEAL':
       clearPTimers();
       if(data.scores) pScores=data.scores;
-      if(data.history) pHistory=data.history;
+      if(data.historyDelta&&data.historyDelta.length>0) pHistory=[...pHistory,...data.historyDelta];
+      else if(data.history) pHistory=data.history; // fallback
       if(data.players) data.players.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateScorePin();
       doReveal(data);break;
@@ -2250,7 +2284,8 @@ function handlePData(data){
     case 'GAME_OVER':
       clearPTimers();
       if(data.scores) pScores=data.scores;
-      if(data.history) pHistory=data.history;
+      if(data.historyDelta&&data.historyDelta.length>0) pHistory=[...pHistory,...data.historyDelta];
+      else if(data.history) pHistory=data.history; // fallback
       renderFinalSB('go-sb','go-final-winner',data.scores,data.photos||{},data.history||[]);
       confetti();
       show('s-gameover');
@@ -2676,11 +2711,10 @@ function doReveal(data){
       // 🎵 Play each winner's custom victory sound
       pt(()=>{
         try{
-          const ctx=getAudioCtx();
           winners.forEach((wname,wi)=>{
-            const wp=players.find(p=>p.name===wname);
-            if(!wp) return;
-            const snd=wp.sound||1;
+            // Use local pSound for current player (most up-to-date),
+            // use wp.sound from REVEAL data for other winners
+            const snd=(wname===pName)?pSound:(players.find(p=>p.name===wname)?.sound||1);
             setTimeout(()=>playSoundById(snd), wi*600);
           });
         }catch(e){}
@@ -2736,7 +2770,7 @@ function doReveal(data){
       }
 
       if(iAmWinner){
-        pt(()=>startWheelQueue(winners),1400);
+        pt(()=>startWheelQueue(winners),2800);
       }
     },650);
   });
@@ -2760,6 +2794,16 @@ function startWheelQueue(winners){
   showWheelForTurn();
 }
 
+function hostSkipSpinner(){
+  // Host can skip the current spinner if they disconnected or are unresponsive
+  if(wQueue.length===0) return;
+  const skipped=wQueue[0];
+  toast('⏭ '+skipped+' passé');
+  wheelNext();
+  // Broadcast skip to all
+  if(isHost) hBcast({type:'WHEEL_QUEUE_DONE'});
+}
+
 function showWheelForTurn(){
   if(wQueue.length===0){$('wheel-ov').style.display='none';return;}
   const spinner=wQueue[0];
@@ -2771,6 +2815,7 @@ function showWheelForTurn(){
   $('w-result').textContent='';
   drawWheel(wAngle);
   $('wheel-ov').style.display='flex';
+  const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='';
 }
 
 // 🎰 SON DE ROUE — cliquetis rythmés synchronisés avec la vitesse
@@ -2904,6 +2949,7 @@ function spectatorWheelLanded(segment,spinner){
 }
 
 function anyoneDismissWheel(){
+  const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='none';
   $('wheel-ov').style.display='none';
   const rc=$('rev-ctrl');
   if(rc) rc.style.display='block';
@@ -3062,7 +3108,14 @@ document.addEventListener('input',e=>{
 // ═══════════════════ FLOATING PLAYER PHOTO CARDS ═══════════════════
 let _bgPlayers = []; // cached player list for background cards
 
+let _bgDebounceT=null;
 function updateBgCards(players){
+  // Debounce: wait 300ms after last call to avoid 18x rebuild on mass join
+  _bgPlayers=players;
+  clearTimeout(_bgDebounceT);
+  _bgDebounceT=setTimeout(()=>_doUpdateBgCards(players),300);
+}
+function _doUpdateBgCards(players){
   _bgPlayers = players;
   const bg = $('global-bg');
   if(!bg) return;
