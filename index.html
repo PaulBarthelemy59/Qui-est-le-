@@ -16,13 +16,15 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;overflow-x:hidden;position:relative;}
 .screen{
-  width:100%;max-width:600px;
+  width:100%;max-width:500px;
   margin:0 auto;
   position:relative;
-  padding:0 16px;
+  padding:max(72px,env(safe-area-inset-top,12px)) 16px max(24px,env(safe-area-inset-bottom,24px));
   min-height:100vh;
   display:flex;flex-direction:column;
   align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
 }
 #s-land{z-index:5;}
 .screen.hidden{display:none!important;}
@@ -66,14 +68,9 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 #qrcode{background:#fff;padding:12px;border-radius:14px;border:3px solid var(--pu);box-shadow:5px 5px 0 var(--pu-d);}
 .ru-small{font-size:.7rem;color:var(--pu-l);word-break:break-all;max-width:320px;}
 /* Q BANNER */
-.qbn{background:var(--pu);border-radius:20px 24px 22px 18px/18px 22px 24px 20px;padding:18px 22px;margin-bottom:18px;transform:rotate(-.5deg);position:relative;overflow:hidden;}
-.qbn-lbl{font-size:.7rem;font-weight:900;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;margin-bottom:5px;}
-.qbn-txt{font-family:'Baloo 2',cursive;font-size:clamp(1.5rem,4vw,2.6rem);font-weight:900;color:#fff;line-height:1.2;}
+
 /* VOTE BAR */
-.vbw{display:flex;align-items:center;gap:10px;margin:0 0 14px;}
-.vbt{flex:1;height:12px;background:var(--pu-s);border-radius:99px;overflow:hidden;border:2px solid var(--pu-l);}
-.vbf{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .5s ease;width:0%;}
-.vbl{font-size:.9rem;font-weight:800;color:var(--pu);white-space:nowrap;}
+
 /* WAITING VOTE COUNTER — shown on s-pvoted */
 .vote-counter-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:16px;padding:12px 20px;margin:12px 0;}
 .vote-counter-num{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu);line-height:1;}
@@ -88,7 +85,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .pcard.voted-in{border-color:var(--gr);box-shadow:0 6px 0 var(--gr-d);}
 .pcard.winner{border-color:var(--ye)!important;animation:winG .55s ease infinite alternate;z-index:5;}
 @keyframes winG{from{box-shadow:0 8px 0 var(--ye-d),0 0 20px rgba(251,191,36,.4);}to{box-shadow:0 8px 0 var(--ye-d),0 0 55px rgba(251,191,36,.95);}}
-.wcrown{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:1.7rem;animation:crownF .4s ease infinite alternate;z-index:10;}
+
 @keyframes crownF{from{transform:translateX(-50%) translateY(0);}to{transform:translateX(-50%) translateY(-7px);}}
 .pcard-pa{flex:1;position:relative;overflow:hidden;background:linear-gradient(135deg,#6d28d9,#8b5cf6);}
 .pcard-pa img,.pcard-init{width:100%;height:100%;object-fit:cover;display:block;}
@@ -232,27 +229,10 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .wheel-ptr{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:28px solid #fff;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6));}
 .wheel-result{font-family:'Baloo 2',cursive;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:900;color:#fff;text-align:center;margin-top:14px;min-height:2.4rem;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
 /* WINNER VIDEO CLIP */
-.rev-clip-wrap{
-  position:relative;z-index:2;
-  margin-top:16px;
-  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
-}
-.clip-bubble{
-  width:90px;height:90px;border-radius:50%;
-  overflow:hidden;
-  border:4px solid var(--ye);
-  box-shadow:0 0 30px rgba(251,191,36,.6),0 4px 0 var(--ye-d);
-  position:relative;
-  animation:clipPulse .8s ease infinite alternate;
-  flex-shrink:0;
-}
-@keyframes clipPulse{
-  from{box-shadow:0 0 20px rgba(251,191,36,.4),0 4px 0 var(--ye-d);}
+
   to{box-shadow:0 0 50px rgba(251,191,36,.9),0 4px 0 var(--ye-d);}
 }
-.clip-bubble video{
-  width:100%;height:100%;object-fit:cover;display:block;
-}
+
 .clip-name{
   font-family:'Baloo 2',cursive;font-size:.75rem;font-weight:900;
   color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;
@@ -280,12 +260,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
   accent-color:var(--pu);cursor:pointer;margin-top:1px;
 }
 .cfg-q-text{flex:1;font-size:.85rem;font-weight:700;color:var(--pu-d);line-height:1.35;cursor:pointer;}
-.cfg-q-media{
-  width:100%;background:rgba(255,255,255,.7);
-  border:1.5px solid var(--pu-l);border-radius:8px;
-  padding:5px 8px;font-family:'Nunito',sans-serif;font-size:.75rem;
-  color:var(--pu-d);outline:none;margin-top:5px;
-}
+
 .cfg-q-media:focus{border-color:var(--pu);}
 .cfg-q-media::placeholder{color:var(--pu-l);}
 .cfg-q-text-inp{width:100%;background:rgba(124,58,237,.06);border:1.5px solid var(--pu-l);border-radius:8px;padding:6px 8px;font-size:.82rem;font-weight:700;color:var(--pu-d);outline:none;font-family:"Nunito",sans-serif;resize:vertical;margin-bottom:4px;}
@@ -393,10 +368,6 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .fe3{top:70%;left:15%;animation-duration:4.5s;animation-delay:-1.5s;}
 .fe4{top:25%;right:15%;animation-duration:7s;animation-delay:-2s;}
 .fe5{bottom:25%;left:40%;animation-duration:5.5s;animation-delay:-1s;}
-
-
-
-
 
 /* ═══ EXTRA FEMOJI POSITIONS ═══ */
 .fe6{top:12%;left:22%;animation-duration:6.5s;animation-delay:-3s;}
@@ -506,6 +477,7 @@ button.game-only.game-active,
 .hmb-btn{
   position:fixed;top:max(12px,env(safe-area-inset-top));left:12px;
   z-index:900;
+  opacity:0.75;
   width:44px;height:44px;border-radius:12px;
   background:var(--pu);color:#fff;border:2px solid var(--pu-d);
   box-shadow:0 4px 0 var(--pu-d);
@@ -825,6 +797,25 @@ button.game-only.game-active,
 }
 .sound-play-btn:hover{border-color:var(--pu);}
 @keyframes shameIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+/* ═══ UTILITY CLASSES (remplace inline styles répétitifs) ═══ */
+.w-full{width:100%;}
+.text-center{text-align:center;}
+.card-sm{width:min(92vw,360px);}
+.card-md{width:min(92vw,420px);}
+.mt-4{margin-top:4px;}.mt-6{margin-top:6px;}.mt-8{margin-top:8px;}.mt-10{margin-top:10px;}.mt-12{margin-top:12px;}.mt-16{margin-top:16px;}.mt-20{margin-top:20px;}
+.mb-4{margin-bottom:4px;}.mb-6{margin-bottom:6px;}.mb-8{margin-bottom:8px;}.mb-10{margin-bottom:10px;}.mb-12{margin-bottom:12px;}.mb-14{margin-bottom:14px;}.mb-16{margin-bottom:16px;}.mb-20{margin-bottom:20px;}
+.fw-900{font-weight:900;}.fw-800{font-weight:800;}.fw-700{font-weight:700;}
+.col-pu{color:var(--pu);}.col-pu-d{color:var(--pu-d);}.col-pu-l{color:var(--pu-l);}.col-gr{color:var(--gr);}
+.fs-sm{font-size:.8rem;}.fs-xs{font-size:.72rem;}.fs-xxs{font-size:.65rem;}
+.baloo{font-family:'Baloo 2',cursive;}
+.uppercase{text-transform:uppercase;}
+.ls-wide{letter-spacing:3px;}
+.opacity-50{opacity:.5;}.opacity-40{opacity:.4;}
+.flex-center{display:flex;align-items:center;justify-content:center;}
+.flex-col{display:flex;flex-direction:column;}
+.gap-6{gap:6px;}.gap-8{gap:8px;}.gap-10{gap:10px;}
+
 </style>
 </head>
 <body>
@@ -844,9 +835,6 @@ button.game-only.game-active,
     <div class="sp-empty">La partie n'a pas encore commencé…</div>
   </div>
 </div>
-
-
-
 
 <!-- 😂 EMOJI TOGGLE + REACTION BAR -->
 <button class="emoji-toggle game-only" id="emoji-toggle" onclick="toggleEmojiBar(event)">😄</button>
@@ -908,19 +896,11 @@ button.game-only.game-active,
       <button class="btn big ye land-main-btn" onclick="hostOpen(event)">🎮 Ouvrir le Salon</button>
       <div class="land-divider">— ou —</div>
       <button class="btn land-join-btn" onclick="gotoCodeEntry()">🔑 Rejoindre avec un code</button>
-      <div class="land-divider">— ou —</div>
-      <button class="btn" onclick="openDemoSetup()" style="width:100%;background:rgba(124,58,237,.1);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 4px 0 var(--pu-l);margin:0;">🧪 Mode démo (test local)</button>
     </div>
-
 
   </div>
 </div>
 
-
-<!-- DEMO SETUP SCREEN -->
-<div id="s-demo" class="screen hidden">
-  <div class="card" style="max-width:380px;width:min(100%,380px);margin-top:20px;">
-    <div style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:900;color:var(--pu-d);margin-bottom:4px;">🧪 Mode Démo</div>
     <div style="font-size:.8rem;color:var(--pu-l);font-weight:700;margin-bottom:20px;">Simule une partie sans connexion réseau</div>
 
     <div style="margin-bottom:16px;text-align:left;">
@@ -957,7 +937,7 @@ button.game-only.game-active,
       </div>
     </div>
 
-    <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="startDemo()">🚀 Lancer la démo !</button>
+    <button class="btn big ye w-full mt-4" onclick="startDemo()">🚀 Lancer la démo !</button>
     <button class="btn" style="width:100%;margin-top:8px;background:transparent;color:var(--pu-l);border-color:var(--pu-l);box-shadow:none;" onclick="show('s-land')">← Retour</button>
   </div>
 </div>
@@ -1000,7 +980,6 @@ button.game-only.game-active,
   </div>
 </div>
 
-
 <!-- HOST CONFIG SCREEN -->
 <div id="s-hconfig" class="screen hidden">
   <div class="lw"><div class="lb" style="font-size:clamp(1.3rem,3.5vw,2rem);transform:rotate(0);padding:6px 20px 8px;">⚙️ CONFIGURATION DE LA PARTIE</div></div>
@@ -1040,7 +1019,6 @@ button.game-only.game-active,
       </select>
       <input type="text" id="cfg-new-q-inp" class="inp" placeholder="…la suite (ex: mytho en soirée)" maxlength="80" style="margin-bottom:8px;">
       <div style="font-size:.78rem;font-weight:800;color:var(--pu-d);margin-bottom:4px;">🎬 URL vidéo/son pour cette question (optionnel) :</div>
-      <input type="text" id="cfg-new-q-media" class="inp" placeholder="https://... (MP4 ou MP3)" maxlength="200" style="font-size:.85rem;margin-bottom:8px;">
       <div style="display:flex;gap:6px;">
         <button class="btn ye" style="flex:1;font-size:.85rem;padding:9px;" onclick="cfgAddQuestion()">Ajouter ✓</button>
         <button class="btn" style="font-size:.85rem;padding:9px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('cfg-add-q').style.display='none'">Annuler</button>
@@ -1055,7 +1033,6 @@ button.game-only.game-active,
       <button class="btn" onclick="hResendSounds()" style="margin-top:8px;font-size:.8rem;padding:8px 14px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">📡 Renvoyer les sons aux joueurs</button>
     </div>
 
-
     <hr class="div">
     <div style="margin-bottom:16px;">
       <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:8px;">🎰 Segments de la roue</div>
@@ -1066,7 +1043,7 @@ button.game-only.game-active,
 
     <hr class="div">
     <div id="cfg-count-info" style="font-size:.82rem;color:var(--pu-l);font-weight:700;margin-bottom:12px;"></div>
-    <button class="btn big ye" style="width:100%;" onclick="hostLaunchFromConfig()">🚀 Lancer la Partie !</button>
+    <button class="btn big ye w-full" onclick="hostLaunchFromConfig()">🚀 Lancer la Partie !</button>
     <button class="btn" style="width:100%;margin-top:6px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('s-hconfig').classList.add('hidden');$('s-host').classList.remove('hidden');">← Retour au salon</button>
   </div>
 </div>
@@ -1081,100 +1058,75 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER JOIN — onboarding flow -->
-<div id="s-pjoin" class="screen hidden" style="justify-content:flex-start;align-items:center;padding:0;">
-  <!-- Logo compact -->
-  <div style="text-align:center;padding:max(10px,env(safe-area-inset-top,10px)) 16px 6px;flex-shrink:0;width:100%;">
-    <div style="font-family:'Baloo 2',cursive;font-size:clamp(.95rem,4vw,1.5rem);font-weight:900;line-height:1.05;color:#fff;text-shadow:2px 2px 0 var(--pu-d);">QUI EST LA <span style="color:var(--ye);">+</span> GROSSE PUTE DE ROUEN ?</div>
-    <div style="font-size:.65rem;color:rgba(255,255,255,.45);font-weight:700;margin-top:2px;">On commence sobre, on finit bourré.</div>
+<div id="s-pjoin" class="screen hidden">
+
+  <!-- Logo -->
+  <div style="text-align:center;margin-bottom:16px;flex-shrink:0;">
+    <div style="font-family:'Baloo 2',cursive;font-size:clamp(1rem,5vw,1.6rem);font-weight:900;color:#fff;text-shadow:2px 2px 0 var(--pu-d);line-height:1.1;">QUI EST LA <span style="color:var(--ye);">+</span> GROSSE PUTE DE ROUEN ?</div>
+    <div style="font-size:.62rem;color:rgba(255,255,255,.4);font-weight:700;margin-top:2px;">On commence sobre, on finit bourré.</div>
   </div>
-  <!-- Card scrollable -->
-  <div class="card" style="max-width:420px;width:min(100%,420px);margin:0 0 20px;">
 
-    <!-- STEP 0: code entry (when arrived without ?room) -->
-    <div id="step-code" style="display:none;">
-      <p style="color:var(--pu-l);margin-bottom:14px;font-size:.9rem;font-weight:700;">Entre le code affiché sur l'écran principal</p>
-      <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off" oninput="this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase();" onkeyup="if(this.value.length===4)setTimeout(validateCode,50)">
-      <button class="btn big" style="width:100%;" onclick="validateCode()">Valider ✓</button>
-    </div>
-
-    <!-- STEP 1: "Choisi ton nom beau gosse" -->
-    <div id="step-name" style="display:none;">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:900;color:var(--pu-d);margin-bottom:6px;">Choisi ton nom beau gosse</div>
-      <div class="ph-circle" id="phc" style="width:110px;height:110px;border-radius:22px;border-width:3px;margin-bottom:6px;cursor:pointer;" onclick="showPhotoChoice()">
-        <span id="php" style="font-size:2.5rem;">📷</span><img id="phprev" src="" style="display:none;" alt="">
-      </div>
-      <!-- Inputs séparés: selfie et galerie -->
-      <input type="file" id="fi-selfie" style="display:none;" accept="image/*" capture="user" onchange="handlePhoto(event)">
-      <input type="file" id="fi-gallery" style="display:none;" accept="image/*" onchange="handlePhoto(event)">
-      <!-- Mini choix selfie/galerie -->
-      <div id="photo-choice" style="display:none;gap:8px;margin-bottom:8px;justify-content:center;">
-        <button onclick="$('fi-selfie').click();$('photo-choice').style.display='none';" style="background:var(--pu);color:#fff;border:2px solid var(--pu-d);border-radius:10px;padding:8px 14px;font-size:.85rem;font-weight:800;cursor:pointer;">📷 Selfie</button>
-        <button onclick="$('fi-gallery').click();$('photo-choice').style.display='none';" style="background:var(--pu-s);color:var(--pu-d);border:2px solid var(--pu-l);border-radius:10px;padding:8px 14px;font-size:.85rem;font-weight:800;cursor:pointer;">🖼️ Galerie</button>
-      </div>
-      <div id="photo-hint" style="font-size:.75rem;color:var(--pu-l);margin-bottom:12px;font-weight:700;">Tape pour choisir ta photo 📸</div>
-      <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
-      <button class="btn big ye" style="width:100%;margin-top:8px;" onclick="onboardStep1()">Continuer →</button>
-    </div>
-
-    <!-- STEP 2: "C'est ton nom ?" -->
-    <div id="step-confirm" style="display:none;text-align:center;">
-      <div style="font-size:1rem;font-weight:700;color:var(--pu-l);margin-bottom:8px;">C'est ton nom ?</div>
-      <div id="confirm-photo-preview" style="width:70px;height:70px;border-radius:14px;overflow:hidden;margin:0 auto 10px;border:3px solid var(--pu-l);display:none;"><img id="confirm-photo-img" src="" style="width:100%;height:100%;object-fit:cover;"></div>
-      <div id="confirm-name" style="font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu-d);margin-bottom:20px;"></div>
-      <button class="btn big ye" style="width:100%;margin-bottom:8px;" onclick="onboardStep2()">Oui</button>
-      <button class="btn ghost" style="width:100%;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 4px 0 var(--pu-l);" onclick="onboardBack()">← Changer</button>
-    </div>
-
-    <!-- STEP 2b: "C'est flingué" -->
-    <div id="step-flingue" style="display:none;text-align:center;">
-      <div style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:900;color:var(--pu-d);margin-bottom:10px;">C'est flingué <span style="display:inline-block;">😂🫵</span></div>
-      <button class="btn big ye" style="width:100%;margin-top:10px;" onclick="onboardStep2b()">Eh oh</button>
-    </div>
-
-    <!-- STEP 3: "Ta gueule" -->
-    <div id="step-tagueule" style="display:none;text-align:center;">
-      <div style="font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu-d);margin-bottom:6px;">Ta gueule</div>
-      <button class="btn big ye" style="width:100%;margin-top:10px;" onclick="onboardStep3()">Pas de problèmes</button>
-    </div>
-
-    <!-- STEP 4: Rules -->
-    <div id="step-rules" style="display:none;max-height:72vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu-d);margin-bottom:14px;text-align:center;">La règle est simple :</div>
-      <div class="rules-list">
-        <div class="rule-item">🗳️ Vote pour la personne qui correspond le mieux à l'adjectif. La plus votée tourne la roue et reçoit un défi. Ex-æquo → chacun tourne à son tour.</div>
-        <div class="rule-item">☠️ Le grand gagnant de la soirée tourne la <b>Roue Diabolique des Enfers</b> à la fin. Bonne chance.</div>
-        <div class="rule-item">🕵️ Votes <b>anonymes</b>. C'est une safe place. Restez souples, c'est un jeu.</div>
-        <div class="rule-item">🔊 Son activé + téléphone pas en veille = pas de déco.</div>
-      </div>
-      <div style="font-size:1.05rem;font-weight:900;color:var(--pu-d);text-align:center;margin:16px 0 12px;">Est-ce que c'est bon pour vous ?</div>
-      <button class="btn big ye" style="width:100%;" onclick="onboardShowConsent()">C'est ciao 🤙</button>
-    </div>
-
-    <!-- STEP 5: Consent -->
-    <div id="step-consent" style="display:none;text-align:center;">
-      <div style="font-size:2.5rem;margin-bottom:14px;">🍺</div>
-      <div style="font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:900;color:var(--pu-d);margin-bottom:20px;line-height:1.4;">Je reconnais avoir pris connaissance de la biture qui m'attend.</div>
-      <button class="btn big ye" style="width:100%;" onclick="onboardFinish()">Allons-y 🚀</button>
-    </div>
-
-    <div id="jstat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;text-align:center;"></div>
+  <!-- STEP 0: saisie code (sans QR) -->
+  <div id="step-code" class="card" style="width:min(92vw,380px);display:none;">
+    <p style="color:var(--pu-l);margin-bottom:12px;font-size:.88rem;font-weight:700;text-align:center;">Entre le code affiché sur l'écran</p>
+    <input type="text" id="code-inp" class="code-inp" placeholder="XXXX" maxlength="4" autocomplete="off"
+      oninput="this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase();"
+      onkeyup="if(this.value.length===4)setTimeout(validateCode,50)">
+    <button class="btn big w-full mt-8" onclick="validateCode()">Valider ✓</button>
   </div>
+
+  <!-- STEP 1: photo + nom (1 seul écran) -->
+  <div id="step-name" class="card" style="width:min(92vw,380px);display:none;">
+    <!-- Photo -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:14px;">
+      <div class="ph-circle" id="phc" onclick="showPhotoChoice()" style="width:96px;height:96px;border-radius:20px;cursor:pointer;flex-shrink:0;">
+        <span id="php" style="font-size:2.2rem;">📷</span>
+        <img id="phprev" src="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:18px;" alt="">
+      </div>
+      <div id="photo-choice" style="display:none;gap:8px;justify-content:center;">
+        <button onclick="$('fi-selfie').click();$('photo-choice').style.display='none';"
+          style="background:var(--pu);color:#fff;border:2px solid var(--pu-d);border-radius:10px;padding:7px 12px;font-size:.8rem;font-weight:800;cursor:pointer;">📷 Selfie</button>
+        <button onclick="$('fi-gallery').click();$('photo-choice').style.display='none';"
+          style="background:var(--pu-s);color:var(--pu-d);border:2px solid var(--pu-l);border-radius:10px;padding:7px 12px;font-size:.8rem;font-weight:800;cursor:pointer;">🖼️ Galerie</button>
+      </div>
+      <div id="photo-hint" style="font-size:.72rem;color:var(--pu-l);font-weight:700;">Tape pour choisir ta photo 📸</div>
+    </div>
+    <input type="file" id="fi-selfie" style="display:none;" accept="image/*" capture="user" onchange="handlePhoto(event)">
+    <input type="file" id="fi-gallery" style="display:none;" accept="image/*" onchange="handlePhoto(event)">
+    <!-- Nom -->
+    <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off" style="margin-bottom:10px;">
+    <button class="btn big ye w-full" onclick="onboardStep1()">Continuer →</button>
+  </div>
+
+  <!-- STEP 2: règles (modal-style, skippable) -->
+  <div id="step-rules" class="card" style="width:min(92vw,380px);display:none;">
+    <div style="font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:900;color:var(--pu-d);margin-bottom:12px;text-align:center;">Les règles 🎯</div>
+    <div class="rules-list" style="margin-bottom:16px;">
+      <div class="rule-item">🗳️ Vote pour la personne qui correspond le mieux à l'adjectif. La plus votée tourne la roue et reçoit un défi.</div>
+      <div class="rule-item">☠️ Le grand gagnant tourne la <b>Roue Diabolique des Enfers</b> à la fin.</div>
+      <div class="rule-item">🕵️ Votes anonymes. C'est un jeu, restez souples.</div>
+      <div class="rule-item">🔊 Son activé + téléphone pas en veille.</div>
+    </div>
+    <button class="btn big ye" style="width:100%;margin-bottom:8px;" onclick="onboardFinish()">Allons-y 🚀</button>
+    <div id="jstat" style="text-align:center;color:var(--pu-l);font-size:.8rem;font-weight:700;min-height:18px;margin-top:4px;"></div>
+  </div>
+
 </div>
 
 <!-- PLAYER WAIT -->
-<div id="s-pwait" class="screen hidden" style="justify-content:center;align-items:center;">
-  <div class="card" style="width:100%;max-width:400px;">
+<div id="s-pwait" class="screen hidden" style="">
+  <div class="card" style="width:min(92vw,360px);">
     <div id="pwait-photo" style="width:64px;height:64px;border-radius:14px;overflow:hidden;margin:0 auto 10px;border:3px solid var(--pu-l);display:none;"><img id="pwait-photo-img" src="" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="m-title" id="p-name-d">...</div>
     <p style="color:var(--gr);font-weight:800;font-size:.95rem;">✓ Connecté au salon</p>
     <p style="color:var(--pu-l);margin-top:6px;font-size:.85rem;font-weight:700;">En attente du lancement<span class="wdots"></span></p>
-    <div class="chips" id="p-chips" style="margin-top:clamp(6px,1.5svh,12px);max-height:30svh;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+    <div class="chips" id="p-chips" style="margin-top:8px;max-height:28vh;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
 
   </div>
 </div>
 
 <!-- PLAYER VOTE -->
-<div id="s-pvote" class="screen hidden" style="justify-content:flex-start;align-items:center;padding:0;">
+<div id="s-pvote" class="screen hidden" style="justify-content:flex-start;">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
   <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%;max-width:440px;margin:0 auto;padding:8px 12px max(60px,env(safe-area-inset-bottom,60px));display:flex;flex-direction:column;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-shrink:0;"><span id="v-player-name" style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;"></span><span id="v-round-num" style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.35);"></span></div>
@@ -1184,9 +1136,9 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER VOTED — shows live vote counter -->
-<div id="s-pvoted" class="screen hidden" style="align-items:center;padding-top:max(40px,env(safe-area-inset-top,40px));">
+<div id="s-pvoted" class="screen hidden" style="">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
-  <div class="card" style="width:100%;max-width:400px;">
+  <div class="card" style="width:min(92vw,360px);">
     <span class="big-emoji">🤫</span>
     <div class="m-title">VOTÉ !</div>
     <p id="voted-for-lbl" style="color:var(--pk);font-weight:800;margin-bottom:4px;"></p>
@@ -1200,9 +1152,9 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER BETWEEN -->
-<div id="s-pbetween" class="screen hidden" style="align-items:center;padding-top:max(40px,env(safe-area-inset-top,40px));">
+<div id="s-pbetween" class="screen hidden" style="">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
-  <div class="card" style="width:100%;max-width:400px;">
+  <div class="card" style="width:min(92vw,360px);">
     <span class="big-emoji" id="pbetween-emoji">⏳</span>
     <div class="m-title" id="pbetween-title">MANCHE TERMINÉE</div>
     <p id="pbetween-winner" style="color:var(--pu);font-weight:800;margin-bottom:4px;font-size:1.1rem;"></p>
@@ -1250,7 +1202,6 @@ button.game-only.game-active,
   <!-- Winner card(s) (hidden until reveal) -->
   <div id="rev-winners-wrap" style="display:none;flex-wrap:wrap;gap:8px;justify-content:center;align-items:flex-start;position:relative;z-index:2;width:100%;max-width:min(96vw,480px);"></div>
   <!-- Winner video clips (shown below cards) -->
-  <div id="rev-clip-wrap" class="rev-clip-wrap" style="display:none;"></div>
   <div id="rev-winner-lbl" class="rev-winner-lbl" style="display:none;"></div>
   <!-- Others (shown after winners) -->
   <div id="rev-others-sec" class="others-section" style="display:none;">
@@ -1327,42 +1278,8 @@ const QUESTIONS = [
   {p:"Qui est le +", t:"accro aux réseaux dès le réveil"}
 ];
 
-// 🎬 VIDEO_MAP is now built dynamically by the config UI (see cfgBuildVideoMap)
-// Ajoute ou modifie les URLs ci-dessous avant ta soirée.
-// La clé doit correspondre EXACTEMENT à la question dans QUESTIONS.
-// Si une question n'a pas de vidéo, elle ne s'affiche pas.
 // ════════════════════════════════════════════════
-let VIDEO_MAP = {}; // populated from config UI
 
-// ════════════════════════════════════════════════
-// 💬 CHAT — pseudos anonymes aléatoires
-// ════════════════════════════════════════════════
-const ANON_ANIMALS = [
-  "🦊 Renard","🐺 Loup","🦁 Lion","🐻 Ours","🦝 Raton",
-  "🐸 Grenouille","🦋 Papillon","🦜 Perroquet","🐙 Poulpe","🦄 Licorne",
-  "🐯 Tigre","🦈 Requin","🦚 Paon","🐊 Croco","🦉 Hibou",
-  "🐧 Pingouin","🦩 Flamant","🐺 Hyène","🦇 Chauve-Souris","🐢 Tortue"
-];
-
-const WHEEL_FUN = {
-  "1 gorgée":            "Une petite pour la route 🥂",
-  "Cul sec 🔥":          "Arrière-gorge, tu connais la chanson 🫡",
-  "3 gorgées":           "Compte pas tes calories ce soir 🍷",
-  "Donne 4 gorgées":     "Partage c'est aimer, mais là t'es pas sympa 😈",
-  "Cul rouge 🍑":        "Sans commentaire. On t'avait prévenu 🍑",
-  "2 gorgées":           "Deux petites, tranquille 😌",
-  "Cul sec pour toi":    "Pour toi. Bon courage mon grand 🫠",
-  "Cul sec pour moi":    "Auto-punition, respect 🤝",
-  // Death wheel
-  "Cul sec pour tout le monde": "Tout le monde boit. Pas d'exception. 🥂",
-  "Le perdant offre le shot":   "T'as pas le choix, passe à la caisse 💸",
-  "Tous en jugement":           "Le groupe décide de ton sort 🧑‍⚖️",
-  "Strip-tease obligatoire":    "Et on applaudit 👏",
-  "Vérité ou défi collectif":   "La démocratie dans toute sa splendeur 🗳️",
-  "Cul sec pour deux":          "Désigne ta victime avec sagesse 👉",
-  "Le champion ouvre bouteille": "Tu paies l'apéro, champion 🍾",
-  "Règle maison":               "À l'hôte de décider. Ça va être cruel.",
-};
 // ctx.arc draws CW from `start` angle. 0 = 3 o'clock (right).
 // Pointer is fixed at TOP = -PI/2.
 // Segment under pointer at wheel angle A:
@@ -1370,14 +1287,14 @@ const WHEEL_FUN = {
 //   idx = Math.floor(ptr / ARC) % WS.length
 // This is consistent with drawWheel which draws seg i from A + i*ARC.
 const WS=[
-  {l:"1 gorgée",     c:"#7c3aed"},
-  {l:"Cul sec 🔥",   c:"#dc2626"},
-  {l:"3 gorgées",    c:"#db2777"},
-  {l:"Donne 4 gorgées",c:"#d97706"},
-  {l:"Cul rouge 🍑", c:"#059669"},
-  {l:"2 gorgées",    c:"#2563eb"},
-  {l:"Cul sec pour toi",c:"#9333ea"},
-  {l:"Cul sec pour moi",c:"#0891b2"},
+  {l:"1 gorgée",        c:"#7c3aed", fun:"Une petite pour la route 🥂"},
+  {l:"Cul sec 🔥",      c:"#dc2626", fun:"Arrière-gorge, tu connais la chanson 🫡"},
+  {l:"3 gorgées",       c:"#db2777", fun:"Compte pas tes calories ce soir 🍷"},
+  {l:"Donne 4 gorgées", c:"#d97706", fun:"Partage c'est aimer, mais là t'es pas sympa 😈"},
+  {l:"Cul rouge 🍑",    c:"#059669", fun:"Sans commentaire. On t'avait prévenu 🍑"},
+  {l:"2 gorgées",       c:"#2563eb", fun:"Deux petites, tranquille 😌"},
+  {l:"Cul sec pour toi",c:"#9333ea", fun:"Pour toi. Bon courage mon grand 🫠"},
+  {l:"Cul sec pour moi",c:"#0891b2", fun:"Auto-punition, respect 🤝"},
 ];
 let ARC=2*Math.PI/WS.length;
 
@@ -1394,14 +1311,14 @@ function stripPrefix(adj){
   return adj.replace(/^(Qui est celui qui|Qui [a-zàâéèêëîïôùûüç']+ l[ae]?[s']?\s*[-+]?\s*)/i,'').trim()
             .replace(/^[+\-]\s*/,'').trim();
 }
-// Compose full question text from a question object {p:prefix,t:text} or a plain string
-function qFull(q){
-  if(typeof q === 'string') return q;
-  if(q && q.p && q.t) return q.p + ' ' + q.t;
-  if(q && q.t) return q.t;
-  return String(q);
-}
+
 const $=id=>document.getElementById(id);
+
+// Helper pour modifier un élément en toute sécurité
+function setElStyle(id,prop,val){const e=$(id);if(e)e.style[prop]=val;}
+function addElClass(id,cls){const e=$(id);if(e)e.classList.add(cls);}
+function remElClass(id,cls){const e=$(id);if(e)e.classList.remove(cls);}
+
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));const el=$(id);if(el)el.classList.remove('hidden');}
 function showRev(){const t=$('rev-theatre');if(t){t.classList.add('visible');}}
@@ -1436,7 +1353,6 @@ let pName='',pPhoto='',pConn=null,pList=[],pRoomId='';
 let pScores={}; // live scores from server
 let pHistory=[]; // live win history from server
 let pPhotosMap={}; // name→photo, updated on LOBBY_UPDATE/START_ROUND
-let pAnonNick=''; // anonymous chat identity
 let pTimers=[];  // reveal timers
 // Wheel state
 let wQueue=[];   // array of player names waiting to spin
@@ -1458,7 +1374,6 @@ window.addEventListener("load",()=>{
 // Chat
 let chatOpen = false;
 let chatUnread = 0;
-
 
 // ═══════════════════ NAV ═══════════════════
 function gotoCodeEntry(){showGameUI();show('s-pjoin');$('step-code').style.display='block';}
@@ -1494,8 +1409,6 @@ function handlePhoto(e){
     const p=$('phprev');p.src=pPhoto;p.style.display='block';
   };img.src=url;
 }
-
-
 
 // ════ SON PERSONNALISÉ ════
 let pSound=1; // 1=prout, 2=vomi, 3=cloche, 4=trompette, 5=caisse
@@ -1597,8 +1510,6 @@ function _playBase64ViaWebAudio(n,url){
   }catch(e){}
 }
 
-// playVictorySound replaced by playSoundById
-
 function buildSoundPicker(){
   const picker=$('sound-picker');
   if(!picker) return;
@@ -1623,51 +1534,24 @@ function buildSoundPicker(){
 // ═══════════════════ ONBOARDING STEPS ═══════════════════
 function onboardStep1(){
   const raw=$('pni').value.trim();
-  if(!raw){toast('✏️ Entre ton prénom beau gosse !');return;}
-  if(!pPhoto){toast("📸 Prends ta photo d'abord mon coco !");$('phc').style.animation='qCardPulse .4s ease 3';setTimeout(()=>{if($('phc'))$('phc').style.animation='';},1200);return;}
+  if(!raw){toast('✏️ Entre ton prénom !');return;}
+  if(!pPhoto){toast("📸 Ajoute ta photo !");$('phc').style.animation='qCardPulse .4s ease 3';setTimeout(()=>{if($('phc'))$('phc').style.animation='';},1200);return;}
   pName=raw.substring(0,12);
-  $('confirm-name').textContent=pName.toUpperCase();
   $('step-name').style.display='none';
-  $('step-confirm').style.display='block';
+  $('step-rules').style.display='block';
 }
 
 function onboardStep2(){
-  // "C'est flingué"
   $('step-confirm').style.display='none';
-  $('step-flingue').style.display='block';
-}
-
-function onboardStep2b(){
-  // "Ta gueule"
-  $('step-flingue').style.display='none';
-  $('step-tagueule').style.display='block';
-}
-
-function onboardBack(){
-  $('step-confirm').style.display='none';
-  $('step-flingue').style.display='none';
-  $('step-tagueule').style.display='none';
-  $('step-name').style.display='block';
-}
-
-function onboardShowConsent(){
-  $('step-rules').style.display='none';
-  $('step-consent').style.display='block';
-}
-
-function onboardStep3(){
-  // Show rules
-  $('step-tagueule').style.display='none';
   $('step-rules').style.display='block';
 }
 
 function onboardFinish(){
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   if(typeof Peer==='undefined'){toast('❌ Erreur réseau — recharge la page');return;}
-  pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
   if(peer&&!isHost){try{peer.destroy();}catch(e){}}
-  peer=new Peer(undefined,{debug:0});
+  peer=new Peer(undefined,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
   const to1=setTimeout(()=>{stat.textContent='❌ Impossible de se connecter.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
   peer.on('error',err=>{clearTimeout(to1);stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);});
   peer.on('open',()=>{
@@ -1675,14 +1559,11 @@ function onboardFinish(){
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
     pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-consent').style.display='none';$('step-name').style.display='block';});
-    pConn.on('open',()=>{clearTimeout(to2);try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){}pConn.send({type:'JOIN',name:pName,photo:pPhoto});});
+    pConn.on('open',()=>{clearTimeout(to2);try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){}pConn.send({type:'JOIN',name:pName,photo:pPhoto});startHeartbeat();});
     pConn.on('data',handlePData);
     pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
 }
-
-// Videos are configured via VIDEO_MAP at the top of the script — not uploaded by players.
-// playerJoin replaced by onboarding flow (onboardStep1 → onboardStep2 → onboardStep3 → onboardFinish)
 
 // ═══════════════════ HOST OPEN ═══════════════════
 function hostOpen(e){ 
@@ -1695,7 +1576,7 @@ function hostOpen(e){
   const attempt=(code)=>{
     hCode=code;
     if(peer)try{peer.destroy();}catch(e){}
-    peer=new Peer(code,{debug:0});
+    peer=new Peer(code,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
     peer.on('error',err=>{
       if(err.type==='unavailable-id'){attempt(rndCode());return;}
       toast('❌ '+err.message);if(btn){btn.textContent='🎮 Ouvrir le Salon';btn.disabled=false;}
@@ -1727,7 +1608,8 @@ function handleHConn(conn){
       }
       hostLobbyUI();
       hBcast({type:'LOBBY_UPDATE',players:hPListMeta()}); // no photos = lightweight
-      setTimeout(()=>hSendSounds(conn),200); // send sounds after connection is stable
+      // Only send sounds if at least one is configured
+      if(CUSTOM_SOUNDS.some(s=>s.url&&s.url.trim())) setTimeout(()=>hSendSounds(conn),200);
       updateBgCards(hPList());
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
       if(hQi>=0){
@@ -1760,7 +1642,7 @@ function handleHConn(conn){
       // to avoid disconnect-triggered false auto-reveal
       const expected=hExpectedVoters||Object.keys(hConns).length;
       if(!hRevealed&&hWhoVoted.size>=expected){
-        hRevealed=true;setTimeout(hostReveal,600);
+        setTimeout(hostReveal,600);
       }
       return;
     }
@@ -1815,7 +1697,7 @@ function hPList(includePhotos=true){
   }));
 }
 function hPListMeta(){return hPList(false);} // lightweight: no photos
-function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
+function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn&&p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
 function hResendSounds(){
   const n=Object.keys(hConns).length;
@@ -1853,7 +1735,6 @@ function hostLobbyUI(){
 
 // ═══════════════════ HOST GAME ═══════════════════
 
-
 function buildWheelSegUI(){
   const list=$('wheel-seg-list');
   if(!list) return;
@@ -1867,12 +1748,11 @@ function buildWheelSegUI(){
     row.appendChild(dot);
     // Label input
     const inp=document.createElement('input');
-    inp.type='text';inp.value=seg.l;inp.maxLength=30;
+    inp.type='text';inp.value=seg.l;inp.maxLength=30;inp.placeholder='Nom du segment';
     inp.style.cssText='flex:1;background:rgba(124,58,237,.06);border:1.5px solid var(--pu-l);border-radius:8px;padding:6px 8px;font-size:.82rem;font-weight:700;color:var(--pu-d);outline:none;font-family:Nunito,sans-serif;';
     inp.addEventListener('input',(function(idx){return function(){
       WS[idx].l=this.value;
-      // Update WHEEL_FUN key if needed
-    };})(i));
+      };})(i));
     row.appendChild(inp);
     // Delete
     if(WS.length>3){
@@ -1891,7 +1771,6 @@ function buildWheelSegUI(){
 }
 
 // WS.length est une const — on utilise une ref
-
 
 function addWheelSeg(){
   if(WS.length>=12){toast('12 segments max !');return;}
@@ -1979,8 +1858,7 @@ function cfgBuildList(){
     window.cfgQuestions = QUESTIONS.map(q=>({
       prefix: (typeof q==='object'&&q.p)?q.p:'Qui est le +',
       text:   (typeof q==='object'&&q.t)?q.t:String(q),
-      active: true,
-      media:  ''
+      active: true
     }));
   }
   renderCfgList();
@@ -2028,12 +1906,6 @@ function renderCfgList(){
     ta.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].text=this.value;};})(i));
     inner.appendChild(ta);
 
-    const mediaInp=document.createElement('input');
-    mediaInp.type='text';mediaInp.className='cfg-q-media';
-    mediaInp.placeholder='URL vidéo/son (optionnel)';mediaInp.value=q.media||'';
-    mediaInp.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].media=this.value;};})(i));
-    inner.appendChild(mediaInp);
-
     row.appendChild(inner);
 
     // Move up/down + delete
@@ -2054,9 +1926,6 @@ function renderCfgList(){
     list.appendChild(row);
   });
 }
-
-
-
 
 function cfgToggle(i,val){
   window.cfgQuestions[i].active=val;
@@ -2079,11 +1948,9 @@ function showAddQuestion(){
 function cfgAddQuestion(){
   const txt=$('cfg-new-q-inp').value.trim();
   if(!txt){toast('✏️ Entre la question !');return;}
-  const media=$('cfg-new-q-media').value.trim();
   const prefix=$('cfg-new-q-prefix')?$('cfg-new-q-prefix').value:'Qui est le +';
-  window.cfgQuestions.push({prefix,text:txt,active:true,media});
+  window.cfgQuestions.push({prefix,text:txt,active:true});
   $('cfg-new-q-inp').value='';
-  $('cfg-new-q-media').value='';
   $('cfg-add-q').style.display='none';
   renderCfgList();updateCfgInfo();
   const list=$('cfg-q-list');list.scrollTop=list.scrollHeight;
@@ -2096,29 +1963,17 @@ function updateCfgInfo(){
   $('cfg-count-info').textContent=`${active} question${active>1?'s':''} sélectionnée${active>1?'s':''} · ${will} manche${will>1?'s':''} seront jouées`;
 }
 
-function cfgBuildVideoMap(){
-  VIDEO_MAP={};
-  (window.cfgQuestions||[]).forEach(q=>{
-    if(q.media&&q.media.trim()) VIDEO_MAP[(q.prefix+' '+q.text).trim()]=q.media.trim();
-  });
-}
-
 function hostLaunchFromConfig(){
   if(Object.keys(hConns).length===0){toast("⚠️ Attends qu'au moins un joueur rejoigne !");return;}
   const activeQs=(window.cfgQuestions||[]).filter(q=>q.active);
   if(activeQs.length===0){toast('⚠️ Sélectionne au moins une question !');return;}
   MAX_ROUNDS=parseInt($('cfg-rounds').value)||10;
-  cfgBuildVideoMap();
   const pool=activeQs.map(q=>(q.prefix+' '+q.text).trim());
   hQs=shuffle(pool).slice(0,MAX_ROUNDS);hQi=-1;
   $('h-lobby').style.display='none';$('h-game').style.display='block';
   $('rth').textContent=Math.min(MAX_ROUNDS,pool.length);
   show('s-host');showScorePin();updateScorePin();updateRemainingRounds();hostNext();
 }
-
-// Keep old hostLaunch as alias just in case
-function hostLaunch(){hostLaunchFromConfig();}
-
 
 function openConfigDuringGame(){
   const existing=$('mid-game-config');
@@ -2229,11 +2084,7 @@ function hostSkipRound(idx){
   toast('Manche supprimée');
 }
 
-
-
-
 function hostNext(){
-  if(demoMode){clearPTimers();hideRev();demoNextRound();return;}
   hQi++;if(hQi>=hQs.length||hQi>=MAX_ROUNDS){hostFinal();return;}
   hWhoVoted.clear();hVotes={};hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
@@ -2249,14 +2100,13 @@ function hostNext(){
 }
 
 function hostForceReveal(){
-  if(hRevealed)return;hRevealed=true;$('btn-fr').disabled=true;hostReveal();
+  if(hRevealed) return;
+  hostReveal();
 }
 
 function hostReveal(){
-  if(hRevealed&&Object.keys(hVotes).length>0&&Object.values(hVotes).some(v=>v>0)){
-    // Already revealed — avoid double score counting
-    return;
-  }
+  if(hRevealed) return; // prevent double call
+  hRevealed=true;
   const _bfr=$('btn-fr');if(_bfr)_bfr.disabled=true;
   const names=Object.keys(hVotes);
   if(names.length===0){setTimeout(()=>$("btn-fn").disabled=false,500);return;}
@@ -2287,7 +2137,6 @@ function hostFinal(){
   confetti();
 }
 
-
 // ════ HALL OF SHAME BANNER ════
 function updateShameScroll(){
   const wrap=$('shame-scroll-wrap');
@@ -2297,7 +2146,7 @@ function updateShameScroll(){
   wrap.style.display='block';
   // Build scrolling text from win history
   const items=hWinHistory.map(h=>{
-    const adj=stripPrefix(h.adjective)||h.adjective;
+    const adj=stripPrefix(h.adjective)||h.adjective||'?';
     return `🏆 ${h.name} est le + ${adj}`;
   });
   // Repeat to fill space
@@ -2316,196 +2165,8 @@ function updateShameScroll(){
 // 🧪 MODE DÉMO — simulation locale sans PeerJS
 // ═══════════════════════════════════════════════════════
 
-let demoMode = false;
-let demoSpeed = 'slow'; // slow=3s, normal=1.5s, fast=0.5s
-const DEMO_SPEED_MS = {slow:3000, normal:1200, fast:400};
-
-const BOT_NAMES = ['Kevin','Sophie','Gauthier','Lucie','Thomas','Camille','Axel','Manon','Romain','Chloé','Baptiste','Inès','Hugo','Léa','Mathieu','Jade','Dylan','Anaïs','Kévin','Pauline'];
-const BOT_COLORS = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e','#e91e63','#00bcd4','#ff5722','#607d8b','#8bc34a','#795548','#ff9800'];
-
-function openDemoSetup(){
-  show('s-demo');
-}
-
-function selectDemoSpeed(btn){
-  document.querySelectorAll('.demo-speed-btn').forEach(b=>{
-    b.style.background='var(--pu-s)';b.style.color='var(--pu-d)';b.style.borderColor='var(--pu-l)';
-  });
-  btn.style.background='var(--pu)';btn.style.color='#fff';btn.style.borderColor='var(--pu)';
-  demoSpeed=btn.dataset.speed;
-}
-
-function startDemo(){
-  const name=($('demo-name').value.trim())||'Moi';
-  const nbBots=parseInt($('demo-bots').value)||5;
-  const nbRounds=parseInt($('demo-rounds').value)||5;
-  demoSpeed=$('demo-bots').closest('.card').querySelector('.demo-speed-btn[style*="background:var(--pu)"]')?.dataset?.speed||'slow';
-
-  demoMode=true;
-  isHost=true; // on joue en mode hôte local
-  pName=name;
-  pPhoto=''; // pas de photo en démo
-  showGameUI();
-
-  // Créer les bots
-  const bots=BOT_NAMES.slice(0,nbBots).map((n,i)=>({
-    name:n,
-    photo:'',
-    color:BOT_COLORS[i%BOT_COLORS.length],
-    sound:1
-  }));
-
-  // Injecter les bots dans hConns avec des faux peers
-  hConns={};
-  bots.forEach((bot,i)=>{
-    const fakeId='bot-'+i;
-    hConns[fakeId]={name:bot.name,photo:'',sound:1,conn:{open:true,send:()=>{}}};
-    hScores[bot.name]=0;
-  });
-  // Ajouter le joueur humain
-  hScores[name]=0;
-
-  // Config partie
-  MAX_ROUNDS=nbRounds;
-  cfgBuildList();
-  const activeQs=(window.cfgQuestions||[]).filter(q=>q.active);
-  const pool=activeQs.map(q=>(q.prefix+' '+q.text).trim());
-  hQs=shuffle(pool).slice(0,MAX_ROUNDS);
-  hQi=-1;
-
-  // Lancer
-  show('s-host');
-  $('h-lobby').style.display='none';
-  $('h-game').style.display='block';
-  $('rc2').textContent='DEMO';
-  $('rth').textContent=MAX_ROUNDS;
-  updateScorePin();updateRemainingRounds();
-
-  // Lancer la première manche + afficher l'UI joueur
-  demoNextRound();
-}
-
-function demoNextRound(){
-  hQi++;
-  if(hQi>=hQs.length||hQi>=MAX_ROUNDS){demoFinal();return;}
-  hWhoVoted.clear();hVotes={};hRevealed=false;
-  hAdj=hQs[hQi];
-  hExpectedVoters=Object.keys(hConns).length+1; // bots + joueur humain
-  $('rnh').textContent=hQi+1;
-  const _bfr=$('btn-fr');if(_bfr)_bfr.disabled=false;
-  const _bfn=$('btn-fn');if(_bfn)_bfn.disabled=true;
-  updateRemainingRounds();updateShameScroll();
-
-  // Construire la liste de joueurs pour le vote (bots + humain)
-  const allPlayers=Object.values(hConns).map(p=>({name:p.name,photo:p.photo||'',sound:1}));
-  allPlayers.push({name:pName,photo:pPhoto,sound:pSound});
-
-  // Initialiser hVotes pour tout le monde
-  allPlayers.forEach(p=>hVotes[p.name]=0);
-
-  // Afficher l'écran de vote au joueur humain
-  pList=allPlayers;
-  const vAdj=$('v-adj');
-  if(vAdj){
-    vAdj.textContent=hAdj;
-    vAdj.style.fontSize=hAdj.length>35?'clamp(.9rem,3svh,1.3rem)':hAdj.length>20?'clamp(1rem,3.5svh,1.6rem)':'clamp(1.1rem,4svh,1.8rem)';
-  }
-  const vrn=$('v-round-num');if(vrn)vrn.textContent='Manche '+(hQi+1)+'/'+hQs.length;
-  const vpn=$('v-player-name');if(vpn)vpn.textContent='Ton vote, '+pName;
-  buildVoteGrid(allPlayers);
-  show('s-pvote');
-
-  // Les bots votent après un délai
-  const delay=DEMO_SPEED_MS[demoSpeed]||2000;
-  Object.keys(hConns).forEach((peerId,i)=>{
-    setTimeout(()=>{
-      if(hRevealed) return;
-      const bot=hConns[peerId];
-      if(!bot) return;
-      // Vote aléatoire parmi tous les joueurs
-      const targets=allPlayers.filter(p=>p.name!==bot.name);
-      const target=targets[Math.floor(Math.random()*targets.length)];
-      if(!target||hVotes[target.name]===undefined) return;
-      hWhoVoted.add(peerId);
-      hVotes[target.name]++;
-      // Mettre à jour le compteur si le joueur a déjà voté
-      updateVoteCounter(hWhoVoted.size+(hWhoVoted.has('human')?0:0), hExpectedVoters);
-      // Auto-reveal quand tous les bots ont voté
-      if(hWhoVoted.size>=Object.keys(hConns).length&&!hRevealed){
-        // Attendre que le joueur humain vote aussi (ou forcer après délai)
-        setTimeout(()=>{
-          if(!hRevealed&&!hWhoVoted.has('human')){
-            // Joueur n'a pas voté — voter aléatoirement pour lui
-            const hTargets=allPlayers.filter(p=>p.name!==pName);
-            const hTarget=hTargets[Math.floor(Math.random()*hTargets.length)];
-            if(hTarget&&hVotes[hTarget.name]!==undefined){
-              hWhoVoted.add('human');
-              hVotes[hTarget.name]++;
-              toast('⏱ Vote auto: '+hTarget.name);
-            }
-            demoReveal(allPlayers);
-          }
-        }, delay);
-      }
-    }, delay*(i+1)*(0.5+Math.random()));
-  });
-}
-
-function demoPlayerVote(targetName){
-  if(hRevealed||hWhoVoted.has('human')) return;
-  if(hVotes[targetName]===undefined) return;
-  hWhoVoted.add('human');
-  hVotes[targetName]++;
-  try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
-  try{getOrCreateAudioCtx();const ctx=getAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
-  const vfl=$('voted-for-lbl');if(vfl)vfl.textContent='Tu as voté pour '+targetName+' 👉';
-  show('s-pvoted');
-  updateVoteCounter(hWhoVoted.size, hExpectedVoters);
-  // Si tous les bots ont déjà voté
-  if(hWhoVoted.size>=hExpectedVoters&&!hRevealed){
-    setTimeout(()=>demoReveal(pList),600);
-  }
-}
-
-function demoReveal(allPlayers){
-  if(hRevealed) return;
-  hRevealed=true;
-  const vvals=Object.values(hVotes);
-  const maxV=vvals.length>0?Math.max(...vvals,0):0;
-  const winners=maxV>0?Object.keys(hVotes).filter(n=>hVotes[n]===maxV):[];
-  winners.forEach(w=>{
-    hScores[w]=(hScores[w]||0)+1;
-    hWinHistory.push({name:w,adjective:hAdj});
-  });
-  pScores={...hScores};pHistory=[...hWinHistory];
-  updateScorePin();updateShameScroll();
-  doReveal({votes:{...hVotes},winners,adjective:hAdj,players:allPlayers,scores:{...hScores},historyDelta:hWinHistory.slice(-winners.length)});
-}
-
-function demoFinal(){
-  const photos={};
-  renderFinalSB('h-sb','h-final-winner',hScores,photos,hWinHistory);
-  pScores={...hScores};
-  show('s-hfinal');
-  confetti();
-}
-
 // Override buildVoteGrid en mode démo pour intercepter les clics
-const _origBuildVoteGrid = null; // on patch directement
 // ═══════════════════ SCOREBOARD ═══════════════════
-function renderSB(id,scores,photos={}){
-  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  const el=$(id);el.innerHTML='';
-  const cls=['gold','silver','bronze'],medals=['🥇','🥈','🥉'];
-  sorted.forEach(([name,pts],i)=>{
-    const li=document.createElement('li');
-    li.className='sb-row '+(cls[i]||'');li.style.animationDelay=i*.08+'s';
-    const ph=photos[name]||'';
-    const pe=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
-    li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${pe}<div class="sb-name">${name}</div><div><div class="sb-pts">${pts}</div><div class="sb-sub">pt${pts>1?'s':''}</div></div>`;
-    el.appendChild(li);
-  });
-}
 
 // Final scoreboard with winner spotlight + win history tags
 function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
@@ -2569,7 +2230,6 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
   });
 }
 
-
 // ═══════════════════ PLAYER DATA ═══════════════════
 function handlePData(data){
   switch(data.type){
@@ -2609,7 +2269,6 @@ function handlePData(data){
       pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       $('p-name-d').textContent=pName.toUpperCase();
       $('p-chips').innerHTML=pList.map(p=>`<div class="chip"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${acol(p.name)};flex-shrink:0;"></span> ${escHtml(p.name)}</div>`).join('');
-      initChatNick();
       updateBgCards(pList);
       showScorePin();updateScorePin();
       if(pPhoto){const pp=$('pwait-photo');const pi=$('pwait-photo-img');if(pp&&pi){pi.src=pPhoto;pp.style.display='block';}}
@@ -2619,7 +2278,7 @@ function handlePData(data){
       pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateBgCards(pList);
       const vAdj=$('v-adj');
-      if(vAdj){vAdj.textContent=data.adjective;vAdj.style.fontSize=data.adjective.length>35?'clamp(.9rem,3svh,1.3rem)':data.adjective.length>20?'clamp(1rem,3.5svh,1.6rem)':'clamp(1.1rem,4svh,1.8rem)';}
+      if(vAdj){vAdj.textContent=data.adjective;vAdj.style.fontSize=data.adjective.length>35?'clamp(.9rem,3vw,1.3rem)':data.adjective.length>20?'clamp(1rem,3.5vw,1.6rem)':'clamp(1.1rem,4vw,1.8rem)';}
       const vrn=$('v-round-num');if(vrn&&data.round)vrn.textContent='Manche '+data.round+(data.total?'/'+data.total:'');
       const vpn=$('v-player-name');if(vpn)vpn.textContent='Ton vote, '+pName;
       buildVoteGrid(data.players);show('s-pvote');break;}
@@ -2691,7 +2350,7 @@ function handlePData(data){
       spawnFloatEmoji(data.emoji);break;
     case 'CHAT':
       appendChatMsg(data.nick,data.msg);
-      if(!chatOpen){chatUnread++;updateChatBadge();}
+      if(!chatOpen){chatUnread++;}
       break;
     case 'DEATH_SPIN':
       // Spectators see death wheel spinning
@@ -2743,15 +2402,11 @@ function buildVoteGrid(players){
     btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${p.name}</div>`;
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
-      if(demoMode){
-        demoPlayerVote(p.name);
-      } else {
-        try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
+      try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
         try{getOrCreateAudioCtx();unlockAllSounds();const ctx=getAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
         if(pConn&&pConn.open)pConn.send({type:'SUBMIT_VOTE',target:p.name});
         const vfl=$('voted-for-lbl');if(vfl)vfl.textContent='Tu as voté pour '+p.name+' 👉';
         show('s-pvoted');
-      }
     };
     grid.appendChild(btn);
   });
@@ -2760,12 +2415,8 @@ function buildVoteGrid(players){
 function clearPTimers(){pTimers.forEach(clearTimeout);pTimers=[];if(window._revealHintTimer){clearInterval(window._revealHintTimer);window._revealHintTimer=null;}}
 function pt(fn,ms){const t=setTimeout(fn,ms);pTimers.push(t);return t;}
 
-
 // ═══════════════════ SLOT MACHINE ═══════════════════
 
-function triggerSlot(){
-  if(window._revealContinue) window._revealContinue();
-}
 function runSlotMachine(players, duration, onDone){
   const reel = $('slot-reel');
   const qmark = $('q-mark-el');
@@ -2837,10 +2488,6 @@ function getOrCreateAudioCtx(){
   }
   if(_audioCtx.state==='suspended') _audioCtx.resume();
   return _audioCtx;
-}
-
-function stopRevealSounds(){
-  // Sounds are fire-and-forget with scheduled stop — nothing to cancel
 }
 
 // 💨 PROUT — the classic
@@ -2998,21 +2645,6 @@ function playRevealSound(){
 }
 
 // Vote ding (petit son quand quelqu'un vote)
-function playVotePing(){
-  try{
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, now);
-    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.15, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.2);
-  }catch(e){}
-}
 
 // ═══════════════════ THE REVEAL ═══════════════════
 
@@ -3076,8 +2708,6 @@ function doReveal(data){
   $('suspense-hint').style.opacity='1';
   $('rev-winners-wrap').style.display='none';
   $('rev-winners-wrap').innerHTML='';
-  $('rev-clip-wrap').style.display='none';
-  $('rev-clip-wrap').innerHTML='';
   $('rev-winner-lbl').style.display='none';
   $('rev-winner-lbl').textContent='';
   $('rev-others-sec').style.display='none';
@@ -3160,7 +2790,6 @@ function doReveal(data){
       // 🎆 FIREWORKS
       fireworks();
 
-
       // Winner label + media
       pt(()=>{
         const lbl=$('rev-winner-lbl');
@@ -3169,28 +2798,6 @@ function doReveal(data){
         lbl.textContent='👑 '+winners.join(' & ')+' est vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
         lbl.style.display='block';
         confetti();
-
-        const mediaUrl=(VIDEO_MAP[adjective]||'').trim();
-        const clipWrap=$('rev-clip-wrap');
-        clipWrap.innerHTML='';
-        if(mediaUrl){
-          const isAudio=/\.(mp3|ogg|wav|aac|m4a)(\?.*)?$/i.test(mediaUrl);
-          const d=document.createElement('div');
-          d.style.cssText='display:flex;flex-direction:column;align-items:center;opacity:0;transition:opacity .8s ease;';
-          if(isAudio){
-            d.innerHTML='<div class="clip-bubble" style="width:90px;height:90px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,#4c1d95,#7c3aed);">🔊</div>';
-            const aud=document.createElement('audio');
-            aud.src=mediaUrl;aud.autoplay=true;aud.loop=false;
-            aud.onerror=()=>{d.style.display='none';};
-            document.body.appendChild(aud);
-            setTimeout(()=>{try{aud.pause();aud.remove();}catch(e){}},30000);
-          } else {
-            d.innerHTML='<div class="clip-bubble" style="width:120px;height:120px;"><video src="'+mediaUrl+'" autoplay loop playsinline style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.parentElement.style.display=\'none\'"></video></div>';
-          }
-          clipWrap.appendChild(d);
-          clipWrap.style.display='flex';
-          requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';}));
-        }
       },450);
 
       const others=players.filter(p=>votes[p.name]>0&&!winners.includes(p.name)).sort((a,b)=>votes[b.name]-votes[a.name]);
@@ -3220,7 +2827,7 @@ function doReveal(data){
 function playerAskNext(){
   clearPTimers();
   hideRev();
-  $('wheel-ov').style.display='none';
+  const _wo2=$('wheel-ov');if(_wo2)_wo2.style.display='none';
   show('s-pbetween');
 }
 
@@ -3246,7 +2853,7 @@ function hostSkipSpinner(){
 }
 
 function showWheelForTurn(){
-  if(wQueue.length===0){$('wheel-ov').style.display='none';return;}
+  if(wQueue.length===0){do{const _elt=$('wheel-ov');if(_elt)_elt.style.display='none';}while(0);return;}
   const spinner=wQueue[0];
   wIsSpinner=(spinner===pName);
   $('wt').textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
@@ -3255,7 +2862,7 @@ function showWheelForTurn(){
   $('wdone-btn').style.display='none';
   $('w-result').textContent='';
   drawWheel(wAngle);
-  $('wheel-ov').style.display='flex';
+  const _wo1=$('wheel-ov');if(_wo1)_wo1.style.display='flex';
   const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='';
 }
 
@@ -3322,7 +2929,7 @@ function spinWheel(){
       } else if(pConn&&pConn.open){
         pConn.send({type:'WHEEL_RESULT',segment:seg.l,spinner:pName});
       }
-      const wFun=WHEEL_FUN[seg.l]||'Bonne chance 😈';
+      const wFun=seg.fun||seg.l;
       $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+seg.l+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun+'</div>';
       $('wspin-btn').style.display='none';
       $('wdone-btn').style.display='';
@@ -3360,7 +2967,7 @@ function wheelNext(){
   }
   if(done){
     // All spins complete — close overlay and reveal next-round button
-    $('wheel-ov').style.display='none';
+    do{const _elt=$('wheel-ov');if(_elt)_elt.style.display='none';}while(0);
     // Show rev-ctrl if reveal is still open (it may have arrived via NEXT_ALLOWED already)
     const revCtrl=$('rev-ctrl');
     if(revCtrl) revCtrl.style.display='block';
@@ -3385,23 +2992,22 @@ function updateWheelDisplay(angle,spinner){
 }
 
 function spectatorWheelLanded(segment,spinner){
-  const wFun2=WHEEL_FUN[segment]||'Bonne chance 😈';
+  const wFun2=WS.find(s=>s.l===segment)?.fun||'Bonne chance 😈';
   $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+segment+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun2+'</div>';
   $('wt').textContent='🎰 '+spinner+' a eu : '+segment;
 }
 
 function anyoneDismissWheel(){
   const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='none';
-  $('wheel-ov').style.display='none';
+  do{const _elt=$('wheel-ov');if(_elt)_elt.style.display='none';}while(0);
   const rc=$('rev-ctrl');
   if(rc) rc.style.display='block';
 }
 // Keep old name as alias
-function spectatorDismissWheel(){ anyoneDismissWheel(); }
 
 // ═══════════════════ DRAW WHEEL ═══════════════════
 function drawWheel(angle){
-  ARC=2*Math.PI/WS.length; // recalc in case segments changed
+  ARC=2*Math.PI/WS.length;
   const canvas=$('wcanvas');if(!canvas)return;
   const SZ=Math.min(window.innerWidth*0.78,300);
   canvas.width=SZ;canvas.height=SZ;
@@ -3448,10 +3054,7 @@ function toggleChat(){
   if(chatOpen){
     panel.classList.add('open');
     chatUnread=0;
-    updateChatBadge();
     // Show nick in header
-    if(pAnonNick) $('chat-my-nick').textContent=pAnonNick;
-    else $('chat-anon-tag').style.display='none';
     // Scroll to bottom
     const msgs=$('chat-msgs');
     msgs.scrollTop=msgs.scrollHeight;
@@ -3461,14 +3064,11 @@ function toggleChat(){
   }
 }
 
-function updateChatBadge(){/* chat removed */}
-
 function sendChat(){
   const inp=$('chat-inp');
   const msg=inp.value.trim().substring(0,200);
   if(!msg)return;
   inp.value='';
-  const nick=pAnonNick||'👑 Hôte';
   if(isHost){
     // Host broadcasts directly
     hBcast({type:'CHAT',nick,msg,ts:Date.now()});
@@ -3480,32 +3080,12 @@ function sendChat(){
 }
 
 const _sentKeys=new Set();
-function appendChatMsg(nick,msg,isMine=false){
-  // Chat UI removed — relay still works for future use
-  return;
-  const msgs=$('chat-msgs');
-  if(!msgs)return;
-  const key=nick+'|'+msg;
-  if(!isMine&&_sentKeys.has(key)){_sentKeys.delete(key);return;}
-  if(isMine)_sentKeys.add(key);
-  const placeholder=msgs.querySelector('div[style*="text-align:center"]');
-  if(placeholder)placeholder.remove();
-  const d=document.createElement('div');
-  d.className='chat-msg';
-  d.innerHTML=`<div class="chat-msg-nick">${escHtml(nick)}</div>
-    <div class="chat-msg-bubble" style="${isMine?'background:var(--pu);color:#fff;border-color:var(--pu-d);align-self:flex-end;border-radius:12px 12px 3px 12px;':''}">${escHtml(msg)}</div>`;
-  msgs.appendChild(d);
-  // Auto-scroll to bottom
-  msgs.scrollTop=msgs.scrollHeight;
-}
 
 function escHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // Show chat nick once player is connected
-function initChatNick(){/* chat removed */}
-
 
 // ═══════════════════ 😂 EMOJI REACTIONS ═══════════════════
 let emojiBarOpen = false;
@@ -3546,7 +3126,6 @@ function spawnFloatEmoji(emoji){
 document.addEventListener('input',e=>{
   if(e.target.id==='cfg-rounds') updateCfgInfo();
 });
-
 
 // ═══════════════════ FLOATING PLAYER PHOTO CARDS ═══════════════════
 let _bgPlayers = []; // cached player list for background cards
@@ -3604,7 +3183,6 @@ function _doUpdateBgCards(players){
   });
 }
 
-
 // ═══════════════════ ☠️ ROUE ABSOLUE DE LA MORT ═══════════════════
 const DEATH_SEGMENTS = [
   {l:"Cul sec pour tout le monde", c:"#dc2626"},
@@ -3656,7 +3234,7 @@ function spinDeathWheel(){
       const ptr=((-Math.PI/2-dAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
       const idx=Math.floor(ptr/D_ARC)%DEATH_SEGMENTS.length;
       const seg=DEATH_SEGMENTS[idx];
-      const dFun=WHEEL_FUN[seg.l]||'Bonne chance 😈';
+      const dFun=seg.fun||'Bonne chance 😈';
       $('death-result').innerHTML='<div style="font-size:1.1rem;font-weight:900;color:var(--pk);">☠️ '+seg.l+'</div><div style="font-size:.85rem;color:rgba(255,255,255,.6);margin-top:4px;font-style:italic;">'+dFun+'</div>';
       try{playRevealSound();}catch(e){}
       dSpinning=false;
@@ -3724,10 +3302,8 @@ function drawDeathWheel(angle){
   ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
 }
 
-
 // ═══════════════════ 🏆 SCORE PIN ═══════════════════
 let scorePinOpen = false;
-
 
 function showGameUI(){
   document.querySelectorAll('.game-only').forEach(el=>el.classList.add('game-active'));
@@ -3746,10 +3322,12 @@ function toggleScorePin(e){
     if(scorePinOpen){
       // Position panel right below the hamburger button
       const btn=$('hmb-btn');
-      if(btn){
+      if(btn&&btn.offsetParent!==null){
         const rect=btn.getBoundingClientRect();
-        panel.style.top=(rect.bottom+6)+'px';
-        panel.style.left=rect.left+'px';
+        if(rect.bottom>0){
+          panel.style.top=(rect.bottom+6)+'px';
+          panel.style.left=rect.left+'px';
+        }
       }
     }
     panel.classList.toggle('open',scorePinOpen);
@@ -3757,8 +3335,6 @@ function toggleScorePin(e){
   if(overlay) overlay.classList.toggle('open',scorePinOpen);
   if(scorePinOpen) updateScorePin();
 }
-
-
 
 function updateScorePin(){
   // Determine scores to show — host uses hScores, player uses pScores
@@ -3829,7 +3405,6 @@ function updateScorePin(){
   });
 }
 
-
 function showPlayerShame(name, adj){
   // Show a brief shame banner on player screens
   const existing=$('player-shame-banner');
@@ -3850,6 +3425,55 @@ function requestSync(){
     toast('❌ Connexion perdue — recharge la page');
   }
 }
+
+// ════ HEARTBEAT — détecte et reconecte les joueurs perdus ════
+let _hbTimer=null;
+let _hbMissed=0;
+
+function startHeartbeat(){
+  if(isHost) return; // hôte n'a pas de pConn
+  stopHeartbeat();
+  _hbMissed=0;
+  _hbTimer=setInterval(()=>{
+    if(!pConn||!pConn.open){
+      _hbMissed++;
+      if(_hbMissed>=2&&pRoomId&&pName){
+        // Tenter reconnexion auto
+        toast('🔌 Reconnexion…');
+        stopHeartbeat();
+        attemptReconnect();
+      }
+      return;
+    }
+    _hbMissed=0;
+    try{pConn.send({type:'PING'});}catch(e){}
+  },8000);
+}
+
+function stopHeartbeat(){
+  if(_hbTimer){clearInterval(_hbTimer);_hbTimer=null;}
+}
+
+function attemptReconnect(){
+  if(!pRoomId||!pName||!pPhoto) return;
+  if(peer){try{peer.destroy();}catch(e){}}
+  peer=new Peer(undefined,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+  peer.on('open',()=>{
+    pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
+    pConn.on('open',()=>{
+      pConn.send({type:'JOIN',name:pName,photo:pPhoto});
+      pConn.on('data',handlePData);
+      pConn.on('close',()=>{toast('🔌 Déconnecté');});
+      startHeartbeat();
+      toast('✅ Reconnecté !');
+      // Demander sync
+      setTimeout(()=>{if(pConn&&pConn.open)pConn.send({type:'REQUEST_SYNC'});},500);
+    });
+    pConn.on('error',()=>toast('❌ Reconnexion échouée'));
+  });
+  peer.on('error',()=>toast('❌ Serveur inaccessible'));
+}
+function appendChatMsg(){} // chat removed
 // ═══════════════════ KEYBOARD ═══════════════════
 // Unlock AudioContext on first touch/click (required by iOS Safari)
 // Unlock AudioContext on ANY user interaction (required by Chrome/Safari)
