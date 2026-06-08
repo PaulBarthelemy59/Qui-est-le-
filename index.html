@@ -1374,8 +1374,7 @@ const baseUrl=window.location.href.split('?')[0];
 
 window.addEventListener("load",()=>{
   buildSoundPicker();
-  // Pre-decode all sounds already embedded in CUSTOM_SOUNDS
-  setTimeout(()=>CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1)),500);
+  // Sounds are pre-decoded after user gesture (see _unlockAudio)
   if(roomP){pRoomId=roomP;showGameUI();show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
 });
@@ -1442,8 +1441,10 @@ const _audioBuffers = {};
 function preloadSound(n){
   const s=CUSTOM_SOUNDS[n-1];
   if(!s||!s.url||_audioBuffers[n]) return;
+  // Only preload if AudioContext is already running (after user gesture)
+  if(!_audioCtx||_audioCtx.state==='suspended') return;
   try{
-    const ctx=getAudioCtx();
+    const ctx=_audioCtx;
     // Convert base64 data URL to ArrayBuffer
     const b64=s.url.split(',')[1];
     const bin=atob(b64);
@@ -1762,7 +1763,7 @@ function loadSoundFile(idx, fileInput, row, uploadBtn){
     uploadBtn.textContent='✅ Chargé';uploadBtn.className='sound-upload-file-btn done';
     uploadBtn.disabled=false;row.className='sound-upload-row loaded';
     buildSoundPicker();buildSoundUploadUI();
-    CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1)); // pre-decode all
+    if(_audioCtx&&_audioCtx.state==='running') CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
     // Auto-broadcast updated sounds to all already-connected players
     Object.values(hConns).forEach(p=>hSendSounds(p.conn));
     toast('🎵 '+CUSTOM_SOUNDS[idx].label+' chargé et envoyé aux joueurs !');
@@ -2218,8 +2219,8 @@ function handlePData(data){
         CUSTOM_SOUNDS[data.idx].label=data.label||CUSTOM_SOUNDS[data.idx].label;
         CUSTOM_SOUNDS[data.idx].url=data.url||'';
         // Pre-decode into Web Audio buffer immediately
-        preloadSound(data.idx+1);
         buildSoundPicker();
+        preloadSound(data.idx+1); // only runs if ctx already unlocked
       }
       break;
     case 'SOUNDS_UPDATE':
@@ -2232,7 +2233,7 @@ function handlePData(data){
           }
         });
         buildSoundPicker();
-        // Pre-decode all sounds now that we have them
+        // Pre-decode all sounds (only if ctx unlocked by user gesture)
         CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
         // If sounds just arrived and none selected yet, auto-select first available
         const firstSnd=CUSTOM_SOUNDS.findIndex(s=>s.url&&s.url.trim());
@@ -2758,18 +2759,16 @@ function doReveal(data){
 
       // 🎆 FIREWORKS
       fireworks();
-      // 🎵 Play each winner's custom victory sound
+      // 🎵 Play winner sound(s) for everyone
       pt(()=>{
-        winners.forEach((wname,wi)=>{
-          // Use local pSound for current player, server sound for others
-          const snd=(wname===pName)?pSound:(players.find(p=>p.name===wname)?.sound||1);
-          const delay=wi*600;
-          if(delay===0){
-            try{playSoundById(snd);}catch(e){}
-          } else {
-            setTimeout(()=>{try{playSoundById(snd);}catch(e){};},delay);
-          }
-        });
+        try{
+          winners.forEach((wname,wi)=>{
+            // My own sound uses local pSound, others use server data
+            const snd=(wname===pName)?pSound:(players.find(p=>p.name===wname)?.sound||1);
+            if(wi===0) playSoundById(snd); // first winner plays immediately
+            else setTimeout(()=>playSoundById(snd),wi*600);
+          });
+        }catch(e){}
       },200);
 
       // Winner label + media
@@ -3440,8 +3439,18 @@ function updateScorePin(){
 
 // ═══════════════════ KEYBOARD ═══════════════════
 // Unlock AudioContext on first touch/click (required by iOS Safari)
-document.addEventListener('touchstart', ()=>{ try{getAudioCtx();}catch(e){} }, {once:true, passive:true});
-document.addEventListener('click',      ()=>{ try{getAudioCtx();}catch(e){} }, {once:true});
+// Unlock AudioContext on ANY user interaction (required by Chrome/Safari)
+function _unlockAudio(){
+  try{
+    if(!_audioCtx) _audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(_audioCtx.state==='suspended') _audioCtx.resume();
+    // Pre-decode all embedded sounds now that context is unlocked
+    CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
+  }catch(e){}
+}
+document.addEventListener('touchstart', _unlockAudio, {passive:true});
+document.addEventListener('mousedown',  _unlockAudio);
+document.addEventListener('keydown',    _unlockAudio);
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
   const j=$('s-pjoin');
