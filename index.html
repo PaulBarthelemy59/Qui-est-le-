@@ -1036,10 +1036,7 @@ button.game-only.game-active,
       <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>
       <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends toi en photo, c'est obligatoire pour le jeu mon coco 📸</div>
       <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
-      <div style="font-size:.75rem;font-weight:900;letter-spacing:3px;color:var(--pu-l);text-transform:uppercase;margin:12px 0 6px;text-align:center;">🎵 Ton son de victoire</div>
-      <div class="sound-picker" id="sound-picker">
-        <!-- Populated by buildSoundPicker() on load -->
-      </div>
+
       <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="onboardStep1()">Continuer →</button>
     </div>
 
@@ -1099,6 +1096,7 @@ button.game-only.game-active,
     <p style="color:var(--pu);font-weight:800;font-size:1rem;">Tu es dans le salon !</p>
     <p style="color:var(--pu-l);margin-top:8px;font-size:.9rem;font-weight:700;">La partie commence bientôt<span class="wdots"></span></p>
     <div class="chips" id="p-chips" style="margin-top:14px;"></div>
+
   </div>
 </div>
 
@@ -1370,8 +1368,7 @@ const roomP=urlP.get('room');
 const baseUrl=window.location.href.split('?')[0];
 
 window.addEventListener("load",()=>{
-  buildSoundPicker();
-  if(roomP){pRoomId=roomP;showGameUI();show('s-pjoin');$('step-name').style.display='block';}
+  if(roomP){showGameUI();connectEarly(roomP);show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
 });
 
@@ -1379,12 +1376,43 @@ window.addEventListener("load",()=>{
 let chatOpen = false;
 let chatUnread = 0;
 
+
+// Connect to the room immediately (before onboarding) so sounds arrive early
+function connectEarly(roomId){
+  pRoomId=roomId;
+  if(peer){try{peer.destroy();}catch(e){}}
+  peer=new Peer(undefined,{debug:0});
+  peer.on('error',()=>{}); // silent — will retry properly in onboardFinish
+  peer.on('open',()=>{
+    pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
+    pConn.on('open',()=>{
+      // Send a "ping" so host sends back sounds
+      pConn.send({type:'PING_SOUNDS'});
+    });
+    pConn.on('data',data=>{
+      // Only handle SOUNDS_UPDATE before onboarding completes
+      if(data.type==='SOUNDS_UPDATE'){
+        if(data.sounds&&Array.isArray(data.sounds)){
+          data.sounds.forEach(s=>{
+            if(s.idx>=0&&s.idx<CUSTOM_SOUNDS.length){
+              CUSTOM_SOUNDS[s.idx].emoji=s.emoji||CUSTOM_SOUNDS[s.idx].emoji;
+              CUSTOM_SOUNDS[s.idx].label=s.label||CUSTOM_SOUNDS[s.idx].label;
+              CUSTOM_SOUNDS[s.idx].url=s.url||'';
+            }
+          });
+          buildSoundPicker();
+        }
+      }
+    });
+    pConn.on('close',()=>{pConn=null;}); // will reconnect in onboardFinish
+  });
+}
 // ═══════════════════ NAV ═══════════════════
 function gotoCodeEntry(){showGameUI();show('s-pjoin');$('step-code').style.display='block';}
 function validateCode(){
   const c=$('code-inp').value.trim().toUpperCase();
   if(c.length!==4){toast('⚠️ Code de 4 lettres !');return;}
-  pRoomId=c;
+  connectEarly(c);
   $('step-code').style.display='none';
   $('step-name').style.display='block';
   $('pni').focus();
@@ -1452,12 +1480,17 @@ function buildSoundPicker(){
   const picker=$('sound-picker');
   if(!picker) return;
   picker.innerHTML='';
+  const hasSounds=CUSTOM_SOUNDS.some(s=>s.url&&s.url.trim());
+  if(!hasSounds){
+    picker.innerHTML='<div style="font-size:.78rem;color:var(--pu-l);font-weight:700;text-align:center;padding:4px;">Pas de sons personnalisés pour cette partie</div>';
+    return;
+  }
   CUSTOM_SOUNDS.forEach((s,i)=>{
     const n=i+1;
     const btn=document.createElement('button');
-    btn.className='sound-btn'+(n===1?' selected':'');
+    btn.className='sound-btn'+(n===pSound?' selected':'');
     btn.id='sbtn-'+n;
-    btn.innerHTML=`<span class="se">${s.emoji}</span><span class="sn">${s.label}</span>`;
+    btn.innerHTML=`<span class="se">${s.emoji}</span><span class="sn">${escHtml(s.label)}</span>`;
     btn.addEventListener('click',()=>selectSound(n));
     picker.appendChild(btn);
   });
@@ -1503,10 +1536,24 @@ function onboardStep3(){
 }
 
 function onboardFinish(){
-  // Actually connect
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
+
+  function doJoin(){
+    pConn.on('data',handlePData); // register full handler
+    pConn.on('close',()=>toast('🔌 Connexion perdue'));
+    pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});
+  }
+
+  // If early connection is already open, reuse it
+  if(pConn&&pConn.open){
+    stat.textContent='';
+    doJoin();
+    return;
+  }
+
+  // Otherwise full connect flow
   if(peer){try{peer.destroy();}catch(e){}}
   peer=new Peer(undefined,{debug:0});
   const to1=setTimeout(()=>{stat.textContent='❌ Impossible de se connecter.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
@@ -1516,9 +1563,7 @@ function onboardFinish(){
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
     pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-consent').style.display='none';$('step-name').style.display='block';});
-    pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});});
-    pConn.on('data',handlePData);
-    pConn.on('close',()=>toast('🔌 Connexion perdue'));
+    pConn.on('open',()=>{clearTimeout(to2);doJoin();});
   });
 }
 
@@ -1603,6 +1648,10 @@ function handleHConn(conn){
     if(data.type==='WHEEL_RESULT'){
       // Relay result to all
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
+      return;
+    }
+    if(data.type==='PING_SOUNDS'){
+      hSendSounds(conn); // player is connecting, send them the sounds
       return;
     }
     if(data.type==='EMOJI_REACT'){
@@ -2120,7 +2169,6 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
 function handlePData(data){
   switch(data.type){
     case 'SOUNDS_UPDATE':
-      // Host sent us the custom sounds — update CUSTOM_SOUNDS locally
       if(data.sounds&&Array.isArray(data.sounds)){
         data.sounds.forEach(s=>{
           if(s.idx>=0&&s.idx<CUSTOM_SOUNDS.length){
@@ -2129,7 +2177,10 @@ function handlePData(data){
             CUSTOM_SOUNDS[s.idx].url=s.url||'';
           }
         });
-        buildSoundPicker(); // refresh the picker with actual sounds
+        buildSoundPicker();
+        // If sounds just arrived and none selected yet, auto-select first available
+        const firstSnd=CUSTOM_SOUNDS.findIndex(s=>s.url&&s.url.trim());
+        if(firstSnd>=0&&pSound===1&&!CUSTOM_SOUNDS[0].url) selectSound(firstSnd+1);
       }
       break;
     case 'NAME_TAKEN':
