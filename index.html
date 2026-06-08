@@ -14,18 +14,13 @@
   --gr:#10b981;--gr-d:#065f46;--tx:#1e1b4b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden;position:relative;}
+body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;position:relative;}
 .screen{
   width:100%;max-width:600px;
   position:relative;z-index:2;
   display:flex;flex-direction:column;
-  height:100vh;
-  height:100svh;
-  max-height:100vh;
-  max-height:100svh;
-  overflow:hidden;
   align-items:center;
-  padding:0;
+  padding:0 16px;
 }
 #s-land{z-index:5;}
 .screen.hidden{display:none!important;}
@@ -37,9 +32,9 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .lw{text-align:center;margin-bottom:20px;}
 .ls{display:block;font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.4rem);font-weight:800;color:var(--pu);margin-top:8px;font-style:italic;}
 /* CARD */
-.card{background:rgba(255,255,255,.93);border-radius:24px;padding:clamp(12px,3svh,22px) clamp(14px,4vw,24px);box-shadow:0 4px 30px rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.15);text-align:center;}
+.card{background:rgba(255,255,255,.93);border-radius:24px;padding:20px;box-shadow:0 4px 30px rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.15);text-align:center;}
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pu);color:#fff;border:3px solid var(--pu-d);padding:clamp(10px,2svh,13px) 26px;font-family:'Baloo 2',cursive;font-size:clamp(.95rem,2.5svh,1.1rem);font-weight:800;border-radius:14px;cursor:pointer;box-shadow:0 5px 0 var(--pu-d);transition:transform .08s,box-shadow .08s;text-transform:uppercase;letter-spacing:1px;margin:5px;-webkit-tap-highlight-color:transparent;user-select:none;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pu);color:#fff;border:3px solid var(--pu-d);padding:13px 26px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;border-radius:14px;cursor:pointer;box-shadow:0 5px 0 var(--pu-d);transition:transform .08s,box-shadow .08s;text-transform:uppercase;letter-spacing:1px;margin:5px;-webkit-tap-highlight-color:transparent;user-select:none;}
 .btn:active{transform:translateY(5px);box-shadow:0 0 0 var(--pu-d);}
 .btn:disabled{opacity:.35;pointer-events:none;}
 .btn.ye{background:var(--ye);color:var(--tx);border-color:var(--ye-d);box-shadow:0 5px 0 var(--ye-d);}
@@ -48,7 +43,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .btn.pk:active{box-shadow:0 0 0 var(--pk-d);}
 .btn.gr{background:var(--gr);color:#fff;border-color:var(--gr-d);box-shadow:0 5px 0 var(--gr-d);}
 .btn.gr:active{box-shadow:0 0 0 var(--gr-d);}
-.btn.big{font-size:clamp(1rem,2.8svh,1.25rem);padding:clamp(11px,2.5svh,15px) 34px;border-radius:16px;}
+.btn.big{font-size:1.15rem;padding:15px 34px;border-radius:16px;}
 /* INPUTS */
 .inp{width:100%;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:max(16px,1.2rem);font-weight:700;color:var(--tx);outline:none;text-align:center;transition:border-color .2s;margin-bottom:12px;}
 .inp:focus{border-color:var(--pu);}
@@ -78,8 +73,8 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .vbf{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .5s ease;width:0%;}
 .vbl{font-size:.9rem;font-weight:800;color:var(--pu);white-space:nowrap;}
 /* WAITING VOTE COUNTER — shown on s-pvoted */
-.vote-counter-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:16px;padding:clamp(8px,2svh,14px) 20px;margin:clamp(8px,2svh,16px) 0;}
-.vote-counter-num{font-family:'Baloo 2',cursive;font-size:clamp(1.6rem,4svh,2.5rem);font-weight:900;color:var(--pu);line-height:1;}
+.vote-counter-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:16px;padding:12px 20px;margin:12px 0;}
+.vote-counter-num{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu);line-height:1;}
 .vote-counter-lbl{font-size:.8rem;font-weight:800;color:var(--pu-l);margin-top:4px;}
 .vote-counter-bar{height:10px;background:#e5e7eb;border-radius:99px;margin-top:10px;overflow:hidden;}
 .vote-counter-fill{height:100%;background:linear-gradient(90deg,var(--pu),var(--pk));border-radius:99px;transition:width .4s ease;width:0%;}
@@ -113,17 +108,17 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .sb-pts{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:900;color:var(--pu);}
 .sb-sub{font-size:.62rem;color:var(--pu-l);font-weight:700;text-align:right;}
 /* VOTE SCREEN */
-.vbanner{background:var(--pu);border-radius:18px;padding:clamp(8px,2svh,15px) clamp(12px,3vw,18px);margin-bottom:clamp(6px,1.5svh,14px);transform:rotate(-.5deg);}
+.vbanner{background:var(--pu);border-radius:18px;padding:12px 16px;margin-bottom:10px;transform:rotate(-.5deg);}
 .vb-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
-.vb-txt{font-family:'Baloo 2',cursive;font-size:clamp(1rem,4svh,1.6rem);font-weight:900;color:#fff;line-height:1.2;}
+.vb-txt{font-family:'Baloo 2',cursive;font-size:clamp(1rem,4vw,1.5rem);font-weight:900;color:#fff;line-height:1.2;}
 .vote-grid{display:flex;flex-direction:column;gap:6px;width:100%;}
-.vote-btn{background:#fff;border:2px solid var(--pu-l);border-radius:14px;padding:clamp(6px,1.5svh,8px) 10px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;box-shadow:0 2px 0 var(--pu-l);}
+.vote-btn{background:#fff;border:2px solid var(--pu-l);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;box-shadow:0 2px 0 var(--pu-l);}
 .vote-btn:hover{border-color:var(--pu);box-shadow:0 3px 0 var(--pu-d);}
 .vote-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu);}
 .vote-btn.cast{background:var(--pu-s);opacity:.5;pointer-events:none;}
 .vb-ph{width:36px;height:36px;border-radius:8px;object-fit:cover;border:2px solid var(--pu-l);flex-shrink:0;}
 .vb-in{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:900;color:#fff;flex-shrink:0;}
-.vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:clamp(.75rem,2svh,.9rem);text-transform:uppercase;color:var(--tx);}
+.vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:.85rem;text-transform:uppercase;color:var(--tx);}
 /* PHOTO PICKER */
 .ph-circle{width:84px;height:84px;border-radius:18px;margin:0 auto 12px;border:3px dashed var(--pu-l);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;background:var(--pu-s);overflow:hidden;position:relative;transition:border-color .2s,transform .15s;}
 .ph-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
@@ -262,8 +257,8 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
   color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;
   text-align:center;margin-top:6px;
 }
-.m-title{font-size:clamp(1.3rem,4svh,1.9rem);font-weight:900;color:var(--pu);margin-bottom:clamp(3px,1svh,8px);}
-.big-emoji{font-size:clamp(1.8rem,5svh,2.8rem);margin-bottom:clamp(4px,1svh,10px);display:block;animation:bounce .5s ease infinite alternate;}
+.m-title{font-size:1.7rem;font-weight:900;color:var(--pu);margin-bottom:6px;}
+.big-emoji{font-size:2.5rem;margin-bottom:8px;display:block;animation:bounce .5s ease infinite alternate;}
 @keyframes bounce{from{transform:translateY(0);}to{transform:translateY(-8px);}}
 .wdots::after{content:'';animation:dots 1.5s infinite;}
 @keyframes dots{0%{content:'';}33%{content:'.';}66%{content:'..';}100%{content:'...';}};
@@ -1027,14 +1022,14 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER JOIN — onboarding flow -->
-<div id="s-pjoin" class="screen hidden" style="justify-content:flex-start;align-items:center;">
+<div id="s-pjoin" class="screen hidden" style="justify-content:flex-start;align-items:center;padding:0;">
   <!-- Logo compact -->
   <div style="text-align:center;padding:max(10px,env(safe-area-inset-top,10px)) 16px 6px;flex-shrink:0;width:100%;">
     <div style="font-family:'Baloo 2',cursive;font-size:clamp(.95rem,4vw,1.5rem);font-weight:900;line-height:1.05;color:#fff;text-shadow:2px 2px 0 var(--pu-d);">QUI EST LA <span style="color:var(--ye);">+</span> GROSSE PUTE DE ROUEN ?</div>
     <div style="font-size:.65rem;color:rgba(255,255,255,.45);font-weight:700;margin-top:2px;">On commence sobre, on finit bourré.</div>
   </div>
   <!-- Card scrollable -->
-  <div class="card" style="width:min(92vw,440px);flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;margin:0 12px max(max(12px,env(safe-area-inset-bottom)),12px);border-radius:20px;">
+  <div class="card" style="width:100%;max-width:420px;margin:0 0 20px;">
 
     <!-- STEP 0: code entry (when arrived without ?room) -->
     <div id="step-code" style="display:none;">
@@ -1105,8 +1100,8 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER WAIT -->
-<div id="s-pwait" class="screen hidden" style="justify-content:center;align-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));">
-  <div class="card" style="width:min(88vw,400px);">
+<div id="s-pwait" class="screen hidden" style="justify-content:center;align-items:center;min-height:100vh;padding:20px 0;">
+  <div class="card" style="width:100%;max-width:400px;">
     <div id="pwait-photo" style="width:64px;height:64px;border-radius:14px;overflow:hidden;margin:0 auto 10px;border:3px solid var(--pu-l);display:none;"><img id="pwait-photo-img" src="" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="m-title" id="p-name-d">...</div>
     <p style="color:var(--gr);font-weight:800;font-size:.95rem;">✓ Connecté au salon</p>
@@ -1117,7 +1112,7 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER VOTE -->
-<div id="s-pvote" class="screen hidden" style="justify-content:flex-start;align-items:center;">
+<div id="s-pvote" class="screen hidden" style="justify-content:flex-start;align-items:center;padding:0;">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
   <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%;max-width:440px;margin:0 auto;padding:8px 12px max(60px,env(safe-area-inset-bottom,60px));display:flex;flex-direction:column;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-shrink:0;"><span id="v-player-name" style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;"></span><span id="v-round-num" style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.35);"></span></div>
@@ -1127,9 +1122,9 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER VOTED — shows live vote counter -->
-<div id="s-pvoted" class="screen hidden" style="justify-content:center;align-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));">
+<div id="s-pvoted" class="screen hidden" style="justify-content:center;align-items:center;min-height:100vh;padding:20px 0;">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
-  <div class="card" style="width:min(88vw,400px);">
+  <div class="card" style="width:100%;max-width:400px;">
     <span class="big-emoji">🤫</span>
     <div class="m-title">VOTÉ !</div>
     <p id="voted-for-lbl" style="color:var(--pk);font-weight:800;margin-bottom:4px;"></p>
@@ -1143,9 +1138,9 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER BETWEEN -->
-<div id="s-pbetween" class="screen hidden" style="justify-content:center;align-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));">
+<div id="s-pbetween" class="screen hidden" style="justify-content:center;align-items:center;min-height:100vh;padding:20px 0;">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
-  <div class="card" style="width:min(88vw,400px);">
+  <div class="card" style="width:100%;max-width:400px;">
     <span class="big-emoji" id="pbetween-emoji">⏳</span>
     <div class="m-title" id="pbetween-title">MANCHE TERMINÉE</div>
     <p id="pbetween-winner" style="color:var(--pu);font-weight:800;margin-bottom:4px;font-size:1.1rem;"></p>
@@ -1155,7 +1150,7 @@ button.game-only.game-active,
 </div>
 
 <!-- GAME OVER (player view) -->
-<div id="s-gameover" class="screen hidden" style="overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div id="s-gameover" class="screen hidden" style="padding:16px 0;">
   <div class="lw"><div class="lb" style="transform:rotate(0);font-size:clamp(1.5rem,5vw,3rem);">🎊 FIN DU JEU !</div></div>
   <div class="card" style="max-width:700px;margin:0 auto;">
     <div id="go-final-winner"></div>
@@ -1603,7 +1598,6 @@ function onboardStep3(){
 function onboardFinish(){
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   if(typeof Peer==='undefined'){toast('❌ Erreur réseau — recharge la page');return;}
-  try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){}
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
   if(peer&&!isHost){try{peer.destroy();}catch(e){}}
@@ -1615,7 +1609,7 @@ function onboardFinish(){
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
     pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-consent').style.display='none';$('step-name').style.display='block';});
-    pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});});
+    pConn.on('open',()=>{clearTimeout(to2);try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){}pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});});
     pConn.on('data',handlePData);
     pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
