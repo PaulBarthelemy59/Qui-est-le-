@@ -712,6 +712,90 @@ button.game-only.game-active,
   75% {transform:translateY(-16px) rotate(calc(var(--r,0deg) + 2deg));}
   100%{transform:translateY(0)   rotate(var(--r,0deg));}
 }
+
+/* ═══ HALL OF SHAME SCROLLING BANNER ═══ */
+.shame-scroll-wrap{
+  overflow:hidden;
+  white-space:nowrap;
+  background:rgba(124,58,237,.12);
+  border:1.5px solid rgba(124,58,237,.2);
+  border-radius:10px;
+  padding:7px 0;
+  margin:10px 0 6px;
+  position:relative;
+}
+.shame-scroll-wrap::before,
+.shame-scroll-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:28px;z-index:2;
+}
+.shame-scroll-wrap::before{left:0;background:linear-gradient(to right,rgba(20,6,46,.9),transparent);}
+.shame-scroll-wrap::after{right:0;background:linear-gradient(to left,rgba(20,6,46,.9),transparent);}
+.shame-scroll-inner{
+  display:inline-block;
+  animation:shameScroll 20s linear infinite;
+  font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:900;
+  color:rgba(255,255,255,.75);
+  padding-left:100%;
+}
+@keyframes shameScroll{
+  from{transform:translateX(0);}
+  to{transform:translateX(-100%);}
+}
+.shame-scroll-inner.paused{animation-play-state:paused;}
+
+/* ═══ SOUND PICKER ═══ */
+.sound-picker{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0 14px;}
+.sound-btn{
+  background:var(--pu-s);border:2px solid var(--pu-l);
+  border-radius:12px;padding:8px 10px;
+  cursor:pointer;font-size:1.3rem;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:border-color .1s,background .1s,transform .1s,box-shadow .1s;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 3px 0 var(--pu-l);
+  flex:1;min-width:50px;max-width:70px;
+}
+.sound-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu-l);}
+.sound-btn.selected{background:var(--pu);border-color:var(--pu-d);box-shadow:0 3px 0 var(--pu-d);}
+.sound-btn.selected span.sn{color:#fff;}
+.sound-btn span.se{font-size:1.5rem;}
+.sound-btn span.sn{font-size:.6rem;font-weight:900;color:var(--pu-l);text-transform:uppercase;letter-spacing:1px;}
+
+/* ═══ SOUND UPLOAD IN CONFIG ═══ */
+.sound-upload-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--pu-s);border:2px solid var(--pu-l);
+  border-radius:12px;padding:8px 10px;
+  transition:border-color .15s;
+}
+.sound-upload-row.loaded{border-color:var(--pu);}
+.sound-upload-emoji-inp{
+  width:36px;background:none;border:1.5px solid var(--pu-l);border-radius:8px;
+  padding:4px;font-size:1.1rem;text-align:center;outline:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;
+}
+.sound-upload-label-inp{
+  flex:1;background:rgba(255,255,255,.7);border:1.5px solid var(--pu-l);
+  border-radius:8px;padding:5px 8px;font-size:.82rem;font-weight:700;
+  color:var(--pu-d);outline:none;font-family:'Nunito',sans-serif;min-width:0;
+}
+.sound-upload-label-inp:focus{border-color:var(--pu);}
+.sound-upload-file-btn{
+  background:var(--pu);color:#fff;border:2px solid var(--pu-d);
+  border-radius:8px;padding:6px 10px;font-size:.78rem;font-weight:800;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  font-family:'Baloo 2',cursive;box-shadow:0 3px 0 var(--pu-d);
+  transition:transform .08s,box-shadow .08s;
+  -webkit-tap-highlight-color:transparent;
+}
+.sound-upload-file-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu-d);}
+.sound-upload-file-btn.done{background:var(--gr);border-color:var(--gr-d);box-shadow:0 3px 0 var(--gr-d);}
+.sound-play-btn{
+  background:none;border:1.5px solid var(--pu-l);border-radius:8px;
+  padding:5px 8px;font-size:.9rem;cursor:pointer;color:var(--pu-d);
+  transition:border-color .1s;flex-shrink:0;
+}
+.sound-play-btn:hover{border-color:var(--pu);}
 </style>
 </head>
 <body>
@@ -820,6 +904,10 @@ button.game-only.game-active,
       <div class="rc-big" id="rc2">----</div>
       <div id="lstat2" style="font-size:.9rem;font-weight:800;color:var(--pu);margin:6px 0 4px;"></div>
       <div class="chips" id="lchips2"></div>
+      <!-- HALL OF SHAME scrolling banner -->
+      <div id="shame-scroll-wrap" class="shame-scroll-wrap" style="display:none;">
+        <div id="shame-scroll-inner" class="shame-scroll-inner">…</div>
+      </div>
       <div class="em-box emergency-box">
         <div style="font-size:.7rem;letter-spacing:4px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:10px;">⚡ Urgence</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
@@ -882,6 +970,13 @@ button.game-only.game-active,
     </div>
 
     <hr class="div">
+    <div style="margin-bottom:16px;">
+      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:4px;">🎵 Sons de victoire</div>
+      <div style="font-size:.75rem;color:var(--pu-l);font-weight:700;margin-bottom:10px;">Clips courts recommandés (5-15s). Les joueurs choisissent leur son à l'inscription.</div>
+      <div id="sound-upload-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <hr class="div">
     <div id="cfg-count-info" style="font-size:.82rem;color:var(--pu-l);font-weight:700;margin-bottom:12px;"></div>
     <button class="btn big ye" style="width:100%;" onclick="hostLaunchFromConfig()">🚀 Lancer la Partie !</button>
     <button class="btn" style="width:100%;margin-top:6px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('s-hconfig').classList.add('hidden');$('s-host').classList.remove('hidden');">← Retour au salon</button>
@@ -924,6 +1019,10 @@ button.game-only.game-active,
       <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>
       <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends toi en photo, c'est obligatoire pour le jeu mon coco 📸</div>
       <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
+      <div style="font-size:.75rem;font-weight:900;letter-spacing:3px;color:var(--pu-l);text-transform:uppercase;margin:12px 0 6px;text-align:center;">🎵 Ton son de victoire</div>
+      <div class="sound-picker" id="sound-picker">
+        <!-- Populated by buildSoundPicker() on load -->
+      </div>
       <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="onboardStep1()">Continuer →</button>
     </div>
 
@@ -1087,6 +1186,24 @@ button.game-only.game-active,
 
 <script>
 // ═══════════════════ CONSTANTS ═══════════════════
+
+// ════════════════════════════════════════════════════════
+// 🎵 SONS PERSONNALISÉS — MODIFIE ICI AVANT CHAQUE SOIRÉE
+// Remplace les URLs par tes propres liens (MP3, OGG, WAV…)
+// Héberge tes fichiers sur Google Drive, Dropbox, ou n'importe où.
+// Pour Google Drive: Fichier → Partager → "Tout le monde" → copie l'ID
+//   puis utilise: https://drive.google.com/uc?export=download&id=TON_ID
+// ════════════════════════════════════════════════════════
+const CUSTOM_SOUNDS = [
+  { emoji: "🎵", label: "Son 1", url: "" },
+  { emoji: "🎶", label: "Son 2", url: "" },
+  { emoji: "🔥", label: "Son 3", url: "" },
+  { emoji: "💥", label: "Son 4", url: "" },
+  { emoji: "⭐", label: "Son 5", url: "" },
+];
+// Si une URL est vide, le son procédural de secours sera utilisé (prout/vomi/etc.)
+// ════════════════════════════════════════════════════════
+
 const PREFIXES = ["Qui est le +", "Qui est la +", "Qui a le +", "Qui a la +", "Qui est le -", "Qui a l'air le +"];
 const QUESTIONS = [
   {p:"Qui est le +", t:"radin quand c'est son tour de payer"},
@@ -1235,10 +1352,11 @@ const urlP=new URLSearchParams(window.location.search);
 const roomP=urlP.get('room');
 const baseUrl=window.location.href.split('?')[0];
 
-window.onload=()=>{
+window.addEventListener("load",()=>{
+  buildSoundPicker();
   if(roomP){pRoomId=roomP;showGameUI();show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
-};
+});
 
 // Chat
 let chatOpen = false;
@@ -1274,6 +1392,59 @@ function handlePhoto(e){
 }
 
 
+
+// ════ SON PERSONNALISÉ ════
+let pSound=1; // 1=prout, 2=vomi, 3=cloche, 4=trompette, 5=caisse
+
+function selectSound(n){
+  pSound=n;
+  for(let i=1;i<=5;i++){
+    const b=$('sbtn-'+i);
+    if(b) b.classList.toggle('selected',i===n);
+  }
+  // Preview
+  try{ playSoundById(n); }catch(e){}
+}
+
+// Play a sound by its index (1-5), using CUSTOM_SOUNDS URL if set
+function playSoundById(n){
+  const s=CUSTOM_SOUNDS[n-1];
+  if(s&&s.url&&s.url.trim()){
+    const aud=new Audio(s.url.trim());
+    aud.volume=0.8;
+    aud.play().catch(()=>{});
+    setTimeout(()=>{try{aud.pause();aud.remove();}catch(e){}},8000);
+  } else {
+    // Fallback: procedural sound
+    const ctx=getAudioCtx();
+    const now=ctx.currentTime;
+    const fb=[
+      ()=>playFart(ctx,now,0.5,70),
+      ()=>playVomit(ctx,now),
+      ()=>playBurp(ctx,now),
+      ()=>playLoserHorn(ctx,now),
+      ()=>playSuspenseDrumRoll(0.8)
+    ];
+    (fb[n-1]||fb[0])();
+  }
+}
+
+// playVictorySound replaced by playSoundById
+
+function buildSoundPicker(){
+  const picker=$('sound-picker');
+  if(!picker) return;
+  picker.innerHTML='';
+  CUSTOM_SOUNDS.forEach((s,i)=>{
+    const n=i+1;
+    const btn=document.createElement('button');
+    btn.className='sound-btn'+(n===1?' selected':'');
+    btn.id='sbtn-'+n;
+    btn.innerHTML=`<span class="se">${s.emoji}</span><span class="sn">${s.label}</span>`;
+    btn.addEventListener('click',()=>selectSound(n));
+    picker.appendChild(btn);
+  });
+}
 // ═══════════════════ ONBOARDING STEPS ═══════════════════
 function onboardStep1(){
   const raw=$('pni').value.trim();
@@ -1328,7 +1499,7 @@ function onboardFinish(){
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
     pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-consent').style.display='none';$('step-name').style.display='block';});
-    pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto});});
+    pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});});
     pConn.on('data',handlePData);
     pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
@@ -1369,10 +1540,11 @@ function handleHConn(conn){
       const name=data.name.trim().substring(0,12);
       const oldPeer=Object.keys(hConns).find(k=>hConns[k].name===name);
       if(oldPeer)delete hConns[oldPeer];
-      hConns[conn.peer]={name,conn,photo:data.photo||'',clip:data.clip||''};
+      hConns[conn.peer]={name,conn,photo:data.photo||'',sound:data.sound||1};
       if(hScores[name]===undefined)hScores[name]=0;
       hostLobbyUI();
       hBcast({type:'LOBBY_UPDATE',players:hPList()});
+      hSendSounds(conn); // send audio data to the new player
       updateBgCards(hPList());
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
       if(hQi>=0){
@@ -1445,8 +1617,14 @@ function handleHConn(conn){
   conn.on('error',()=>{delete hConns[conn.peer];hostLobbyUI();});
 }
 
-function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo}));}
+function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo,sound:p.sound||1}));}
 function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
+
+function hSendSounds(conn){
+  // Send CUSTOM_SOUNDS to a specific player so they can play them
+  const sounds=CUSTOM_SOUNDS.map((s,i)=>({idx:i,emoji:s.emoji,label:s.label,url:s.url||''}));
+  if(conn&&conn.open) try{conn.send({type:'SOUNDS_UPDATE',sounds});}catch(e){}
+}
 
 function hostLobbyUI(){
   const ps=Object.values(hConns),n=ps.length;
@@ -1458,8 +1636,73 @@ function hostLobbyUI(){
 }
 
 // ═══════════════════ HOST GAME ═══════════════════
+
+function loadSoundFile(idx, fileInput, row, uploadBtn){
+  const file=fileInput.files[0];
+  if(!file) return;
+  if(file.size > 3*1024*1024){toast('⚠️ Max 3MB !');return;}
+  uploadBtn.textContent='⏳…';uploadBtn.disabled=true;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    CUSTOM_SOUNDS[idx].url=e.target.result;
+    if(!CUSTOM_SOUNDS[idx].label||CUSTOM_SOUNDS[idx].label===('Son '+(idx+1))){
+      CUSTOM_SOUNDS[idx].label=file.name.replace(/\.[^.]+$/,'').substring(0,20);
+    }
+    uploadBtn.textContent='✅ Chargé';uploadBtn.className='sound-upload-file-btn done';
+    uploadBtn.disabled=false;row.className='sound-upload-row loaded';
+    buildSoundPicker();buildSoundUploadUI();
+    toast('🎵 '+CUSTOM_SOUNDS[idx].label+' chargé !');
+  };
+  reader.onerror=()=>{uploadBtn.textContent='❌ Erreur';uploadBtn.disabled=false;};
+  reader.readAsDataURL(file);
+}
+
+function buildSoundUploadUI(){
+  const list=$('sound-upload-list');
+  if(!list) return;
+  list.innerHTML='';
+  CUSTOM_SOUNDS.forEach((s,i)=>{
+    const n=i+1;
+    const row=document.createElement('div');
+    row.className='sound-upload-row'+(s.url?' loaded':'');
+    row.id='srow-'+n;
+    // Emoji
+    const emojiInp=document.createElement('input');
+    emojiInp.type='text';emojiInp.className='sound-upload-emoji-inp';
+    emojiInp.value=s.emoji;emojiInp.maxLength=4;emojiInp.title='Emoji';
+    emojiInp.addEventListener('input',function(){CUSTOM_SOUNDS[i].emoji=this.value.trim()||'🎵';buildSoundPicker();});
+    row.appendChild(emojiInp);
+    // Label
+    const labelInp=document.createElement('input');
+    labelInp.type='text';labelInp.className='sound-upload-label-inp';
+    labelInp.value=s.label;labelInp.placeholder='Nom du son';labelInp.maxLength=20;
+    labelInp.addEventListener('input',function(){CUSTOM_SOUNDS[i].label=this.value||('Son '+n);buildSoundPicker();});
+    row.appendChild(labelInp);
+    // File input
+    const fileInp=document.createElement('input');
+    fileInp.type='file';fileInp.accept='audio/*';fileInp.style.display='none';
+    fileInp.addEventListener('change',function(){loadSoundFile(i,this,row,uploadBtn);});
+    row.appendChild(fileInp);
+    // Upload button
+    const uploadBtn=document.createElement('button');
+    uploadBtn.className='sound-upload-file-btn'+(s.url?' done':'');
+    uploadBtn.textContent=s.url?'✅ Chargé':'📁 Choisir';
+    uploadBtn.onclick=()=>fileInp.click();
+    row.appendChild(uploadBtn);
+    // Preview
+    if(s.url){
+      const playBtn=document.createElement('button');
+      playBtn.className='sound-play-btn';playBtn.textContent='▶';playBtn.title='Écouter';
+      playBtn.onclick=()=>playSoundById(n);
+      row.appendChild(playBtn);
+    }
+    list.appendChild(row);
+  });
+}
+
 function openConfig(){
   cfgBuildList();
+  buildSoundUploadUI();
   show('s-hconfig');
 }
 
@@ -1719,6 +1962,7 @@ function hostForceReveal(){
 function hostReveal(){
   $('btn-fr').disabled=true;
   const names=Object.keys(hVotes);
+  if(names.length===0){setTimeout(()=>$("btn-fn").disabled=false,500);return;}
   const vvals=Object.values(hVotes);
   const maxV=vvals.length>0?Math.max(...vvals,0):0;
   const winners=maxV>0?names.filter(n=>hVotes[n]===maxV):[];
@@ -1737,13 +1981,36 @@ function hostReveal(){
 
 function hostFinal(){
   const photos=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.photo]));
-  const clips=Object.fromEntries(Object.values(hConns).map(p=>[p.name,p.clip||'']));
   renderFinalSB('h-sb','h-final-winner',hScores,photos,hWinHistory);
   show('s-hfinal');
-  hBcast({type:'GAME_OVER',scores:hScores,photos,clips,history:hWinHistory});
+  hBcast({type:'GAME_OVER',scores:hScores,photos,history:hWinHistory});
   confetti();
 }
 
+
+// ════ HALL OF SHAME BANNER ════
+function updateShameScroll(){
+  const wrap=$('shame-scroll-wrap');
+  const inner=$('shame-scroll-inner');
+  if(!wrap||!inner) return;
+  if(!hWinHistory||hWinHistory.length===0){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  // Build scrolling text from win history
+  const items=hWinHistory.map(h=>{
+    const adj=stripPrefix(h.adjective)||h.adjective;
+    return `🏆 ${h.name} est le + ${adj}`;
+  });
+  // Repeat to fill space
+  const txt=items.join('  •  ')+'  •  '+items.join('  •  ');
+  inner.textContent=txt;
+  // Reset animation
+  inner.classList.add('paused');
+  void inner.offsetWidth; // force reflow
+  inner.classList.remove('paused');
+  // Adjust speed: faster with more items
+  const dur=Math.max(12,items.length*4);
+  inner.style.animationDuration=dur+'s';
+}
 // ═══════════════════ SCOREBOARD ═══════════════════
 function renderSB(id,scores,photos={}){
   const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
@@ -1785,7 +2052,7 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
     const tags=(tagMap[ch]||[]).map(t=>`<span class="win-tag">${escHtml(t)}</span>`).join('');
     ws.innerHTML=`
       <div class="final-winner-card">
-        <div style="font-size:.65rem;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:8px;">👑 Champion·ne de la soirée</div>
+        <div style="font-size:.65rem;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:8px;">👑 Champion de la soirée</div>
         ${phEl}
         <div class="final-winner-name">${escHtml(ch)}</div>
         <div class="final-winner-sub">${maxPts} victoire${maxPts>1?'s':''}</div>
@@ -1825,6 +2092,19 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
 // ═══════════════════ PLAYER DATA ═══════════════════
 function handlePData(data){
   switch(data.type){
+    case 'SOUNDS_UPDATE':
+      // Host sent us the custom sounds — update CUSTOM_SOUNDS locally
+      if(data.sounds&&Array.isArray(data.sounds)){
+        data.sounds.forEach(s=>{
+          if(s.idx>=0&&s.idx<CUSTOM_SOUNDS.length){
+            CUSTOM_SOUNDS[s.idx].emoji=s.emoji||CUSTOM_SOUNDS[s.idx].emoji;
+            CUSTOM_SOUNDS[s.idx].label=s.label||CUSTOM_SOUNDS[s.idx].label;
+            CUSTOM_SOUNDS[s.idx].url=s.url||'';
+          }
+        });
+        buildSoundPicker(); // refresh the picker with actual sounds
+      }
+      break;
     case 'NAME_TAKEN':
       $('jstat').textContent='❌ Ce prénom est déjà pris !';break;
     case 'LOBBY_UPDATE':
@@ -1835,13 +2115,13 @@ function handlePData(data){
       initChatNick();
       updateBgCards(pList);
       showScorePin();updateScorePin();show('s-pwait');break;
-    case 'START_ROUND':
+    case 'START_ROUND':{
       pList=data.players;clearPTimers();
       pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateBgCards(pList);
       const vAdj=$('v-adj');
       if(vAdj){vAdj.textContent=data.adjective;vAdj.style.fontSize=data.adjective.length>30?'clamp(1rem,3.5vw,1.6rem)':'clamp(1.3rem,5vw,2.2rem)';}
-      buildVoteGrid(data.players);show('s-pvote');break;
+      buildVoteGrid(data.players);show('s-pvote');break;}
     case 'ALREADY_VOTED':
       updateVoteCounter(data.done,data.total);show('s-pvoted');break;
     case 'VOTE_PROGRESS':
@@ -1872,20 +2152,22 @@ function handlePData(data){
         if(rc) rc.style.display='block';
       },2000);
       break;
-    case 'WHEEL_NEXT':
+    case 'WHEEL_NEXT':{
       if(data.nextSpinner!==pName){
-        $('wt').textContent='🎰 '+data.nextSpinner+' tourne la roue !';
-        $('ws').textContent='Regarde en direct !';
+        const wt2=$('wt'),ws2=$('ws'),wr=$('w-result');
+        if(wt2)wt2.textContent='🎰 '+data.nextSpinner+' tourne la roue !';
+        if(ws2)ws2.textContent='Regarde en direct !';
         $('wspin-btn').style.display='none';
         $('wdone-btn').style.display='none';
-        $('w-result').textContent='';
+        if(wr)wr.textContent='';
       }
-      break;
+      break;}
     case 'FORCE_NEXT':
-      // Host forced next round — clean up everything immediately
       clearPTimers();
       hideRev();
       $('wheel-ov').style.display='none';
+      // Reset wheel state for next round
+      wQueue=[];wAngle=0;wSpinning=false;wIsSpinner=false;
       show('s-pbetween');
       break;
     case 'NEXT_ALLOWED':
@@ -1940,7 +2222,7 @@ function buildVoteGrid(players){
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
       try{const ctx=getAudioCtx();playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
-      pConn.send({type:'SUBMIT_VOTE',target:p.name});
+      if(pConn&&pConn.open)pConn.send({type:'SUBMIT_VOTE',target:p.name});
       show('s-pvoted');
     };
     grid.appendChild(btn);
@@ -1994,10 +2276,13 @@ function runSlotMachine(players, duration, onDone){
     qmark.style.opacity = String(Math.max(0, 1 - prog*1.1));
 
     const p = players[fi % players.length];
+    // Blur decreases progressively: starts at 18px, reaches 0 at the end
+    const blurPx = Math.max(0, 18 * (1 - Math.pow(prog, 0.7))).toFixed(1);
+    const blurStyle = blurPx > 0 ? `filter:blur(${blurPx}px);transition:filter 0.05s;` : '';
     if(p.photo){
-      reel.innerHTML=`<img class="slot-frame" src="${p.photo}" alt="">`;
+      reel.innerHTML=`<img class="slot-frame" src="${p.photo}" alt="" style="${blurStyle}">`;
     } else {
-      reel.innerHTML=`<div class="slot-init" style="background:${acol(p.name)}">${ini(p.name)}</div>`;
+      reel.innerHTML=`<div class="slot-init" style="background:${acol(p.name)};${blurStyle}">${ini(p.name)}</div>`;
     }
     const slotT=setTimeout(nextFrame, frameDurations[fi]);
     pTimers.push(slotT);
@@ -2335,6 +2620,18 @@ function doReveal(data){
 
       // 🎆 FIREWORKS
       fireworks();
+      // 🎵 Play each winner's custom victory sound
+      pt(()=>{
+        try{
+          const ctx=getAudioCtx();
+          winners.forEach((wname,wi)=>{
+            const wp=players.find(p=>p.name===wname);
+            if(!wp) return;
+            const snd=wp.sound||1;
+            setTimeout(()=>playSoundById(snd), wi*600);
+          });
+        }catch(e){}
+      },200);
 
       // Winner label + media
       pt(()=>{
@@ -2499,8 +2796,8 @@ function spinWheel(){
     drawWheel(cur);
     // Broadcast angle for spectators — throttled to 15fps
     const nowMs=performance.now();
-    if(!spinWheel._lastBcast||nowMs-spinWheel._lastBcast>66){
-      spinWheel._lastBcast=nowMs;
+    if(!window._wLastBcast||nowMs-window._wLastBcast>66){
+      window._wLastBcast=nowMs;
       if(isHost){
         hBcast({type:'WHEEL_SPINNING',angle:cur,spinner:pName});
       } else if(pConn&&pConn.open){
