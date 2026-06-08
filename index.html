@@ -514,8 +514,8 @@ button.game-only.game-active,
 .hmb-badge.show{display:flex;}
 .score-panel{
   position:fixed;
-  /* Align left edge with hamburger button (left:12px, width:44px) */
-  top:max(64px,calc(env(safe-area-inset-top,0px)+58px));
+  /* top and left set dynamically by JS in toggleScorePin */
+  top:80px;
   left:12px;
   width:min(88vw,300px);
   max-height:min(68vh,460px);
@@ -689,6 +689,22 @@ button.game-only.game-active,
 /* ═══ SLOT MACHINE FRAMES ═══ */
 .slot-frame{width:100%;height:100%;object-fit:cover;display:block;}
 .slot-init{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:2.8rem;font-weight:900;color:#fff;}
+/* slot-reel must fill the entire q-card */
+#slot-reel{
+  position:absolute;
+  inset:0;
+  border-radius:17px; /* slightly less than q-card's 22px to stay inside border */
+  overflow:hidden;
+  display:none; /* shown by JS */
+  align-items:stretch;
+  justify-content:stretch;
+}
+#slot-reel img, #slot-reel div{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:0;
+}
 
 /* ═══ FLOATING PLAYER PHOTO CARDS (background) ═══ */
 .fbg-card{
@@ -896,7 +912,7 @@ button.game-only.game-active,
       <div id="lstat" style="font-size:1rem;font-weight:800;color:var(--pu);margin-bottom:6px;">0 joueur connecté</div>
       <div class="chips" id="lchips"></div>
       <hr class="div">
-      <button class="btn big" id="btn-launch" onclick="openConfig()" disabled>⚙️ Configurer &amp; Lancer</button>
+      <button class="btn big" id="btn-launch" onclick="openConfig()">⚙️ Configurer &amp; Lancer</button>
       <div style="font-size:.75rem;color:var(--pu-l);margin-top:6px;">2 joueurs minimum</div>
     </div>
     <div id="h-game" style="display:none;">
@@ -974,6 +990,7 @@ button.game-only.game-active,
       <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:4px;">🎵 Sons de victoire</div>
       <div style="font-size:.75rem;color:var(--pu-l);font-weight:700;margin-bottom:10px;">Clips courts recommandés (5-15s). Les joueurs choisissent leur son à l'inscription.</div>
       <div id="sound-upload-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <button class="btn" onclick="hResendSounds()" style="margin-top:8px;font-size:.8rem;padding:8px 14px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">📡 Renvoyer les sons aux joueurs</button>
     </div>
 
     <hr class="div">
@@ -1620,6 +1637,13 @@ function handleHConn(conn){
 function hPList(){return Object.values(hConns).map(p=>({name:p.name,photo:p.photo,sound:p.sound||1}));}
 function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
+function hResendSounds(){
+  const n=Object.keys(hConns).length;
+  if(n===0){toast('⚠️ Aucun joueur connecté');return;}
+  Object.values(hConns).forEach(p=>hSendSounds(p.conn));
+  toast('📡 Sons envoyés à '+n+' joueur'+(n>1?'s':'')+' !');
+}
+
 function hSendSounds(conn){
   // Send CUSTOM_SOUNDS to a specific player so they can play them
   const sounds=CUSTOM_SOUNDS.map((s,i)=>({idx:i,emoji:s.emoji,label:s.label,url:s.url||''}));
@@ -1630,7 +1654,7 @@ function hostLobbyUI(){
   const ps=Object.values(hConns),n=ps.length;
   const txt=`${n} joueur${n>1?'s':''} connecté${n>1?'s':''}`;
   [$('lstat'),$('lstat2')].forEach(el=>{if(el)el.textContent=txt;});
-  $('btn-launch').disabled=n<2;
+  $('btn-launch').disabled=false; // config always accessible
   const html=ps.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${p.name}</span></div>`).join('');
   $('lchips').innerHTML=html;const c2=$('lchips2');if(c2)c2.innerHTML=html;
 }
@@ -1651,7 +1675,9 @@ function loadSoundFile(idx, fileInput, row, uploadBtn){
     uploadBtn.textContent='✅ Chargé';uploadBtn.className='sound-upload-file-btn done';
     uploadBtn.disabled=false;row.className='sound-upload-row loaded';
     buildSoundPicker();buildSoundUploadUI();
-    toast('🎵 '+CUSTOM_SOUNDS[idx].label+' chargé !');
+    // Auto-broadcast updated sounds to all already-connected players
+    Object.values(hConns).forEach(p=>hSendSounds(p.conn));
+    toast('🎵 '+CUSTOM_SOUNDS[idx].label+' chargé et envoyé aux joueurs !');
   };
   reader.onerror=()=>{uploadBtn.textContent='❌ Erreur';uploadBtn.disabled=false;};
   reader.readAsDataURL(file);
@@ -1836,6 +1862,7 @@ function cfgBuildVideoMap(){
 }
 
 function hostLaunchFromConfig(){
+  if(Object.keys(hConns).length===0){toast("⚠️ Attends qu'au moins un joueur rejoigne !");return;}
   const activeQs=(window.cfgQuestions||[]).filter(q=>q.active);
   if(activeQs.length===0){toast('⚠️ Sélectionne au moins une question !');return;}
   MAX_ROUNDS=parseInt($('cfg-rounds').value)||10;
@@ -2244,7 +2271,6 @@ function runSlotMachine(players, duration, onDone){
   if(!reel || !players || players.length === 0){ if(onDone)onDone(); return; }
 
   reel.style.display = 'flex';
-  qmark.style.opacity = '1';
   qmark.style.transition = 'opacity .3s ease';
 
   // Build accelerating-then-decelerating frame schedule over ~4 seconds
@@ -3193,7 +3219,18 @@ function toggleScorePin(e){
   scorePinOpen=!scorePinOpen;
   const panel=$('score-panel');
   const overlay=$('score-overlay');
-  if(panel) panel.classList.toggle('open',scorePinOpen);
+  if(panel){
+    if(scorePinOpen){
+      // Position panel right below the hamburger button
+      const btn=$('hmb-btn');
+      if(btn){
+        const rect=btn.getBoundingClientRect();
+        panel.style.top=(rect.bottom+6)+'px';
+        panel.style.left=rect.left+'px';
+      }
+    }
+    panel.classList.toggle('open',scorePinOpen);
+  }
   if(overlay) overlay.classList.toggle('open',scorePinOpen);
   if(scorePinOpen) updateScorePin();
 }
