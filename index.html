@@ -1247,7 +1247,6 @@ const roomP=urlP.get('room');
 const baseUrl=window.location.href.split('?')[0];
 
 window.addEventListener("load",()=>{
-  buildSoundPicker();
   // Sounds are pre-decoded after user gesture (see _unlockAudio)
   if(roomP){pRoomId=roomP;showGameUI();show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
@@ -1346,7 +1345,7 @@ function onboardFinish(){
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
     pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-consent').style.display='none';$('step-name').style.display='block';});
-    pConn.on('open',()=>{clearTimeout(to2);try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){}pConn.send({type:'JOIN',name:pName,photo:pPhoto});startHeartbeat();});
+    pConn.on('open',()=>{clearTimeout(to2);try{_unlockAudio();}catch(e){}pConn.send({type:'JOIN',name:pName,photo:pPhoto});startHeartbeat();});
     pConn.on('data',handlePData);
     pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
@@ -2019,7 +2018,7 @@ function buildVoteGrid(players){
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
       try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
-        try{getOrCreateAudioCtx();unlockAllSounds();const ctx=getAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
+        try{_unlockAudio();const ctx=getAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
         if(pConn&&pConn.open)pConn.send({type:'SUBMIT_VOTE',target:p.name});
         const vfl=$('voted-for-lbl');if(vfl)vfl.textContent='Tu as voté pour '+p.name+' 👉';
         show('s-pvoted');
@@ -3094,6 +3093,8 @@ function appendChatMsg(){} // chat removed
 // Unlock AudioContext on first touch/click (required by iOS Safari)
 // Unlock AudioContext on ANY user interaction (required by Chrome/Safari)
 
+// Audio context unlocked on user interaction
+function _unlockAudio(){try{getOrCreateAudioCtx();}catch(e){}}
 document.addEventListener('touchstart', _unlockAudio, {passive:true});
 document.addEventListener('mousedown',  _unlockAudio);
 document.addEventListener('keydown',    _unlockAudio);
