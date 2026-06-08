@@ -1036,8 +1036,9 @@ button.game-only.game-active,
       <input type="file" id="fi" style="display:none;" accept="image/*" onchange="handlePhoto(event)" capture>
       <div style="font-size:.72rem;color:var(--pu-l);margin-bottom:14px;font-weight:700;">Prends toi en photo, c'est obligatoire pour le jeu mon coco 📸</div>
       <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12" autocomplete="off">
-
-      <button class="btn big ye" style="width:100%;margin-top:4px;" onclick="onboardStep1()">Continuer →</button>
+      <div style="font-size:.75rem;font-weight:900;letter-spacing:3px;color:var(--pu-l);text-transform:uppercase;margin:12px 0 6px;text-align:center;">🎵 Ton son de victoire</div>
+      <div class="sound-picker" id="sound-picker"></div>
+      <button class="btn big ye" style="width:100%;margin-top:8px;" onclick="onboardStep1()">Continuer →</button>
     </div>
 
     <!-- STEP 2: "C'est ton nom ?" -->
@@ -1369,7 +1370,7 @@ const baseUrl=window.location.href.split('?')[0];
 
 window.addEventListener("load",()=>{
   buildSoundPicker();
-  if(roomP){showGameUI();connectEarly(roomP);show('s-pjoin');$('step-name').style.display='block';}
+  if(roomP){pRoomId=roomP;showGameUI();show('s-pjoin');$('step-name').style.display='block';}
   else show('s-land');
 });
 
@@ -1378,51 +1379,12 @@ let chatOpen = false;
 let chatUnread = 0;
 
 
-// Connect to the room immediately (before onboarding) so sounds arrive early
-function connectEarly(roomId){
-  pRoomId=roomId;
-  if(peer){try{peer.destroy();}catch(e){}}
-  peer=new Peer(undefined,{debug:0});
-  peer.on('error',()=>{}); // silent — will retry properly in onboardFinish
-  peer.on('open',()=>{
-    pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
-    pConn.on('open',()=>{
-      // Send a "ping" so host sends back sounds
-      pConn.send({type:'PING_SOUNDS'});
-    });
-    pConn.on('data',data=>{
-      // Handle sounds before onboarding completes
-      if(data.type==='SOUND_ONE'){
-        if(data.idx>=0&&data.idx<CUSTOM_SOUNDS.length){
-          CUSTOM_SOUNDS[data.idx].emoji=data.emoji||CUSTOM_SOUNDS[data.idx].emoji;
-          CUSTOM_SOUNDS[data.idx].label=data.label||CUSTOM_SOUNDS[data.idx].label;
-          CUSTOM_SOUNDS[data.idx].url=data.url||'';
-          buildSoundPicker();
-        }
-        return;
-      }
-      if(data.type==='SOUNDS_UPDATE'){
-        if(data.sounds&&Array.isArray(data.sounds)){
-          data.sounds.forEach(s=>{
-            if(s.idx>=0&&s.idx<CUSTOM_SOUNDS.length){
-              CUSTOM_SOUNDS[s.idx].emoji=s.emoji||CUSTOM_SOUNDS[s.idx].emoji;
-              CUSTOM_SOUNDS[s.idx].label=s.label||CUSTOM_SOUNDS[s.idx].label;
-              CUSTOM_SOUNDS[s.idx].url=s.url||'';
-            }
-          });
-          buildSoundPicker();
-        }
-      }
-    });
-    pConn.on('close',()=>{pConn=null;}); // will reconnect in onboardFinish
-  });
-}
 // ═══════════════════ NAV ═══════════════════
 function gotoCodeEntry(){showGameUI();show('s-pjoin');$('step-code').style.display='block';}
 function validateCode(){
   const c=$('code-inp').value.trim().toUpperCase();
   if(c.length!==4){toast('⚠️ Code de 4 lettres !');return;}
-  connectEarly(c);
+  pRoomId=c;
   $('step-code').style.display='none';
   $('step-name').style.display='block';
   $('pni').focus();
@@ -1548,12 +1510,7 @@ function onboardFinish(){
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
-
-  // Always create a fresh connection to avoid double 'data' listener from connectEarly
-  // Close any early connection first
-  if(pConn){try{pConn.close();}catch(e){}pConn=null;}
   if(peer){try{peer.destroy();}catch(e){}}
-
   peer=new Peer(undefined,{debug:0});
   const to1=setTimeout(()=>{stat.textContent='❌ Impossible de se connecter.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
   peer.on('error',err=>{clearTimeout(to1);stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);});
@@ -1562,13 +1519,9 @@ function onboardFinish(){
     pConn=peer.connect(pRoomId,{reliable:true,serialization:'json'});
     const to2=setTimeout(()=>{stat.textContent='❌ Code invalide ou salon introuvable.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
     pConn.on('error',()=>{clearTimeout(to2);stat.textContent='❌ Connexion refusée.';$('step-consent').style.display='none';$('step-name').style.display='block';});
-    pConn.on('open',()=>{
-      clearTimeout(to2);
-      stat.textContent='';
-      pConn.on('data',handlePData);
-      pConn.on('close',()=>toast('🔌 Connexion perdue'));
-      pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});
-    });
+    pConn.on('open',()=>{clearTimeout(to2);pConn.send({type:'JOIN',name:pName,photo:pPhoto,sound:pSound});});
+    pConn.on('data',handlePData);
+    pConn.on('close',()=>toast('🔌 Connexion perdue'));
   });
 }
 
@@ -1611,7 +1564,7 @@ function handleHConn(conn){
       if(hScores[name]===undefined)hScores[name]=0;
       hostLobbyUI();
       hBcast({type:'LOBBY_UPDATE',players:hPList()});
-      hSendSounds(conn); // send audio data to the new player
+      setTimeout(()=>hSendSounds(conn),200); // send sounds after connection is stable
       updateBgCards(hPList());
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
       if(hQi>=0){
@@ -1655,10 +1608,6 @@ function handleHConn(conn){
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
       return;
     }
-    if(data.type==='PING_SOUNDS'){
-      hSendSounds(conn); // player is connecting, send them the sounds
-      return;
-    }
     if(data.type==='EMOJI_REACT'){
       hBcast({type:'EMOJI_REACT',emoji:data.emoji});
       spawnFloatEmoji(data.emoji);
@@ -1699,7 +1648,9 @@ function hResendSounds(){
 }
 
 function hSendSounds(conn){
-  if(!conn||!conn.open) return;
+  if(!conn) return;
+  // Wait for conn to be open if not yet
+  if(!conn.open){setTimeout(()=>hSendSounds(conn),300);return;}
   // Send sounds one at a time to avoid PeerJS 256KB chunk limit
   CUSTOM_SOUNDS.forEach((s,i)=>{
     if(!s.url) return; // skip empty slots
