@@ -744,57 +744,13 @@ button.game-only.game-active,
 .shame-scroll-inner.paused{animation-play-state:paused;}
 
 /* ═══ SOUND PICKER ═══ */
-.sound-picker{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0 14px;}
-.sound-btn{
-  background:var(--pu-s);border:2px solid var(--pu-l);
-  border-radius:12px;padding:8px 10px;
-  cursor:pointer;font-size:1.3rem;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  transition:border-color .1s,background .1s,transform .1s,box-shadow .1s;
-  -webkit-tap-highlight-color:transparent;
-  box-shadow:0 3px 0 var(--pu-l);
-  flex:1;min-width:50px;max-width:70px;
-}
+
 .sound-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu-l);}
-.sound-btn.selected{background:var(--pu);border-color:var(--pu-d);box-shadow:0 3px 0 var(--pu-d);}
+
 .sound-btn.selected span.sn{color:#fff;}
 .sound-btn span.se{font-size:1.5rem;}
 .sound-btn span.sn{font-size:.6rem;font-weight:900;color:var(--pu-l);text-transform:uppercase;letter-spacing:1px;}
 
-/* ═══ SOUND UPLOAD IN CONFIG ═══ */
-.sound-upload-row{
-  display:flex;align-items:center;gap:8px;
-  background:var(--pu-s);border:2px solid var(--pu-l);
-  border-radius:12px;padding:8px 10px;
-  transition:border-color .15s;
-}
-.sound-upload-row.loaded{border-color:var(--pu);}
-.sound-upload-emoji-inp{
-  width:36px;background:none;border:1.5px solid var(--pu-l);border-radius:8px;
-  padding:4px;font-size:1.1rem;text-align:center;outline:none;cursor:pointer;
-  font-family:'Nunito',sans-serif;
-}
-.sound-upload-label-inp{
-  flex:1;background:rgba(255,255,255,.7);border:1.5px solid var(--pu-l);
-  border-radius:8px;padding:5px 8px;font-size:.82rem;font-weight:700;
-  color:var(--pu-d);outline:none;font-family:'Nunito',sans-serif;min-width:0;
-}
-.sound-upload-label-inp:focus{border-color:var(--pu);}
-.sound-upload-file-btn{
-  background:var(--pu);color:#fff;border:2px solid var(--pu-d);
-  border-radius:8px;padding:6px 10px;font-size:.78rem;font-weight:800;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
-  font-family:'Baloo 2',cursive;box-shadow:0 3px 0 var(--pu-d);
-  transition:transform .08s,box-shadow .08s;
-  -webkit-tap-highlight-color:transparent;
-}
-.sound-upload-file-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu-d);}
-.sound-upload-file-btn.done{background:var(--gr);border-color:var(--gr-d);box-shadow:0 3px 0 var(--gr-d);}
-.sound-play-btn{
-  background:none;border:1.5px solid var(--pu-l);border-radius:8px;
-  padding:5px 8px;font-size:.9rem;cursor:pointer;color:var(--pu-d);
-  transition:border-color .1s;flex-shrink:0;
-}
 .sound-play-btn:hover{border-color:var(--pu);}
 @keyframes shameIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 
@@ -901,47 +857,6 @@ button.game-only.game-active,
   </div>
 </div>
 
-    <div style="font-size:.8rem;color:var(--pu-l);font-weight:700;margin-bottom:20px;">Simule une partie sans connexion réseau</div>
-
-    <div style="margin-bottom:16px;text-align:left;">
-      <label style="font-size:.8rem;font-weight:900;color:var(--pu-d);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px;">👤 Ton prénom</label>
-      <input type="text" id="demo-name" class="inp" placeholder="Ton prénom…" maxlength="12" value="Moi" style="margin-bottom:0;">
-    </div>
-
-    <div style="margin-bottom:16px;text-align:left;">
-      <label style="font-size:.8rem;font-weight:900;color:var(--pu-d);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px;">🤖 Nombre de bots</label>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <input type="range" id="demo-bots" min="2" max="20" value="5" step="1"
-          style="flex:1;accent-color:var(--pu);cursor:pointer;"
-          oninput="$('demo-bots-val').textContent=this.value">
-        <span id="demo-bots-val" style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu);min-width:36px;text-align:center;">5</span>
-      </div>
-    </div>
-
-    <div style="margin-bottom:20px;text-align:left;">
-      <label style="font-size:.8rem;font-weight:900;color:var(--pu-d);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px;">⚡ Vitesse des bots</label>
-      <div style="display:flex;gap:8px;">
-        <button class="demo-speed-btn selected" data-speed="slow" onclick="selectDemoSpeed(this)" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--pu);background:var(--pu);color:#fff;font-weight:800;font-size:.8rem;cursor:pointer;">🐢 Lent</button>
-        <button class="demo-speed-btn" data-speed="normal" onclick="selectDemoSpeed(this)" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--pu-l);background:var(--pu-s);color:var(--pu-d);font-weight:800;font-size:.8rem;cursor:pointer;">🚶 Normal</button>
-        <button class="demo-speed-btn" data-speed="fast" onclick="selectDemoSpeed(this)" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--pu-l);background:var(--pu-s);color:var(--pu-d);font-weight:800;font-size:.8rem;cursor:pointer;">🚀 Rapide</button>
-      </div>
-    </div>
-
-    <div style="margin-bottom:16px;text-align:left;">
-      <label style="font-size:.8rem;font-weight:900;color:var(--pu-d);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px;">🔢 Manches</label>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <input type="range" id="demo-rounds" min="2" max="15" value="5" step="1"
-          style="flex:1;accent-color:var(--pu);cursor:pointer;"
-          oninput="$('demo-rounds-val').textContent=this.value">
-        <span id="demo-rounds-val" style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu);min-width:36px;text-align:center;">5</span>
-      </div>
-    </div>
-
-    <button class="btn big ye w-full mt-4" onclick="startDemo()">🚀 Lancer la démo !</button>
-    <button class="btn" style="width:100%;margin-top:8px;background:transparent;color:var(--pu-l);border-color:var(--pu-l);box-shadow:none;" onclick="show('s-land')">← Retour</button>
-  </div>
-</div>
-
 <!-- HOST SCREEN -->
 <div id="s-host" class="screen hidden">
   <div class="lw"><div class="lb" style="font-size:clamp(1.4rem,4vw,2.2rem);transform:rotate(0);padding:6px 22px 8px;">QUI EST LE <span class="plus">+</span> ?</div></div>
@@ -1024,29 +939,6 @@ button.game-only.game-active,
         <button class="btn" style="font-size:.85rem;padding:9px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('cfg-add-q').style.display='none'">Annuler</button>
       </div>
     </div>
-
-    <hr class="div">
-    <div style="margin-bottom:16px;">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:4px;">🎵 Sons de victoire</div>
-      <div style="font-size:.75rem;color:var(--pu-l);font-weight:700;margin-bottom:10px;">Clips courts recommandés (5-15s). Les joueurs choisissent leur son à l'inscription.</div>
-      <div id="sound-upload-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-      <button class="btn" onclick="hResendSounds()" style="margin-top:8px;font-size:.8rem;padding:8px 14px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">📡 Renvoyer les sons aux joueurs</button>
-    </div>
-
-    <hr class="div">
-    <div style="margin-bottom:16px;">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:8px;">🎰 Segments de la roue</div>
-      <div style="font-size:.75rem;color:var(--pu-l);font-weight:700;margin-bottom:10px;">Modifie les défis de la roue de l'infortune (8 segments max)</div>
-      <div id="wheel-seg-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
-      <button onclick="addWheelSeg()" style="background:var(--pu-s);color:var(--pu-d);border:1.5px solid var(--pu-l);border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:800;cursor:pointer;">+ Ajouter un segment</button>
-    </div>
-
-    <hr class="div">
-    <div id="cfg-count-info" style="font-size:.82rem;color:var(--pu-l);font-weight:700;margin-bottom:12px;"></div>
-    <button class="btn big ye w-full" onclick="hostLaunchFromConfig()">🚀 Lancer la Partie !</button>
-    <button class="btn" style="width:100%;margin-top:6px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('s-hconfig').classList.add('hidden');$('s-host').classList.remove('hidden');">← Retour au salon</button>
-  </div>
-</div>
 <!-- HOST FINAL -->
 <div id="s-hfinal" class="screen hidden">
   <div class="lw"><div class="lb" style="transform:rotate(0);font-size:clamp(1.5rem,5vw,3rem);">🏆 CLASSEMENT FINAL</div></div>
@@ -1239,16 +1131,6 @@ button.game-only.game-active,
 // Pour Google Drive: Fichier → Partager → "Tout le monde" → copie l'ID
 //   puis utilise: https://drive.google.com/uc?export=download&id=TON_ID
 // ════════════════════════════════════════════════════════
-const CUSTOM_SOUNDS = [
-  { emoji: "🎵", label: "Son 1", url: "" },
-  { emoji: "🎶", label: "Son 2", url: "" },
-  { emoji: "🔥", label: "Son 3", url: "" },
-  { emoji: "💥", label: "Son 4", url: "" },
-  { emoji: "⭐", label: "Son 5", url: "" },
-];
-// Si une URL est vide, le son procédural de secours sera utilisé (prout/vomi/etc.)
-// ════════════════════════════════════════════════════════
-
 const PREFIXES = ["Qui est le +", "Qui est la +", "Qui a le +", "Qui a la +", "Qui est le -", "Qui a l'air le +"];
 const QUESTIONS = [
   {p:"Qui est le +", t:"radin quand c'est son tour de payer"},
@@ -1411,86 +1293,12 @@ function handlePhoto(e){
 }
 
 // ════ SON PERSONNALISÉ ════
-let pSound=1; // 1=prout, 2=vomi, 3=cloche, 4=trompette, 5=caisse
-
-function selectSound(n){
-  pSound=n;
-  for(let i=1;i<=CUSTOM_SOUNDS.length;i++){
-    const b=$('sbtn-'+i);
-    if(b) b.classList.toggle('selected',i===n);
-  }
-  try{
-    getOrCreateAudioCtx();
-    unlockAllSounds(); // iOS: unlock audio elements during gesture
-    playSoundById(n);
-  }catch(e){}
-  // Tell host about updated sound choice
-  if(pConn&&pConn.open){
-    try{pConn.send({type:'UPDATE_SOUND',sound:n});}catch(e){}
-  }
-}
 
 // Pre-created and iOS-unlocked Audio elements
-const _audioElements = {};
-let _soundsUnlocked = false;
-
-function preloadSound(n){
-  const s=CUSTOM_SOUNDS[n-1];
-  if(!s||!s.url) return;
-  try{
-    if(!_audioElements[n]){
-      const aud=new Audio(s.url);
-      aud.preload='auto';aud.volume=0.85;
-      _audioElements[n]=aud;
-    }
-  }catch(e){}
-}
 
 // Call this from a direct user gesture to unlock all audio elements on iOS
-function unlockAllSounds(){
-  if(_soundsUnlocked) return;
-  CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
-  // On iOS: must call play() inside gesture handler to unlock the element
-  Object.values(_audioElements).forEach(aud=>{
-    const p=aud.play();
-    if(p&&p.then) p.then(()=>{
-      // Small delay before pause to ensure audio element is truly unlocked
-      setTimeout(()=>{try{aud.pause();aud.currentTime=0;}catch(e){}},80);
-    }).catch(()=>{});
-  });
-  _soundsUnlocked=true;
-}
 
 // Play a sound by its index (1-5)
-function playSoundById(n){
-  const s=CUSTOM_SOUNDS[n-1];
-  if(s&&s.url&&s.url.trim()){
-    try{
-      preloadSound(n);
-      const aud=_audioElements[n];
-      if(aud){
-        aud.currentTime=0;
-        const p=aud.play();
-        if(p&&p.catch) p.catch(()=>{
-          // If still blocked (iOS never got gesture), try Web Audio fallback
-          _playBase64ViaWebAudio(n,s.url);
-        });
-      }
-    }catch(e){}
-  } else {
-    // Procedural sound fallback
-    const ctx=getAudioCtx();if(!ctx)return;
-    const now=ctx.currentTime;
-    const fb=[
-      ()=>playFart(ctx,now,0.5,70),
-      ()=>playVomit(ctx,now),
-      ()=>playBurp(ctx,now),
-      ()=>playLoserHorn(ctx,now),
-      ()=>playSuspenseDrumRoll(0.8)
-    ];
-    (fb[n-1]||fb[0])();
-  }
-}
 
 // Web Audio fallback for iOS when HTMLAudioElement is still blocked
 function _playBase64ViaWebAudio(n,url){
@@ -1510,27 +1318,6 @@ function _playBase64ViaWebAudio(n,url){
   }catch(e){}
 }
 
-function buildSoundPicker(){
-  const picker=$('sound-picker');
-  if(!picker) return;
-  // Show/hide sound section based on whether any sounds are loaded
-  const hasSounds=CUSTOM_SOUNDS.some(s=>s.url&&s.url.trim());
-  const ss=$('sound-section');if(ss)ss.style.display=hasSounds?'block':'none';
-  picker.innerHTML='';
-  // Always show all 5 buttons — URL may be empty (uses procedural fallback)
-  CUSTOM_SOUNDS.forEach((s,i)=>{
-    const n=i+1;
-    const btn=document.createElement('button');
-    btn.className='sound-btn'+(n===pSound?' selected':'');
-    btn.id='sbtn-'+n;
-    // Show a lock icon if no sound loaded yet for this slot
-    const hasUrl=s.url&&s.url.trim();
-    btn.innerHTML=`<span class="se">${s.emoji}</span><span class="sn">${escHtml(s.label)}</span>`;
-    btn.title=hasUrl?'Écouter':'Son procédural (pas de fichier chargé)';
-    btn.addEventListener('click',()=>selectSound(n));
-    picker.appendChild(btn);
-  });
-}
 // ═══════════════════ ONBOARDING STEPS ═══════════════════
 function onboardStep1(){
   const raw=$('pni').value.trim();
@@ -1608,8 +1395,6 @@ function handleHConn(conn){
       }
       hostLobbyUI();
       hBcast({type:'LOBBY_UPDATE',players:hPListMeta()}); // no photos = lightweight
-      // Only send sounds if at least one is configured
-      if(CUSTOM_SOUNDS.some(s=>s.url&&s.url.trim())) setTimeout(()=>hSendSounds(conn),200);
       updateBgCards(hPList());
       toast(`${name} ${oldPeer?'reconnecté':'a rejoint'} ! 🎉`);
       if(hQi>=0){
@@ -1656,10 +1441,6 @@ function handleHConn(conn){
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
       return;
     }
-    if(data.type==='UPDATE_SOUND'){
-      if(hConns[conn.peer]) hConns[conn.peer].sound=data.sound||1;
-      return;
-    }
     if(data.type==='EMOJI_REACT'){
       hBcast({type:'EMOJI_REACT',emoji:data.emoji});
       spawnFloatEmoji(data.emoji);
@@ -1699,31 +1480,6 @@ function hPList(includePhotos=true){
 function hPListMeta(){return hPList(false);} // lightweight: no photos
 function hBcast(msg){Object.values(hConns).forEach(p=>{if(p.conn&&p.conn.open)try{p.conn.send(msg);}catch(e){}});}
 
-function hResendSounds(){
-  const n=Object.keys(hConns).length;
-  if(n===0){toast('⚠️ Aucun joueur connecté');return;}
-  Object.values(hConns).forEach(p=>hSendSounds(p.conn));
-  toast('📡 Sons envoyés à '+n+' joueur'+(n>1?'s':'')+' !');
-}
-
-function hSendSounds(conn,_retry=0){
-  if(!conn) return;
-  if(!conn.open){
-    if(_retry>5) return; // max 5 retries = 1.5s
-    setTimeout(()=>hSendSounds(conn,_retry+1),300);return;
-  }
-  // Send sounds one at a time to avoid PeerJS 256KB chunk limit
-  CUSTOM_SOUNDS.forEach((s,i)=>{
-    if(!s.url) return; // skip empty slots
-    try{
-      conn.send({type:'SOUND_ONE',idx:i,emoji:s.emoji,label:s.label,url:s.url});
-    }catch(e){}
-  });
-  // Also send labels/emojis for empty slots so picker shows correct names
-  const meta=CUSTOM_SOUNDS.map((s,i)=>({idx:i,emoji:s.emoji,label:s.label,url:''}));
-  try{conn.send({type:'SOUNDS_UPDATE',sounds:meta});}catch(e){}
-}
-
 function hostLobbyUI(){
   const ps=Object.values(hConns),n=ps.length;
   const txt=`${n} joueur${n>1?'s':''} connecté${n>1?'s':''}`;
@@ -1735,121 +1491,10 @@ function hostLobbyUI(){
 
 // ═══════════════════ HOST GAME ═══════════════════
 
-function buildWheelSegUI(){
-  const list=$('wheel-seg-list');
-  if(!list) return;
-  list.innerHTML='';
-  WS.forEach((seg,i)=>{
-    const row=document.createElement('div');
-    row.style.cssText='display:flex;align-items:center;gap:6px;';
-    // Colour dot
-    const dot=document.createElement('div');
-    dot.style.cssText='width:14px;height:14px;border-radius:50%;flex-shrink:0;background:'+seg.c+';';
-    row.appendChild(dot);
-    // Label input
-    const inp=document.createElement('input');
-    inp.type='text';inp.value=seg.l;inp.maxLength=30;inp.placeholder='Nom du segment';
-    inp.style.cssText='flex:1;background:rgba(124,58,237,.06);border:1.5px solid var(--pu-l);border-radius:8px;padding:6px 8px;font-size:.82rem;font-weight:700;color:var(--pu-d);outline:none;font-family:Nunito,sans-serif;';
-    inp.addEventListener('input',(function(idx){return function(){
-      WS[idx].l=this.value;
-      };})(i));
-    row.appendChild(inp);
-    // Delete
-    if(WS.length>3){
-      const del=document.createElement('button');
-      del.textContent='🗑️';del.style.cssText='background:none;border:none;cursor:pointer;font-size:.9rem;padding:2px;flex-shrink:0;';
-      del.addEventListener('click',(function(idx){return function(){
-        if(WS.length<=3){toast('3 segments minimum');return;}
-        WS.splice(idx,1);
-        WS.length_REF[0]=WS.length;
-        buildWheelSegUI();
-      };})(i));
-      row.appendChild(del);
-    }
-    list.appendChild(row);
-  });
-}
-
 // WS.length est une const — on utilise une ref
-
-function addWheelSeg(){
-  if(WS.length>=12){toast('12 segments max !');return;}
-  const colors=['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d'];
-  WS.push({l:'Nouveau défi',c:colors[WS.length%colors.length]});
-  WS.length_REF[0]=WS.length;
-  buildWheelSegUI();
-  toast('Segment ajouté ✓');
-}
-function loadSoundFile(idx, fileInput, row, uploadBtn){
-  const file=fileInput.files[0];
-  if(!file) return;
-  if(file.size > 3*1024*1024){toast('⚠️ Max 3MB !');return;}
-  uploadBtn.textContent='⏳…';uploadBtn.disabled=true;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    CUSTOM_SOUNDS[idx].url=e.target.result;
-    if(!CUSTOM_SOUNDS[idx].label||CUSTOM_SOUNDS[idx].label===('Son '+(idx+1))){
-      CUSTOM_SOUNDS[idx].label=file.name.replace(/\.[^.]+$/,'').substring(0,20);
-    }
-    uploadBtn.textContent='✅ Chargé';uploadBtn.className='sound-upload-file-btn done';
-    uploadBtn.disabled=false;row.className='sound-upload-row loaded';
-    buildSoundPicker();buildSoundUploadUI();
-    if(_audioCtx&&_audioCtx.state==='running') CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
-    // Auto-broadcast updated sounds to all already-connected players
-    Object.values(hConns).forEach(p=>hSendSounds(p.conn));
-    toast('🎵 '+CUSTOM_SOUNDS[idx].label+' chargé et envoyé aux joueurs !');
-  };
-  reader.onerror=()=>{uploadBtn.textContent='❌ Erreur';uploadBtn.disabled=false;};
-  reader.readAsDataURL(file);
-}
-
-function buildSoundUploadUI(){
-  const list=$('sound-upload-list');
-  if(!list) return;
-  list.innerHTML='';
-  CUSTOM_SOUNDS.forEach((s,i)=>{
-    const n=i+1;
-    const row=document.createElement('div');
-    row.className='sound-upload-row'+(s.url?' loaded':'');
-    row.id='srow-'+n;
-    // Emoji
-    const emojiInp=document.createElement('input');
-    emojiInp.type='text';emojiInp.className='sound-upload-emoji-inp';
-    emojiInp.value=s.emoji;emojiInp.maxLength=4;emojiInp.title='Emoji';
-    emojiInp.addEventListener('input',function(){CUSTOM_SOUNDS[i].emoji=this.value.trim()||'🎵';buildSoundPicker();});
-    row.appendChild(emojiInp);
-    // Label
-    const labelInp=document.createElement('input');
-    labelInp.type='text';labelInp.className='sound-upload-label-inp';
-    labelInp.value=s.label;labelInp.placeholder='Nom du son';labelInp.maxLength=20;
-    labelInp.addEventListener('input',function(){CUSTOM_SOUNDS[i].label=this.value||('Son '+n);buildSoundPicker();});
-    row.appendChild(labelInp);
-    // File input
-    const fileInp=document.createElement('input');
-    fileInp.type='file';fileInp.accept='audio/*';fileInp.style.display='none';
-    fileInp.addEventListener('change',function(){loadSoundFile(i,this,row,uploadBtn);});
-    row.appendChild(fileInp);
-    // Upload button
-    const uploadBtn=document.createElement('button');
-    uploadBtn.className='sound-upload-file-btn'+(s.url?' done':'');
-    uploadBtn.textContent=s.url?'✅ Chargé':'📁 Choisir';
-    uploadBtn.onclick=()=>fileInp.click();
-    row.appendChild(uploadBtn);
-    // Preview
-    if(s.url){
-      const playBtn=document.createElement('button');
-      playBtn.className='sound-play-btn';playBtn.textContent='▶';playBtn.title='Écouter';
-      playBtn.onclick=()=>playSoundById(n);
-      row.appendChild(playBtn);
-    }
-    list.appendChild(row);
-  });
-}
 
 function openConfig(){
   cfgBuildList();
-  buildSoundUploadUI();
-  buildWheelSegUI();
   show('s-hconfig');
 }
 
@@ -2233,35 +1878,6 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
 // ═══════════════════ PLAYER DATA ═══════════════════
 function handlePData(data){
   switch(data.type){
-    case 'SOUND_ONE':
-      // Single sound received (chunked approach)
-      if(data.idx>=0&&data.idx<CUSTOM_SOUNDS.length){
-        CUSTOM_SOUNDS[data.idx].emoji=data.emoji||CUSTOM_SOUNDS[data.idx].emoji;
-        CUSTOM_SOUNDS[data.idx].label=data.label||CUSTOM_SOUNDS[data.idx].label;
-        CUSTOM_SOUNDS[data.idx].url=data.url||'';
-        // Pre-decode into Web Audio buffer immediately
-        buildSoundPicker();
-        preloadSound(data.idx+1);
-        if(_soundsUnlocked) unlockAllSounds(); // re-unlock with new sound
-      }
-      break;
-    case 'SOUNDS_UPDATE':
-      if(data.sounds&&Array.isArray(data.sounds)){
-        data.sounds.forEach(s=>{
-          if(s.idx>=0&&s.idx<CUSTOM_SOUNDS.length){
-            CUSTOM_SOUNDS[s.idx].emoji=s.emoji||CUSTOM_SOUNDS[s.idx].emoji;
-            CUSTOM_SOUNDS[s.idx].label=s.label||CUSTOM_SOUNDS[s.idx].label;
-            CUSTOM_SOUNDS[s.idx].url=s.url||'';
-          }
-        });
-        buildSoundPicker();
-        // Pre-decode all sounds (only if ctx unlocked by user gesture)
-        CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
-        // If sounds just arrived and none selected yet, auto-select first available
-        const firstSnd=CUSTOM_SOUNDS.findIndex(s=>s.url&&s.url.trim());
-        if(firstSnd>=0&&pSound===1&&!CUSTOM_SOUNDS[0].url) selectSound(firstSnd+1);
-      }
-      break;
     case 'NAME_TAKEN':
       $('jstat').textContent='❌ Ce prénom est déjà pris !';break;
     case 'LOBBY_UPDATE':
@@ -3477,12 +3093,7 @@ function appendChatMsg(){} // chat removed
 // ═══════════════════ KEYBOARD ═══════════════════
 // Unlock AudioContext on first touch/click (required by iOS Safari)
 // Unlock AudioContext on ANY user interaction (required by Chrome/Safari)
-function _unlockAudio(){
-  try{
-    getOrCreateAudioCtx();
-    unlockAllSounds(); // unlock HTMLAudioElements for iOS
-  }catch(e){}
-}
+
 document.addEventListener('touchstart', _unlockAudio, {passive:true});
 document.addEventListener('mousedown',  _unlockAudio);
 document.addEventListener('keydown',    _unlockAudio);
