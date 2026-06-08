@@ -14,13 +14,17 @@
   --gr:#10b981;--gr-d:#065f46;--tx:#1e1b4b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);height:100svh;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden;position:relative;}
 .screen{
   width:100%;max-width:600px;
   position:relative;z-index:2;
   display:flex;flex-direction:column;
-  height:100svh;height:100vh;
+  height:100vh;
+  height:100svh;
+  max-height:100vh;
+  max-height:100svh;
   overflow:hidden;
+  align-items:center;
   padding:0;
 }
 #s-land{z-index:5;}
@@ -46,10 +50,10 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);heig
 .btn.gr:active{box-shadow:0 0 0 var(--gr-d);}
 .btn.big{font-size:clamp(1rem,2.8svh,1.25rem);padding:clamp(11px,2.5svh,15px) 34px;border-radius:16px;}
 /* INPUTS */
-.inp{width:100%;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:14px;font-size:16px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:700;color:var(--tx);outline:none;text-align:center;transition:border-color .2s;margin-bottom:12px;}
+.inp{width:100%;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:max(16px,1.2rem);font-weight:700;color:var(--tx);outline:none;text-align:center;transition:border-color .2s;margin-bottom:12px;}
 .inp:focus{border-color:var(--pu);}
 .inp::placeholder{color:var(--pu-l);}
-.code-inp{font-size:16px;width:100%;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:16px;padding:16px;font-family:'Baloo 2',cursive;font-size:2.5rem;font-weight:900;color:var(--pu);outline:none;text-align:center;letter-spacing:8px;transition:border-color .2s;text-transform:uppercase;margin-bottom:14px;}
+.code-inp{width:100%;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:16px;padding:16px;font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,8vw,2.5rem);font-weight:900;color:var(--pu);outline:none;text-align:center;letter-spacing:8px;transition:border-color .2s;text-transform:uppercase;margin-bottom:14px;}
 .code-inp:focus{border-color:var(--pu);}
 /* ROOM CODE */
 .rc-big{font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,5rem);font-weight:900;color:var(--pu);letter-spacing:10px;background:var(--pu-s);border:4px solid var(--pu-l);border-radius:20px;padding:12px 28px;display:inline-block;box-shadow:0 5px 0 var(--pu-l);margin:10px 0;}
@@ -93,7 +97,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);heig
 .pcard-pa img,.pcard-init{width:100%;height:100%;object-fit:cover;display:block;}
 .pcard-init{display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:clamp(1.4rem,4vw,2.8rem);font-weight:900;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.3);}
 .pcard-nb{background:#fff;padding:6px 8px 5px;text-align:center;flex-shrink:0;}
-.pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.7rem,.85rem,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.7rem,2.5vw,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
 .pcard-votes{display:none;font-family:'Baloo 2',cursive;font-size:clamp(.7rem,.82rem,.95rem);font-weight:900;color:var(--pu);margin-top:1px;}
 /* SCOREBOARD */
 .sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;}
@@ -221,8 +225,10 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);heig
   background:rgba(30,5,70,.95);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   z-index:600;
-  padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));
-  -webkit-overflow-scrolling:touch;}
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));}
 .wheel-title{font-family:'Baloo 2',cursive;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;color:var(--ye);margin-bottom:6px;text-align:center;text-transform:uppercase;letter-spacing:2px;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
 .wheel-sub{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:700;margin-bottom:14px;text-align:center;}
 .wheel-wrap{position:relative;width:min(78vw,300px);height:min(78vw,300px);}
@@ -425,7 +431,7 @@ button.game-only.game-active,
   padding:clamp(24px,5vw,48px) 20px clamp(24px,4vw,40px);
   width:100%;max-width:580px;
   text-align:center;
-}
+;overflow-y:auto;}
 .land-logo-zone{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .land-eyebrow{
   font-family:'Nunito',sans-serif;
@@ -1021,14 +1027,14 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER JOIN — onboarding flow -->
-<div id="s-pjoin" class="screen hidden" style="align-items:center;justify-content:flex-start;">
+<div id="s-pjoin" class="screen hidden" style="justify-content:flex-start;align-items:center;">
   <!-- Logo compact -->
   <div style="text-align:center;padding:max(10px,env(safe-area-inset-top,10px)) 16px 6px;flex-shrink:0;width:100%;">
     <div style="font-family:'Baloo 2',cursive;font-size:clamp(.95rem,4vw,1.5rem);font-weight:900;line-height:1.05;color:#fff;text-shadow:2px 2px 0 var(--pu-d);">QUI EST LA <span style="color:var(--ye);">+</span> GROSSE PUTE DE ROUEN ?</div>
     <div style="font-size:.65rem;color:rgba(255,255,255,.45);font-weight:700;margin-top:2px;">On commence sobre, on finit bourré.</div>
   </div>
   <!-- Card scrollable -->
-  <div class="card" style="flex:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;margin:0 12px max(12px,env(safe-area-inset-bottom,12px));border-radius:20px;">
+  <div class="card" style="width:min(92vw,440px);flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;margin:0 12px max(max(12px,env(safe-area-inset-bottom)),12px);border-radius:20px;">
 
     <!-- STEP 0: code entry (when arrived without ?room) -->
     <div id="step-code" style="display:none;">
@@ -1100,7 +1106,7 @@ button.game-only.game-active,
 
 <!-- PLAYER WAIT -->
 <div id="s-pwait" class="screen hidden" style="justify-content:center;align-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));">
-  <div class="card" style="width:min(92vw,420px);">
+  <div class="card" style="width:min(88vw,400px);">
     <div id="pwait-photo" style="width:64px;height:64px;border-radius:14px;overflow:hidden;margin:0 auto 10px;border:3px solid var(--pu-l);display:none;"><img id="pwait-photo-img" src="" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="m-title" id="p-name-d">...</div>
     <p style="color:var(--gr);font-weight:800;font-size:.95rem;">✓ Connecté au salon</p>
@@ -1111,7 +1117,7 @@ button.game-only.game-active,
 </div>
 
 <!-- PLAYER VOTE -->
-<div id="s-pvote" class="screen hidden" style="align-items:center;">
+<div id="s-pvote" class="screen hidden" style="justify-content:flex-start;align-items:center;">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
   <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%;max-width:440px;margin:0 auto;padding:8px 12px max(60px,env(safe-area-inset-bottom,60px));display:flex;flex-direction:column;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-shrink:0;"><span id="v-player-name" style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;"></span><span id="v-round-num" style="font-size:.72rem;font-weight:800;color:rgba(255,255,255,.35);"></span></div>
@@ -1123,7 +1129,7 @@ button.game-only.game-active,
 <!-- PLAYER VOTED — shows live vote counter -->
 <div id="s-pvoted" class="screen hidden" style="justify-content:center;align-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
-  <div class="card" style="width:min(92vw,420px);">
+  <div class="card" style="width:min(88vw,400px);">
     <span class="big-emoji">🤫</span>
     <div class="m-title">VOTÉ !</div>
     <p id="voted-for-lbl" style="color:var(--pk);font-weight:800;margin-bottom:4px;"></p>
@@ -1139,7 +1145,7 @@ button.game-only.game-active,
 <!-- PLAYER BETWEEN -->
 <div id="s-pbetween" class="screen hidden" style="justify-content:center;align-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));">
   <button onclick="requestSync()" style="position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:6px 18px;font-size:.7rem;font-weight:700;cursor:pointer;z-index:100;-webkit-tap-highlight-color:transparent;">🔄 Resync</button>
-  <div class="card" style="width:min(92vw,420px);">
+  <div class="card" style="width:min(88vw,400px);">
     <span class="big-emoji" id="pbetween-emoji">⏳</span>
     <div class="m-title" id="pbetween-title">MANCHE TERMINÉE</div>
     <p id="pbetween-winner" style="color:var(--pu);font-weight:800;margin-bottom:4px;font-size:1.1rem;"></p>
@@ -1596,10 +1602,11 @@ function onboardStep3(){
 
 function onboardFinish(){
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
-  try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){} // unlock during button gesture
+  if(typeof Peer==='undefined'){toast('❌ Erreur réseau — recharge la page');return;}
+  try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){}
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
-  if(peer){try{peer.destroy();}catch(e){}}
+  if(peer&&!isHost){try{peer.destroy();}catch(e){}}
   peer=new Peer(undefined,{debug:0});
   const to1=setTimeout(()=>{stat.textContent='❌ Impossible de se connecter.';try{peer.destroy();}catch(e){}},CONN_TIMEOUT);
   peer.on('error',err=>{clearTimeout(to1);stat.textContent='❌ '+(err.type==='peer-unavailable'?'Code invalide ou salon introuvable.':err.message);});
@@ -1618,7 +1625,9 @@ function onboardFinish(){
 // playerJoin replaced by onboarding flow (onboardStep1 → onboardStep2 → onboardStep3 → onboardFinish)
 
 // ═══════════════════ HOST OPEN ═══════════════════
-function hostOpen(e){ showGameUI();
+function hostOpen(e){ 
+  if(typeof Peer==='undefined'){toast('❌ Erreur réseau — recharge la page');return;}
+  showGameUI();
   const btn=(e&&e.currentTarget)||document.querySelector('[onclick*="hostOpen"]');
   if(btn){btn.textContent='⏳…';btn.disabled=true;}
   const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -2319,7 +2328,7 @@ function handlePData(data){
       pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateBgCards(pList);
       const vAdj=$('v-adj');
-      if(vAdj){vAdj.textContent=data.adjective;vAdj.style.fontSize=data.adjective.length>30?'clamp(1rem,3.5vw,1.6rem)':'clamp(1.3rem,5vw,2.2rem)';}
+      if(vAdj){vAdj.textContent=data.adjective;vAdj.style.fontSize=data.adjective.length>35?'clamp(.9rem,3svh,1.3rem)':data.adjective.length>20?'clamp(1rem,3.5svh,1.6rem)':'clamp(1.1rem,4svh,1.8rem)';}
       const vrn=$('v-round-num');if(vrn&&data.round)vrn.textContent='Manche '+data.round+(data.total?'/'+data.total:'');
       const vpn=$('v-player-name');if(vpn)vpn.textContent='Ton vote, '+pName;
       buildVoteGrid(data.players);show('s-pvote');break;}
