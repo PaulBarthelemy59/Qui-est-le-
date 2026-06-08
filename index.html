@@ -1424,10 +1424,9 @@ function selectSound(n){
     const b=$('sbtn-'+i);
     if(b) b.classList.toggle('selected',i===n);
   }
-  // Preview — we're inside a click so context can be created now
   try{
     getOrCreateAudioCtx();
-    preloadSound(n);
+    unlockAllSounds(); // iOS: unlock audio elements during gesture
     playSoundById(n);
   }catch(e){}
   // Tell host about updated sound choice
@@ -1436,60 +1435,53 @@ function selectSound(n){
   }
 }
 
-// Pre-decoded audio buffers cache (decoded on first selectSound tap)
-const _audioBuffers = {};
+// Pre-created and iOS-unlocked Audio elements
+const _audioElements = {};
+let _soundsUnlocked = false;
 
 function preloadSound(n){
   const s=CUSTOM_SOUNDS[n-1];
-  if(!s||!s.url||_audioBuffers[n]) return;
-  // Only preload if AudioContext is already running (after user gesture)
-  if(!_audioCtx||_audioCtx.state==='suspended') return;
+  if(!s||!s.url) return;
   try{
-    const ctx=_audioCtx;
-    // Convert base64 data URL to ArrayBuffer
-    const b64=s.url.split(',')[1];
-    const bin=atob(b64);
-    const buf=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
-    ctx.decodeAudioData(buf.buffer,decoded=>{
-      _audioBuffers[n]=decoded;
-    },()=>{});
+    if(!_audioElements[n]){
+      const aud=new Audio(s.url);
+      aud.preload='auto';aud.volume=0.85;
+      _audioElements[n]=aud;
+    }
   }catch(e){}
 }
 
-// Play a sound by its index (1-5), using CUSTOM_SOUNDS URL if set
+// Call this from a direct user gesture to unlock all audio elements on iOS
+function unlockAllSounds(){
+  if(_soundsUnlocked) return;
+  CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
+  // On iOS: must call play() inside gesture handler to unlock the element
+  Object.values(_audioElements).forEach(aud=>{
+    const p=aud.play();
+    if(p&&p.then) p.then(()=>{aud.pause();aud.currentTime=0;}).catch(()=>{});
+  });
+  _soundsUnlocked=true;
+}
+
+// Play a sound by its index (1-5)
 function playSoundById(n){
   const s=CUSTOM_SOUNDS[n-1];
   if(s&&s.url&&s.url.trim()){
     try{
-      const ctx=getAudioCtx(); // null if not yet unlocked
-      if(!ctx){console.warn('[SOUND] AudioContext not ready');return;}
-      // Use pre-decoded buffer if available
-      if(_audioBuffers[n]){
-        const src=ctx.createBufferSource();
-        src.buffer=_audioBuffers[n];
-        const g=ctx.createGain();g.gain.value=0.85;
-        src.connect(g);g.connect(ctx.destination);
-        src.start(ctx.currentTime);
-      } else {
-        // Decode now (first time)
-        const b64=s.url.split(',')[1];
-        const bin=atob(b64);
-        const buf=new Uint8Array(bin.length);
-        for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
-        ctx.decodeAudioData(buf.buffer,decoded=>{
-          _audioBuffers[n]=decoded;
-          const src=ctx.createBufferSource();
-          src.buffer=decoded;
-          const g=ctx.createGain();g.gain.value=0.85;
-          src.connect(g);g.connect(ctx.destination);
-          src.start(ctx.currentTime);
-        },()=>{});
+      preloadSound(n);
+      const aud=_audioElements[n];
+      if(aud){
+        aud.currentTime=0;
+        const p=aud.play();
+        if(p&&p.catch) p.catch(()=>{
+          // If still blocked (iOS never got gesture), try Web Audio fallback
+          _playBase64ViaWebAudio(n,s.url);
+        });
       }
     }catch(e){}
   } else {
-    // Fallback: procedural sound
-    const ctx=getAudioCtx();
+    // Procedural sound fallback
+    const ctx=getAudioCtx();if(!ctx)return;
     const now=ctx.currentTime;
     const fb=[
       ()=>playFart(ctx,now,0.5,70),
@@ -1500,6 +1492,24 @@ function playSoundById(n){
     ];
     (fb[n-1]||fb[0])();
   }
+}
+
+// Web Audio fallback for iOS when HTMLAudioElement is still blocked
+function _playBase64ViaWebAudio(n,url){
+  try{
+    const ctx=getAudioCtx();if(!ctx)return;
+    const b64=url.split(',')[1];
+    const bin=atob(b64);
+    const buf=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+    ctx.decodeAudioData(buf.buffer.slice(0),decoded=>{
+      const src=ctx.createBufferSource();
+      src.buffer=decoded;
+      const g=ctx.createGain();g.gain.value=0.85;
+      src.connect(g);g.connect(ctx.destination);
+      src.start(ctx.currentTime);
+    },()=>{});
+  }catch(e){}
 }
 
 // playVictorySound replaced by playSoundById
@@ -1564,6 +1574,7 @@ function onboardStep3(){
 
 function onboardFinish(){
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
+  try{getOrCreateAudioCtx();unlockAllSounds();}catch(e){} // unlock during button gesture
   pAnonNick=ANON_ANIMALS[0|Math.random()*ANON_ANIMALS.length];
   const stat=$('jstat');stat.textContent='🔄 Connexion…';
   if(peer){try{peer.destroy();}catch(e){}}
@@ -2222,7 +2233,8 @@ function handlePData(data){
         CUSTOM_SOUNDS[data.idx].url=data.url||'';
         // Pre-decode into Web Audio buffer immediately
         buildSoundPicker();
-        preloadSound(data.idx+1); // only runs if ctx already unlocked
+        preloadSound(data.idx+1);
+        if(_soundsUnlocked) unlockAllSounds(); // re-unlock with new sound
       }
       break;
     case 'SOUNDS_UPDATE':
@@ -2360,7 +2372,7 @@ function buildVoteGrid(players){
     btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${p.name}</div>`;
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
-      try{const ctx=getOrCreateAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
+      try{getOrCreateAudioCtx();unlockAllSounds();const ctx=getAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
       if(pConn&&pConn.open)pConn.send({type:'SUBMIT_VOTE',target:p.name});
       show('s-pvoted');
     };
@@ -3453,8 +3465,8 @@ function updateScorePin(){
 // Unlock AudioContext on ANY user interaction (required by Chrome/Safari)
 function _unlockAudio(){
   try{
-    getOrCreateAudioCtx(); // create+unlock context on first user gesture
-    CUSTOM_SOUNDS.forEach((_,i)=>preloadSound(i+1));
+    getOrCreateAudioCtx();
+    unlockAllSounds(); // unlock HTMLAudioElements for iOS
   }catch(e){}
 }
 document.addEventListener('touchstart', _unlockAudio, {passive:true});
