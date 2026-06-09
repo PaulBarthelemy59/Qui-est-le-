@@ -1044,6 +1044,7 @@ button.game-only.game-active,
   </div>
   <!-- Controls — only shown when host sends NEXT_ALLOWED -->
   <div class="rev-controls" id="rev-ctrl" style="display:none;">
+    <button class="btn ye big" id="host-launch-wheel" style="display:none;margin-bottom:8px;width:100%;" onclick="hostLaunchWheel()">🎰 Lancer la roue</button>
     <button class="btn gr big" onclick="playerAskNext()">Manche suivante ➡</button>
   </div>
 </div>
@@ -2181,12 +2182,21 @@ function doReveal(data){
         const lbl=$('rev-winner-lbl');
         const adjLow=adjective.replace(/^Qui est le \+\s*/i,'').replace(/^Qui est la \+\s*/i,'').replace(/^Qui a le \+\s*/i,'').replace(/^Qui a la \+\s*/i,'').replace(/^Qui a l'air le \+\s*/i,'').replace(/^Qui est le -\s*/i,'').replace(/^Qui est celui qui\s*/i,'');
         const w2=adjLow.split(' ').slice(0,6).join(' ');
-        const names=winners.join(' & ');
-        // Phrase custom de la question si définie (via {custom})
-        if(window._revealPhrase){
-          lbl.textContent=window._revealPhrase.replace(/\{nom\}/gi,names).replace(/\{nom_gagnant\}/gi,names);
+        const iWon = pName!=='' && winners.includes(pName);
+        // Si c'est MOI le gagnant → "TU es le +..."
+        let names;
+        if(iWon){
+          names = winners.length>1 ? ('TOI & '+winners.filter(w=>w!==pName).join(' & ')) : 'TOI';
         } else {
-          lbl.textContent='👑 '+names+' est vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
+          names = winners.join(' & ');
+        }
+        if(window._revealPhrase){
+          let phrase=window._revealPhrase.replace(/\{nom\}/gi,names).replace(/\{nom_gagnant\}/gi,names);
+          lbl.textContent=phrase;
+        } else if(iWon && winners.length===1){
+          lbl.textContent='👑 TU es vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
+        } else {
+          lbl.textContent='👑 '+names+(iWon?' êtes':' est')+' vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
         }
         lbl.style.display='block';
         confetti();
@@ -2209,12 +2219,35 @@ function doReveal(data){
         },2200);
       }
 
-      // C'est l'HÔTE qui déclenche et orchestre la roue après le reveal
+      // L'HÔTE voit un bouton pour lancer la roue manuellement (push)
       if(isHost && winners.length>0){
-        pt(()=>startWheelQueue(winners),1400);
+        window._revealWinners=[...winners];
+        pt(()=>{
+          const rc=$('rev-ctrl');
+          if(rc) rc.style.display='block';
+          const wb=$('host-launch-wheel');
+          if(wb){
+            wb.style.display='block';
+            wb.textContent=winners.length>1
+              ? '🎰 Lancer la roue ('+winners.length+' gagnants à tour de rôle)'
+              : '🎰 Lancer la roue pour '+winners[0];
+          }
+        },1200);
+      } else {
+        window._revealWinners=[];
       }
     },650);
   });
+}
+
+// L'hôte clique pour lancer la roue (push aux gagnants à tour de rôle)
+function hostLaunchWheel(){
+  if(!isHost) return;
+  const wb=$('host-launch-wheel');
+  if(wb) wb.style.display='none';
+  const winners=window._revealWinners||[];
+  if(winners.length===0) return;
+  startWheelQueue(winners);
 }
 
 function playerAskNext(){
