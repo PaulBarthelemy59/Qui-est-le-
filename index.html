@@ -1401,10 +1401,22 @@ function handleHConn(conn){
       }
       return;
     }
+    if(data.type==='PLAYER_READY'){
+      // Un joueur a cliqué "Manche suivante" après le reveal
+      if(!window._hReadySet) window._hReadySet=new Set();
+      window._hReadySet.add(conn.peer);
+      const total=Object.keys(hConns).length;
+      // Déclencher si tous les joueurs sont prêts (hRevealed=true = après reveal, c'est normal)
+      if(window._hReadySet.size>=total && hRevealed){
+        window._hReadySet=new Set();
+        setTimeout(()=>hostNext(),600);
+      }
+      return;
+    }
     if(data.type==='WHEEL_TURN'){
-      // Un gagnant-joueur tourne → l'hôte relaie l'angle à tous les autres + l'affiche
+      // Un gagnant-joueur tourne → l'hôte relaie + affiche
       hBcast({type:'WHEEL_TURNING',angle:data.angle});
-      if(!wIsSpinner){ wAngle=data.angle; drawWheel(data.angle); }
+      wAngle=data.angle; drawWheel(data.angle);
       return;
     }
     if(data.type==='WHEEL_RESULT'){
@@ -1692,7 +1704,7 @@ function hostSkipRound(idx){
 
 function hostNext(){
   hQi++;if(hQi>=hQs.length||hQi>=MAX_ROUNDS){hostFinal();return;}
-  hWhoVoted.clear();hVotes={};hRevealed=false;
+  hWhoVoted.clear();hVotes={};hRevealed=false;window._hReadySet=new Set();
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
   hExpectedVoters=Object.keys(hConns).length;
   hAdj=hQs[hQi].q;
@@ -1881,8 +1893,8 @@ function handlePData(data){
       showWheel(data.spinner);
       break;
     case 'WHEEL_TURNING':
-      // L'hôte tourne — les autres suivent l'angle
-      if(!wIsSpinner){ wAngle=data.angle; drawWheel(data.angle); }
+      // Tout le monde suit l'angle (même le spinner désigné quand c'est l'hôte qui tourne en backup)
+      wAngle=data.angle; drawWheel(data.angle);
       break;
     case 'WHEEL_LANDED':
       // L'hôte a fait atterrir — afficher le résultat
@@ -2257,6 +2269,8 @@ function playerAskNext(){
   hideRev();
   const _wo2=$('wheel-ov');if(_wo2)_wo2.style.display='none';
   show('s-pbetween');
+  // Signaler à l'hôte que ce joueur est prêt
+  if(pConn&&pConn.open) pConn.send({type:'PLAYER_READY'});
 }
 
 // ═══════════════════ ROUE DE L'INFORTUNE (réécrite, simple) ═══════════════════
@@ -2284,12 +2298,18 @@ function wheelOpenCurrent(){
 function showWheel(spinner){
   wAngle=0; wSpinning=false;
   wIsSpinner=(spinner===pName && pName!=='');
-  const wt=$('wt'); if(wt)wt.textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
-  const ws=$('ws'); if(ws)ws.textContent=wIsSpinner?'Appuie sur le bouton 👇':'Regarde en direct !';
-  // Bouton "Tourner" : visible pour le spinner. L'hôte le voit AUSSI en backup
-  // (pour débloquer si le gagnant ne réagit pas).
+  const wt=$('wt'); if(wt)wt.textContent=wIsSpinner?`🎰 C'est TON TOUR !`:('🎰 '+spinner+' tourne la roue !');
+  const ws=$('ws'); if(ws)ws.textContent=wIsSpinner?'Lance la roue, tout le monde regarde 👇':'Regarde en direct !';
+  // Bouton "Tourner" : visible pour le spinner (avec texte différent) + hôte en backup
   const canSpin = wIsSpinner || isHost;
-  const sb=$('wspin-btn'); if(sb){sb.style.display=canSpin?'':'none'; sb.disabled=false;}
+  const sb=$('wspin-btn');
+  if(sb){
+    sb.style.display=canSpin?'':'none';
+    sb.disabled=false;
+    // Le gagnant voit un bouton plus engageant
+    sb.textContent=wIsSpinner?'🎰 LANCE LA ROUE !':'🎰 Tourner (backup hôte)';
+    sb.style.fontSize=wIsSpinner?'1.1rem':'0.85rem';
+  }
   const wr=$('w-result'); if(wr)wr.textContent='';
   const nb=$('wnext-btn'); if(nb)nb.style.display='none';
   drawWheel(0);
