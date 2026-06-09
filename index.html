@@ -2304,7 +2304,7 @@ function showWheel(spinner){
   const canSpin = wIsSpinner || isHost;
   const sb=$('wspin-btn');
   if(sb){
-    sb.style.display=canSpin?'':'none';
+    sb.style.display=canSpin?'block':'none';
     sb.disabled=false;
     // Le gagnant voit un bouton plus engageant
     sb.textContent=wIsSpinner?'🎰 LANCE LA ROUE !':'🎰 Tourner (backup hôte)';
@@ -2314,6 +2314,8 @@ function showWheel(spinner){
   const nb=$('wnext-btn'); if(nb)nb.style.display='none';
   drawWheel(0);
   const ov=$('wheel-ov'); if(ov)ov.style.display='flex';
+  // S'assurer que le reveal ne bloque pas les touches sur la roue
+  const rt=$('rev-theatre'); if(rt)rt.style.pointerEvents='none';
 }
 
 // [SPINNER ou HÔTE] Fait tourner la roue
@@ -2396,6 +2398,7 @@ function closeWheelAll(){
 // [TOUS] Ferme l'overlay roue localement
 function closeWheelLocal(){
   const ov=$('wheel-ov'); if(ov)ov.style.display='none';
+  const rt=$('rev-theatre'); if(rt)rt.style.pointerEvents='';
   const rc=$('rev-ctrl'); if(rc && $('rev-theatre') && $('rev-theatre').classList.contains('visible')) rc.style.display='block';
 }
 
