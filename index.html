@@ -1974,11 +1974,10 @@ function runSlotMachine(players, duration, onDone){
   reel.style.display = 'flex';
   qmark.style.transition = 'opacity .3s ease';
 
-  // Build accelerating-then-decelerating frame schedule over ~4 seconds
-  // Starts very fast (~45ms), ends slow (~320ms)
+  // Build accelerating-then-decelerating frame schedule
   const frameDurations = [];
   let total = 0;
-  const TARGET = 4000; // 4 seconds
+  const TARGET = duration || 2500;
   let d = 45;
   while(total < TARGET){
     frameDurations.push(d);
@@ -2130,7 +2129,7 @@ function doReveal(data){
   // 🥁 drum roll synced to the 4s slot machine
 
   // Slot machine runs ~4s, then reveals the winner
-  runSlotMachine(players, 4000, ()=>{
+  runSlotMachine(players, 2500, ()=>{
     clearInterval(window._revealHintTimer||hintTimer);
     window._revealHintTimer=null;
 
@@ -2212,7 +2211,7 @@ function doReveal(data){
 
       // C'est l'HÔTE qui déclenche et orchestre la roue après le reveal
       if(isHost && winners.length>0){
-        pt(()=>startWheelQueue(winners),2800);
+        pt(()=>startWheelQueue(winners),1400);
       }
     },650);
   });
