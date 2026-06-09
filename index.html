@@ -213,7 +213,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .wheel-ov{position:fixed;top:0;left:0;right:0;bottom:0;
   background:rgba(30,5,70,.95);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:600;
+  z-index:1500;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
@@ -817,6 +817,12 @@ button.game-only.game-active,
           <button class="btn" onclick="openConfigDuringGame()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">⚙️ Manches</button>
           <button class="btn" onclick="hostEndGameNow()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">🏁 Terminer</button>
         </div>
+        <!-- Bouton roue — apparaît après le reveal, remplacé par "Manche suivante" après -->
+        <button class="btn ye big" id="btn-launch-wheel"
+          onclick="hostLaunchWheel()"
+          style="display:none;width:100%;margin-top:10px;font-size:1rem;">
+          🎰 Lancer la roue de l'infortune
+        </button>
         <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnh">0</span>/<span id="rth">10</span></div>
       </div>
     </div>
@@ -1688,14 +1694,17 @@ function hostNext(){
   hQi++;if(hQi>=hQs.length||hQi>=MAX_ROUNDS){hostFinal();return;}
   hWhoVoted.clear();hVotes={};hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
-  hExpectedVoters=Object.keys(hConns).length; // snapshot
+  hExpectedVoters=Object.keys(hConns).length;
   hAdj=hQs[hQi].q;
   hRevealPhrase=hQs[hQi].r||'';
   $('rnh').textContent=hQi+1;
   const bfr=$('btn-fr');if(bfr)bfr.disabled=false;
-  const bfn=$('btn-fn');if(bfn)bfn.disabled=wQueue.length>0;
+  const bfn=$('btn-fn');if(bfn)bfn.disabled=false;
+  // Cacher le bouton roue si encore visible
+  const bw=$('btn-launch-wheel');if(bw)bw.style.display='none';
+  window._revealWinners=[];
+  wQueue=[];wAngle=0;wSpinning=false;wIsSpinner=false;
   updateRemainingRounds();
-  // Force all players to transition immediately
   hBcast({type:'FORCE_NEXT'});
   setTimeout(()=>hBcast({type:'START_ROUND',adjective:hAdj,players:hPList()}),600);
 }
@@ -1706,11 +1715,11 @@ function hostForceReveal(){
 }
 
 function hostReveal(){
-  if(hRevealed) return; // prevent double call
+  if(hRevealed) return;
   hRevealed=true;
   const _bfr=$('btn-fr');if(_bfr)_bfr.disabled=true;
   const names=Object.keys(hVotes);
-  if(names.length===0){setTimeout(()=>$("btn-fn").disabled=false,500);return;}
+  if(names.length===0){setTimeout(()=>{const b=$('btn-fn');if(b)b.disabled=false;},500);return;}
   const vvals=Object.values(hVotes);
   const maxV=vvals.length>0?Math.max(...vvals,0):0;
   const winners=maxV>0?names.filter(n=>hVotes[n]===maxV):[];
@@ -1718,19 +1727,31 @@ function hostReveal(){
     hScores[w]=(hScores[w]||0)+1;
     hWinHistory.push({name:w,adjective:hAdj});
   });
-  // Only send new history entries (delta) to reduce payload size
   const historyDelta=hWinHistory.slice(hLastHistoryLen);
   hLastHistoryLen=hWinHistory.length;
+  // Broadcast REVEAL aux joueurs
   hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,revealPhrase:hRevealPhrase,players:hPList(),scores:{...hScores},historyDelta});
-  // Update host's own score pin
   window._revealPhrase=hRevealPhrase||'';
   pScores={...hScores};
   pHistory=[...hWinHistory];
   Object.values(hConns).forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
   updateScorePin();
-  // L'HÔTE voit le reveal lui aussi (et donc le bouton "Lancer la roue")
-  doReveal({votes:{...hVotes},winners,adjective:hAdj,revealPhrase:hRevealPhrase,players:hPList(),scores:{...hScores},historyDelta});
-  setTimeout(()=>{const b=$('btn-fn');if(b)b.disabled=false;},1500);
+  // Stocker les gagnants pour la roue
+  window._revealWinners = winners;
+  // Afficher le bouton roue sur s-host après 1s (laisse le temps de voir les votes)
+  if(winners.length>0){
+    setTimeout(()=>{
+      const b=$('btn-launch-wheel');
+      if(!b) return;
+      b.textContent = winners.length>1
+        ? '🎰 Lancer la roue ('+winners.length+' gagnants)'
+        : '🎰 Lancer la roue pour '+winners[0];
+      b.style.display='block';
+      const fn=$('btn-fn');if(fn)fn.disabled=true;
+    }, 1000);
+  } else {
+    setTimeout(()=>{const b=$('btn-fn');if(b)b.disabled=false;},1500);
+  }
 }
 
 function hostFinal(){
@@ -2213,33 +2234,21 @@ function doReveal(data){
       }
 
       // L'HÔTE voit un bouton pour lancer la roue manuellement (push)
-      if(isHost && winners.length>0){
-        window._revealWinners=[...winners];
-        pt(()=>{
-          const rc=$('rev-ctrl');
-          if(rc) rc.style.display='block';
-          const wb=$('host-launch-wheel');
-          if(wb){
-            wb.style.display='block';
-            wb.textContent=winners.length>1
-              ? '🎰 Lancer la roue ('+winners.length+' gagnants à tour de rôle)'
-              : '🎰 Lancer la roue pour '+winners[0];
-          }
-        },1200);
-      } else {
-        window._revealWinners=[];
-      }
+      // _revealWinners est stocké par hostReveal() directement
     },650);
   });
 }
 
-// L'hôte clique pour lancer la roue (push aux gagnants à tour de rôle)
+// [HÔTE] Bouton "Lancer la roue" sur s-host — cache le bouton et ouvre la roue pour tous
 function hostLaunchWheel(){
   if(!isHost) return;
-  const wb=$('host-launch-wheel');
-  if(wb) wb.style.display='none';
+  const b=$('btn-launch-wheel');
+  if(b) b.style.display='none';
   const winners=window._revealWinners||[];
-  if(winners.length===0) return;
+  if(winners.length===0){
+    const fn=$('btn-fn');if(fn)fn.disabled=false;
+    return;
+  }
   startWheelQueue(winners);
 }
 
