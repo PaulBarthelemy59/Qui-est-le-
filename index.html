@@ -382,8 +382,7 @@ hr.div{border:none;border-top:2px solid var(--pu-s);margin:14px 0;}
 .game-only.game-active{pointer-events:all!important;display:block!important;}
 /* Elements that need flex when active */
 button.game-only.game-active,
-#hmb-btn.game-active,
-#emoji-toggle.game-active{display:flex!important;}
+#hmb-btn.game-active{display:flex!important;}
 
 /* ═══ LANDING INNER LAYOUT ═══ */
 .land-inner{
@@ -553,63 +552,8 @@ button.game-only.game-active,
 .sp-shame{font-size:.6rem;color:var(--pk);font-weight:700;font-style:italic;margin-top:2px;}
 
 /* ═══ EMOJI REACTION BAR ═══ */
-.emoji-toggle{
-  position:fixed;
-  bottom:max(18px,env(safe-area-inset-bottom,18px));
-  right:16px;
-  z-index:1200; /* above everything including score panel (1000) and overlays */
-  width:50px;height:50px;border-radius:50%;
-  background:var(--pu);color:#fff;
-  border:3px solid var(--pu-d);
-  box-shadow:0 5px 0 var(--pu-d),0 8px 20px rgba(0,0,0,.3);
-  display:none;
-  align-items:center;justify-content:center;
-  cursor:pointer;font-size:1.4rem;
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .08s,box-shadow .08s;
-}
-.emoji-toggle:active{transform:translateY(5px);box-shadow:0 0 0 var(--pu-d);}
-.emoji-bar{
-  position:fixed;
-  bottom:max(80px,calc(env(safe-area-inset-bottom,0px) + 76px));
-  right:8px;
-  z-index:1199;
-  display:flex;
-  gap:6px;
-  background:rgba(255,255,255,.97);
-  border:2px solid var(--pu-l);
-  border-radius:50px;
-  padding:7px 12px;
-  box-shadow:0 4px 20px rgba(124,58,237,.3);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  transition:opacity .2s ease,transform .2s ease;
-}
-.emoji-bar.hidden-bar{
-  opacity:0;
-  pointer-events:none;
-  transform:translateY(12px);
-}
-.emoji-btn{
-  width:36px;height:36px;border-radius:50%;border:none;
-  background:none;font-size:1.4rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .1s;padding:0;
-}
-.emoji-btn:active{transform:scale(1.4);}
 
 /* ═══ FLOATING EMOJI ═══ */
-.float-emoji{
-  position:fixed;
-  font-size:2.2rem;
-  pointer-events:none;
-  z-index:1201;
-  animation:floatUp 2.5s ease forwards;
-  user-select:none;
-}
-@keyframes floatUp{
-  0%{opacity:1;transform:translateY(0) scale(1) rotate(var(--rot,0deg));}
   60%{opacity:1;transform:translateY(-180px) scale(1.3) rotate(calc(var(--rot,0deg)*-1));}
   100%{opacity:0;transform:translateY(-300px) scale(.8) rotate(var(--rot,0deg));}
 }
@@ -789,17 +733,6 @@ button.game-only.game-active,
 </div>
 
 <!-- 😂 EMOJI TOGGLE + REACTION BAR -->
-<button class="emoji-toggle game-only" id="emoji-toggle" onclick="toggleEmojiBar(event)">😄</button>
-<div class="emoji-bar hidden-bar" id="emoji-bar">
-  <button class="emoji-btn" onclick="sendFloatEmoji('😂')">😂</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('💀')">💀</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('🔥')">🔥</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('👀')">👀</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('🫵')">🫵</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('🍺')">🍺</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('💅')">💅</button>
-  <button class="emoji-btn" onclick="sendFloatEmoji('🤡')">🤡</button>
-</div>
 <!-- ═══ GLOBAL ANIMATED BACKGROUND (visible on all screens) ═══ -->
 <div class="land-bg" id="global-bg" aria-hidden="true">
   <div class="land-blob b1"></div>
@@ -934,6 +867,11 @@ button.game-only.game-active,
         <button class="btn" style="font-size:.85rem;padding:9px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="$('cfg-add-q').style.display='none'">Annuler</button>
       </div>
     </div>
+
+    <hr class="div">
+    <div id="cfg-count-info" style="font-size:.85rem;font-weight:800;color:var(--pu);text-align:center;margin-bottom:12px;">10 questions sélectionnées · 10 manches seront jouées</div>
+    <button class="btn big ye w-full" onclick="hostLaunchFromConfig()">🚀 Lancer la partie !</button>
+    <button class="btn w-full" style="margin-top:8px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);" onclick="show('s-host')">← Retour au salon</button>
   </div>
 </div>
 
@@ -1124,31 +1062,77 @@ button.game-only.game-active,
 // ════════════════════════════════════════════════════════
 const PREFIXES = ["Qui est le +", "Qui est la +", "Qui a le +", "Qui a la +", "Qui est le -", "Qui a l'air le +"];
 const QUESTIONS = [
-  {p:"Qui est le +", t:"radin quand c'est son tour de payer"},
-  {p:"Qui est le +", t:"susceptible quand on le vanne"},
-  {p:"Qui est le +", t:"mauvais perdant sur un jeu de société"},
-  {p:"Qui est le +", t:"capable d'arriver en retard à son propre mariage"},
-  {p:"Qui est le +", t:"gaffeur, lâche des secrets sans faire exprès"},
-  {p:"Qui est le +", t:"flambeur mais n'a plus une thune le 5 du mois"},
-  {p:"Qui est le +", t:"capable d'oublier ses clés à l'intérieur"},
-  {p:"Qui est le +", t:"prêt à survivre longtemps sur une île déserte"},
-  {p:"Qui est le +", t:"râleur dès le matin sans café"},
-  {p:"Qui est le +", t:"gros mytho quand il raconte une anecdote"},
-  {p:"Qui est le +", t:"accro à son téléphone même au ciné"},
-  {p:"Qui est le +", t:"capable de manger seul toute une pizza sans honte"},
-  {p:"Qui est le +", t:"dramatique pour une simple égratignure"},
-  {p:"Qui est le +", t:"toujours en retard mais jamais gêné"},
-  {p:"Qui est le +", t:"charmeur quand il veut quelque chose"},
-  {p:"Qui est le +", t:"malin pour s'éclipser quand il y a la vaisselle"},
-  {p:"Qui est le +", t:"nostalgique du « avant c'était mieux »"},
-  {p:"Qui est le +", t:"convaincu d'avoir toujours raison"},
-  {p:"Qui a le +", t:"plus gros culot pour roter en public"},
-  {p:"Qui est le +", t:"probable à pleurer devant un Disney"},
-  {p:"Qui est celui qui", t:"parle le plus fort dans un resto"},
-  {p:"Qui est le +", t:"capable de zapper une soirée pour une série"},
-  {p:"Qui est le +", t:"premier à s'endormir à une soirée"},
-  {p:"Qui est le +", t:"capable de mentir avec le sourire"},
-  {p:"Qui est le +", t:"accro aux réseaux dès le réveil"}
+  {p:"Qui est le +", t:"susceptible de parler en voix de bébé avec sa meuf"},
+  {p:"Qui est le +", t:"débile, QI négatif (100 + 60 ça fait 200)"},
+  {p:"Qui est le +", t:"super sympa"},
+  {p:"Qui", t:"pue de la bite même après la douche"},
+  {p:"Qui est le +", t:"inculte (le vide astral)"},
+  {p:"Qui est le +", t:"mieux sapé / a le plus de flow"},
+  {p:"Qui est le +", t:"mauvais en alcool"},
+  {p:"Qui est le +", t:"en chien (branle-toi ASAP le bwo)"},
+  {p:"Qui est le +", t:"patient"},
+  {p:"Qui est le +", t:"aigri de service / rabat-joie"},
+  {p:"Qui est le +", t:"capable de se la prendre dans le petit"},
+  {p:"Qui est le +", t:"d'extrême droite (nazi)"},
+  {p:"Qui est le +", t:"beau (trop beau trop merveilleux)"},
+  {p:"Qui est le -", t:"bien sapé"},
+  {p:"Qui est le +", t:"têtu / borné"},
+  {p:"Qui est le +", t:"fan de porno gay"},
+  {p:"Qui a la", t:"malveillance max"},
+  {p:"Qui", t:"dit que de la merde (allez ferme ta gueule)"},
+  {p:"Qui est le +", t:"courageux"},
+  {p:"Qui est le +", t:"épanoui (je suis épanoui)"},
+  {p:"Qui est le +", t:"susceptible de s'être déjà branlé aujourd'hui"},
+  {p:"Qui est le +", t:"incompétent"},
+  {p:"Qui est le +", t:"radin"},
+  {p:"Qui a une", t:"hygiène de cloporte (hygiène de clébard)"},
+  {p:"Qui a des", t:"poumons en goudron (pompier)"},
+  {p:"Qui est le +", t:"hétéro"},
+  {p:"Qui est le +", t:"casse-couilles"},
+  {p:"Qui a le", t:"rire le plus contagieux"},
+  {p:"Qui est le +", t:"misogyne"},
+  {p:"Qui", t:"pue de la gueule en sah (t'as ramené ta merde avec toi)"},
+  {p:"Qui", t:"pense être plus malin que les autres"},
+  {p:"Qui est le +", t:"drôle"},
+  {p:"Qui est le +", t:"peureux"},
+  {p:"Qui est le +", t:"susceptible"},
+  {p:"Qui est le +", t:"tueur en série (psychopathe)"},
+  {p:"Qui est le +", t:"loyal / fidèle"},
+  {p:"Qui est le +", t:"canard"},
+  {p:"Qui est le +", t:"woke"},
+  {p:"Qui est le +", t:"condescendant"},
+  {p:"Qui a un", t:"palais de doberman (mini burger)"},
+  {p:"Qui est le +", t:"ingrat"},
+  {p:"Qui est le +", t:"taré (bébé secoué)"},
+  {p:"Qui est le +", t:"homo"},
+  {p:"Qui est le +", t:"intelligent (j'suis trop intelligent potatoz)"},
+  {p:"Qui est le +", t:"moche"},
+  {p:"Qui est le +", t:"coureur de jupons"},
+  {p:"Qui est le +", t:"pleurnicheur / passe son temps à se plaindre"},
+  {p:"Qui a le +", t:"d'auto-dérision / le moins susceptible"},
+  {p:"Qui est le +", t:"généreux"},
+  {p:"Qui a", t:"l'ex la plus moche"},
+  {p:"Qui est le +", t:"coupeur de parole"},
+  {p:"Qui est le +", t:"naïf / crédule"},
+  {p:"Qui a la", t:"plus petite bite (fah)"},
+  {p:"Qui est le +", t:"sage"},
+  {p:"Qui est le +", t:"vénal (kiffe trop la thune)"},
+  {p:"Qui est le +", t:"susceptible de s'être mis un doigt dans le cul pour le kiff"},
+  {p:"Qui est le +", t:"honnête"},
+  {p:"Qui est le +", t:"mythomane professionnel"},
+  {p:"Qui est le +", t:"poissard légendaire"},
+  {p:"Qui est le +", t:"assisté respiratoire (réveille-toi srx)"},
+  {p:"Qui est le +", t:"vulgaire"},
+  {p:"Qui a la", t:"plus grosse estime de soi / le plus d'ego"},
+  {p:"Qui est le +", t:"colérique"},
+  {p:"Qui est le +", t:"vieux mentalement"},
+  {p:"Qui est le +", t:"raciste"},
+  {p:"Qui est le +", t:"vicelard"},
+  {p:"Qui est le +", t:"bienveillant"},
+  {p:"Qui est le +", t:"alcoolique"},
+  {p:"Qui est le +", t:"fatigué h24"},
+  {p:"Qui", t:"en a le plus rien à foutre de ce que les gens pensent de lui"},
+  {p:"Qui est le +", t:"désagréable avec les inconnus"}
 ];
 
 // ════════════════════════════════════════════════
@@ -1421,11 +1405,7 @@ function handleHConn(conn){
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
       return;
     }
-    if(data.type==='EMOJI_REACT'){
-      hBcast({type:'EMOJI_REACT',emoji:data.emoji});
-      spawnFloatEmoji(data.emoji);
-      return;
-    }
+
     if(data.type==='DEATH_SPIN'){
       hBcast({type:'DEATH_SPIN',angle:data.angle});
       return;
@@ -1942,8 +1922,6 @@ function handlePData(data){
         show('s-pbetween');
       }
       break;
-    case 'EMOJI_REACT':
-      spawnFloatEmoji(data.emoji);break;
     case 'CHAT':
       appendChatMsg(data.nick,data.msg);
       // chatUnread removed
@@ -2668,39 +2646,6 @@ function escHtml(s){
 // Show chat nick once player is connected
 
 // ═══════════════════ 😂 EMOJI REACTIONS ═══════════════════
-let emojiBarOpen = false;
-
-function toggleEmojiBar(e){
-  if(e) e.stopPropagation();
-  emojiBarOpen=!emojiBarOpen;
-  const bar=$('emoji-bar');
-  if(bar) bar.classList.toggle('hidden-bar',!emojiBarOpen);
-}
-
-function sendFloatEmoji(emoji){
-  // Show locally
-  spawnFloatEmoji(emoji);
-  // Broadcast to all via peer
-  if(isHost){
-    hBcast({type:'EMOJI_REACT',emoji});
-  } else if(pConn&&pConn.open){
-    pConn.send({type:'EMOJI_REACT',emoji});
-  }
-  // Auto-close bar after sending
-
-}
-
-function spawnFloatEmoji(emoji){
-  const el=document.createElement('div');
-  el.className='float-emoji';
-  el.textContent=emoji;
-  // Random horizontal position and rotation
-  const x=10+Math.random()*80; // % of viewport width
-  const rot=(-15+Math.random()*30)+'deg';
-  el.style.cssText=`left:${x}vw;bottom:140px;--rot:${rot};`;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),2600);
-}
 
 // Update cfg info when slider changes
 document.addEventListener('input',e=>{
