@@ -815,7 +815,6 @@ button.game-only.game-active,
           <button class="btn pk" id="btn-fr" onclick="hostForceReveal()" style="font-size:.88rem;padding:9px 16px;">💥 Forcer le reveal</button>
           <button class="btn gr" id="btn-fn" onclick="hostNext()" style="font-size:.88rem;padding:9px 16px;" disabled>⏭ Manche suivante</button>
           <button class="btn" onclick="openConfigDuringGame()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">⚙️ Manches</button>
-          <button class="btn" onclick="hostSkipSpinner()" id="btn-skip-spin" style="font-size:.88rem;padding:9px 16px;display:none;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">⏭ Passer roue</button>
           <button class="btn" onclick="hostEndGameNow()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">🏁 Terminer</button>
         </div>
         <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnh">0</span>/<span id="rth">10</span></div>
@@ -1059,9 +1058,7 @@ button.game-only.game-active,
   </div>
   <button class="btn ye big" id="wspin-btn" onclick="spinWheel()" style="margin-top:18px;">🎰 Tourner !</button>
   <div class="wheel-result" id="w-result"></div>
-  <button class="btn" id="wdone-btn" style="display:none;margin-top:8px;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 3px 0 rgba(0,0,0,.3);" onclick="wheelNext()">✅ OK !</button>
-  <!-- Close button — visible for EVERYONE at all times -->
-  <button class="btn" id="wdismiss-btn" style="margin-top:8px;background:transparent;color:rgba(255,255,255,.35);border-color:rgba(255,255,255,.12);box-shadow:none;font-size:.78rem;padding:7px 14px;" onclick="anyoneDismissWheel()">✕ Fermer la roue</button>
+  <button class="btn gr big" id="wnext-btn" style="display:none;margin-top:12px;width:100%;" onclick="wheelNextSpinner()">➡ Suivant</button>
 </div>
 
 <script>
@@ -1398,19 +1395,18 @@ function handleHConn(conn){
       }
       return;
     }
-    if(data.type==='WHEEL_SPIN'){
-      // Relay spin event to all other players so they see the wheel turning
-      hBcast({type:'WHEEL_SPINNING',angle:data.angle,spinner:data.spinner});
+    if(data.type==='WHEEL_TURN'){
+      // Un gagnant-joueur tourne → l'hôte relaie l'angle à tous les autres + l'affiche
+      hBcast({type:'WHEEL_TURNING',angle:data.angle});
+      if(!wIsSpinner){ wAngle=data.angle; drawWheel(data.angle); }
       return;
     }
     if(data.type==='WHEEL_RESULT'){
-      // Relay result to all
-      hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
-      return;
-    }
-    if(data.type==='WHEEL_DONE'){
-      // Un gagnant a fini de tourner — l'hôte fait avancer la queue
-      wheelAdvance();
+      // Un gagnant-joueur a fait atterrir → l'hôte relaie + affiche le résultat + montre "Suivant"
+      hBcast({type:'WHEEL_LANDED',segment:data.segment,angle:data.angle,spinner:data.spinner});
+      wAngle=data.angle; drawWheel(data.angle);
+      const seg=WS.find(s=>s.l===data.segment)||{l:data.segment,fun:''};
+      wheelShowResult(seg);
       return;
     }
 
@@ -1860,28 +1856,23 @@ function handlePData(data){
       updateScorePin();
       doReveal(data);break;
     case 'WHEEL_OPEN':
-      // L'hôte demande à tout le monde d'ouvrir la roue pour le spinner désigné
-      openWheelFor(data.spinner);
+      // L'hôte ouvre la roue pour le spinner désigné
+      showWheel(data.spinner);
       break;
-    case 'WHEEL_SPINNING':
-      // spectateurs voient la roue tourner en temps réel
-      if(data.spinner!==pName) updateWheelDisplay(data.angle,data.spinner);
+    case 'WHEEL_TURNING':
+      // L'hôte tourne — les autres suivent l'angle
+      if(!wIsSpinner){ wAngle=data.angle; drawWheel(data.angle); }
       break;
     case 'WHEEL_LANDED':
-      if(data.spinner!==pName) spectatorWheelLanded(data.segment,data.spinner);
+      // L'hôte a fait atterrir — afficher le résultat
+      if(!wIsSpinner){
+        wAngle=data.angle; drawWheel(data.angle);
+        const seg=WS.find(s=>s.l===data.segment)||{l:data.segment,fun:''};
+        wheelShowResult(seg);
+      }
       break;
-    case 'WHEEL_QUEUE_DONE':
-      // Fin de toutes les roues — fermer et réafficher le bouton manche suivante
-      if(isHost){const bfn=$('btn-fn');if(bfn)bfn.disabled=false;}
-      setTimeout(()=>{
-        const ov=$('wheel-ov');if(ov)ov.style.display='none';
-        const rc=$('rev-ctrl');
-        if(rc&&$('rev-theatre')&&$('rev-theatre').classList.contains('visible'))rc.style.display='block';
-      },1800);
-      break;
-    case 'WHEEL_NEXT':
-      // Passe au spinner suivant — tout le monde rouvre pour le nouveau
-      openWheelFor(data.nextSpinner);
+    case 'WHEEL_CLOSE':
+      closeWheelLocal();
       break;
     case 'SHAME_UPDATE':
       // Show hall of shame banner on player screen
@@ -2259,161 +2250,124 @@ function playerAskNext(){
   show('s-pbetween');
 }
 
-// ═══════════════════ WHEEL QUEUE SYSTEM ═══════════════════
-// wQueue = list of winner names to spin in order
-// current spinner = wQueue[0]
-// when done: wQueue.shift(), if more → next, else close overlay
+// ═══════════════════ ROUE DE L'INFORTUNE (réécrite, simple) ═══════════════════
+// État : wQueue = liste des gagnants à faire tourner, dans l'ordre.
+// L'HÔTE orchestre tout. Les joueurs ne font qu'afficher ce que l'hôte dit.
 
+// [HÔTE] Lance la séquence de roue après avoir cliqué le bouton
 function startWheelQueue(winners){
-  // Appelée uniquement par l'HÔTE après le reveal. L'hôte orchestre tout.
+  if(!isHost) return;
   wQueue=[...winners];
-  wAngle=0;wSpinning=false;
-  if(wQueue.length===0){
-    const bfn=$('btn-fn');if(bfn)bfn.disabled=false;
-    return;
-  }
-  // L'hôte ouvre sa propre roue ET dit à tout le monde d'ouvrir
-  openWheelFor(wQueue[0]);
-  if(isHost) hBcast({type:'WHEEL_OPEN',spinner:wQueue[0]});
+  if(wQueue.length===0){ closeWheelAll(); return; }
+  wheelOpenCurrent();
 }
 
-// Ouvre l'overlay roue chez n'importe qui, en désignant qui tourne
-function openWheelFor(spinner){
-  wAngle=0;wSpinning=false;
+// [HÔTE] Ouvre la roue pour le gagnant courant (wQueue[0]) chez tout le monde
+function wheelOpenCurrent(){
+  if(!isHost) return;
+  const spinner=wQueue[0];
+  wAngle=0; wSpinning=false;
+  hBcast({type:'WHEEL_OPEN',spinner:spinner});
+  showWheel(spinner);   // l'hôte affiche aussi
+}
+
+// [TOUS] Affiche l'overlay roue, désigne qui tourne
+function showWheel(spinner){
+  wAngle=0; wSpinning=false;
   wIsSpinner=(spinner===pName && pName!=='');
-  const wt=$('wt'),ws=$('ws');
-  if(wt)wt.textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
-  if(ws)ws.textContent=wIsSpinner?'Tu as été désigné(e) !':'Regarde en direct !';
-  const sb=$('wspin-btn');if(sb)sb.style.display=wIsSpinner?'':'none';
-  if(sb)sb.disabled=false;
-  const db=$('wdone-btn');if(db)db.style.display='none';
-  const wr=$('w-result');if(wr)wr.textContent='';
-  drawWheel(wAngle);
-  const ov=$('wheel-ov');if(ov)ov.style.display='flex';
-  // Bouton skip visible seulement pour l'hôte (au cas où le gagnant est déconnecté)
-  const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display=isHost?'':'none';
+  const wt=$('wt'); if(wt)wt.textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
+  const ws=$('ws'); if(ws)ws.textContent=wIsSpinner?'Appuie sur le bouton 👇':'Regarde en direct !';
+  // Bouton "Tourner" : visible pour le spinner. L'hôte le voit AUSSI en backup
+  // (pour débloquer si le gagnant ne réagit pas).
+  const canSpin = wIsSpinner || isHost;
+  const sb=$('wspin-btn'); if(sb){sb.style.display=canSpin?'':'none'; sb.disabled=false;}
+  const wr=$('w-result'); if(wr)wr.textContent='';
+  const nb=$('wnext-btn'); if(nb)nb.style.display='none';
+  drawWheel(0);
+  const ov=$('wheel-ov'); if(ov)ov.style.display='flex';
 }
 
-function hostSkipSpinner(){
-  if(wQueue.length===0) return;
-  const skipped=wQueue[0];
-  toast('⏭ '+skipped+' passé');
-  wheelNext();
-}
-
-// Conservée pour compat — redirige vers openWheelFor
-
+// [SPINNER ou HÔTE] Fait tourner la roue
 function spinWheel(){
-  if(wSpinning||!wIsSpinner)return;
+  if(wSpinning) return;
+  if(!wIsSpinner && !isHost) return;
   wSpinning=true;
-  $('wspin-btn').disabled=true;$('w-result').textContent='';
+  const sb=$('wspin-btn'); if(sb)sb.disabled=true;
   const totalRot=2*Math.PI*(6+Math.random()*6);
-  const dur=4000+Math.random()*1000;
-  // 🔊 Son de roue synchronisé avec la durée réelle
-  const t0=performance.now(),a0=wAngle;
+  const dur=4000+Math.random()*800;
+  const t0=performance.now(), a0=wAngle;
+  let lastBcast=0;
   function frame(now){
     const el=now-t0;
     if(el>=dur){
       wAngle=(a0+totalRot)%(2*Math.PI);
       drawWheel(wAngle);
-      // Determine winning segment — pointer at TOP = -PI/2 in canvas coords
       const ptr=((-Math.PI/2 - wAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
       const idx=Math.floor(ptr/ARC)%WS.length;
       const seg=WS[idx];
-      // Broadcast result
+      wSpinning=false;
+      // Annonce le résultat à l'hôte (qui relaie) ou directement si on est l'hôte
       if(isHost){
-        hBcast({type:'WHEEL_LANDED',segment:seg.l,spinner:pName});
+        hBcast({type:'WHEEL_LANDED',segment:seg.l,angle:wAngle,spinner:pName});
+        wheelShowResult(seg);
       } else if(pConn&&pConn.open){
-        pConn.send({type:'WHEEL_RESULT',segment:seg.l,spinner:pName});
+        pConn.send({type:'WHEEL_RESULT',segment:seg.l,angle:wAngle,spinner:pName});
+        wheelShowResult(seg);
       }
-      const wFun=seg.fun||seg.l;
-      $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+seg.l+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun+'</div>';
-      $('wspin-btn').style.display='none';
-      // Seul l'hôte orchestre l'avancement
-      $('wdone-btn').style.display=isHost?'':'none';
-      wSpinning=false;return;
+      return;
     }
-    const progress=el/dur;
-    const eased=1-Math.pow(1-progress,3); // ease-out cubic
-    const cur=(a0+totalRot*eased)%(2*Math.PI);
-    wAngle=cur;
-    drawWheel(cur);
-    // Broadcast angle for spectators — throttled to 15fps
-    const nowMs=performance.now();
-    if(!window._wLastBcast||nowMs-window._wLastBcast>66){
-      window._wLastBcast=nowMs;
-      if(isHost){
-        hBcast({type:'WHEEL_SPINNING',angle:cur,spinner:pName});
-      } else if(pConn&&pConn.open){
-        pConn.send({type:'WHEEL_SPIN',angle:cur,spinner:pName});
-      }
+    const eased=1-Math.pow(1-el/dur,3);
+    wAngle=(a0+totalRot*eased)%(2*Math.PI);
+    drawWheel(wAngle);
+    if(now-lastBcast>66){
+      lastBcast=now;
+      if(isHost) hBcast({type:'WHEEL_TURNING',angle:wAngle});
+      else if(pConn&&pConn.open) pConn.send({type:'WHEEL_TURN',angle:wAngle});
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
 
-// Appelée quand on clique "OK !" après que la roue a atterri
-function wheelNext(){
+// [TOUS] Affiche le résultat de la roue + le bouton Suivant (hôte)
+function wheelShowResult(seg){
+  const wr=$('w-result');
+  const fun=seg.fun||seg.l;
+  if(wr)wr.innerHTML='<div style="font-size:1.1rem;font-weight:900;">👉 '+seg.l+'</div><div style="font-size:.82rem;color:rgba(255,255,255,.7);margin-top:4px;font-style:italic;">'+fun+'</div>';
+  const sb=$('wspin-btn'); if(sb)sb.style.display='none';
+  // L'hôte voit le bouton pour passer au suivant / fermer
   if(isHost){
-    // L'hôte fait avancer la queue directement
-    wheelAdvance();
-  } else if(pConn&&pConn.open){
-    // Un joueur-gagnant signale à l'hôte qu'il a fini
-    pConn.send({type:'WHEEL_DONE'});
-    // Masque son bouton en attendant la suite
-    const db=$('wdone-btn');if(db)db.style.display='none';
-    const wr=$('w-result');if(wr)wr.textContent='⏳ …';
+    const nb=$('wnext-btn');
+    if(nb){
+      nb.style.display='';
+      nb.textContent=(wQueue.length>1)?'➡ Gagnant suivant':'✅ Terminer';
+    }
   }
 }
 
-// Logique d'avancement de la queue — HÔTE UNIQUEMENT
-function wheelAdvance(){
+// [HÔTE] Passe au gagnant suivant ou ferme tout
+function wheelNextSpinner(){
   if(!isHost) return;
   wQueue.shift();
-  wAngle=0;wSpinning=false;
-  if(wQueue.length===0){
-    // Toutes les roues terminées
-    hBcast({type:'WHEEL_QUEUE_DONE'});
-    const bfn=$('btn-fn');if(bfn)bfn.disabled=false;
-    const ov=$('wheel-ov');if(ov)ov.style.display='none';
-    const revCtrl=$('rev-ctrl');if(revCtrl)revCtrl.style.display='block';
+  if(wQueue.length>0){
+    wheelOpenCurrent();
   } else {
-    // Spinner suivant — tout le monde rouvre
-    hBcast({type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
-    openWheelFor(wQueue[0]);
+    closeWheelAll();
   }
 }
 
-// Spectator updates
-function updateWheelDisplay(angle,spinner){
-  wAngle=angle;
-  const ov=$('wheel-ov');
-  if(ov.style.display!=='flex'){
-    $('wt').textContent='🎰 '+spinner+" tourne la roue de l'infortune.";
-    $('ws').textContent='Regarde en direct !';
-    $('wspin-btn').style.display='none';
-    $('wdone-btn').style.display='none';
-    $('w-result').textContent='';
-    ov.style.display='flex';
-  }
-  drawWheel(angle);
+// [HÔTE] Ferme la roue partout et réaffiche le contrôle manche
+function closeWheelAll(){
+  if(!isHost) return;
+  hBcast({type:'WHEEL_CLOSE'});
+  closeWheelLocal();
+  const bfn=$('btn-fn'); if(bfn)bfn.disabled=false;
 }
 
-function spectatorWheelLanded(segment,spinner){
-  const wFun2=WS.find(s=>s.l===segment)?.fun||'Bonne chance 😈';
-  const wr=$('w-result');
-  if(wr)wr.innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+segment+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun2+'</div>';
-  const wt=$('wt');if(wt)wt.textContent='🎰 '+spinner+' a eu : '+segment;
-  // L'hôte voit le bouton OK pour faire avancer la queue (il orchestre)
-  if(isHost){const db=$('wdone-btn');if(db)db.style.display='';}
-}
-
-function anyoneDismissWheel(){
-  const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='none';
-  do{const _elt=$('wheel-ov');if(_elt)_elt.style.display='none';}while(0);
-  const rc=$('rev-ctrl');
-  if(rc) rc.style.display='block';
+// [TOUS] Ferme l'overlay roue localement
+function closeWheelLocal(){
+  const ov=$('wheel-ov'); if(ov)ov.style.display='none';
+  const rc=$('rev-ctrl'); if(rc && $('rev-theatre') && $('rev-theatre').classList.contains('visible')) rc.style.display='block';
 }
 
 // ═══════════════════ DRAW WHEEL ═══════════════════
