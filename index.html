@@ -1002,6 +1002,7 @@ button.game-only.game-active,
   <div class="card" style="max-width:700px;margin:0 auto;">
     <div id="go-final-winner"></div>
     <ul class="sb-list" id="go-sb"></ul>
+    <button class="btn pk big" id="host-launch-death" style="display:none;margin-top:14px;width:100%;" onclick="hostLaunchDeathWheel()">☠️ Lancer la Roue de l'Enfer</button>
     <div id="go-death-wheel-section" style="display:none;">
       <div class="death-wheel-banner">
         <div class="death-wheel-title">☠️ LA ROUE ABSOLUE DE LA MORT</div>
@@ -1184,9 +1185,6 @@ function stripPrefix(adj){
 const $=id=>document.getElementById(id);
 
 // Helper pour modifier un élément en toute sécurité
-function setElStyle(id,prop,val){const e=$(id);if(e)e.style[prop]=val;}
-function addElClass(id,cls){const e=$(id);if(e)e.classList.add(cls);}
-function remElClass(id,cls){const e=$(id);if(e)e.classList.remove(cls);}
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));const el=$(id);if(el)el.classList.remove('hidden');}
@@ -1278,10 +1276,6 @@ function handlePhoto(e){
 // Play a sound by its index (1-5)
 
 // Web Audio fallback for iOS when HTMLAudioElement is still blocked
-function _playBase64ViaWebAudio(n,url){
-  try{
-  }catch(e){}
-}
 
 // ═══════════════════ ONBOARDING STEPS ═══════════════════
 
@@ -1411,6 +1405,11 @@ function handleHConn(conn){
     if(data.type==='WHEEL_RESULT'){
       // Relay result to all
       hBcast({type:'WHEEL_LANDED',segment:data.segment,spinner:data.spinner});
+      return;
+    }
+    if(data.type==='WHEEL_DONE'){
+      // Un gagnant a fini de tourner — l'hôte fait avancer la queue
+      wheelAdvance();
       return;
     }
 
@@ -1621,26 +1620,6 @@ function openConfigDuringGame(){
   updateRemainingRounds();
 }
 
-function hostSyncPlayer(conn){
-  if(!conn||!conn.open) return;
-  try{
-    if(hQi<0){
-      // Game not started yet
-      conn.send({type:'LOBBY_UPDATE',players:hPListMeta()});
-    } else if(hRevealed){
-      // Mid-reveal or between rounds
-      conn.send({type:'FORCE_NEXT'});
-    } else {
-      // Active voting round — resend START_ROUND
-      conn.send({type:'START_ROUND',adjective:hAdj,players:hPList()});
-      // If player already voted, tell them
-      const p=hConns[conn.peer];
-      if(p&&hWhoVoted.has(conn.peer)){
-        conn.send({type:'ALREADY_VOTED',done:hWhoVoted.size,total:Object.keys(hConns).length});
-      }
-    }
-  }catch(e){}
-}
 function hostEndGameNow(){
   if(!confirm('Terminer la partie maintenant et afficher le classement final ?')) return;
   hQi=MAX_ROUNDS; // Force end
@@ -1764,28 +1743,6 @@ function hostFinal(){
 }
 
 // ════ HALL OF SHAME BANNER ════
-function updateShameScroll(){
-  const wrap=$('shame-scroll-wrap');
-  const inner=$('shame-scroll-inner');
-  if(!wrap||!inner) return;
-  if(!hWinHistory||hWinHistory.length===0){wrap.style.display='none';return;}
-  wrap.style.display='block';
-  // Build scrolling text from win history
-  const items=hWinHistory.map(h=>{
-    const adj=stripPrefix(h.adjective)||h.adjective||'?';
-    return `🏆 ${h.name} est le + ${adj}`;
-  });
-  // Repeat to fill space
-  const txt=items.join('  •  ')+'  •  '+items.join('  •  ');
-  inner.textContent=txt;
-  // Reset animation
-  inner.classList.add('paused');
-  void inner.offsetWidth; // force reflow
-  inner.classList.remove('paused');
-  // Adjust speed: faster with more items
-  const dur=Math.max(12,items.length*4);
-  inner.style.animationDuration=dur+'s';
-}
 
 // ═══════════════════════════════════════════════════════
 // 🧪 MODE DÉMO — simulation locale sans PeerJS
@@ -1899,32 +1856,30 @@ function handlePData(data){
       if(data.players) data.players.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateScorePin();
       doReveal(data);break;
+    case 'WHEEL_OPEN':
+      // L'hôte demande à tout le monde d'ouvrir la roue pour le spinner désigné
+      openWheelFor(data.spinner);
+      break;
     case 'WHEEL_SPINNING':
-      // spectators see the wheel spinning in real-time
+      // spectateurs voient la roue tourner en temps réel
       if(data.spinner!==pName) updateWheelDisplay(data.angle,data.spinner);
       break;
     case 'WHEEL_LANDED':
       if(data.spinner!==pName) spectatorWheelLanded(data.segment,data.spinner);
       break;
     case 'WHEEL_QUEUE_DONE':
-      // Re-enable host next button
+      // Fin de toutes les roues — fermer et réafficher le bouton manche suivante
       if(isHost){const bfn=$('btn-fn');if(bfn)bfn.disabled=false;}
       setTimeout(()=>{
         const ov=$('wheel-ov');if(ov)ov.style.display='none';
         const rc=$('rev-ctrl');
         if(rc&&$('rev-theatre')&&$('rev-theatre').classList.contains('visible'))rc.style.display='block';
-      },2000);
+      },1800);
       break;
-    case 'WHEEL_NEXT':{
-      if(data.nextSpinner!==pName){
-        const wt2=$('wt'),ws2=$('ws'),wr=$('w-result');
-        if(wt2)wt2.textContent='🎰 '+data.nextSpinner+' tourne la roue !';
-        if(ws2)ws2.textContent='Regarde en direct !';
-        $('wspin-btn').style.display='none';
-        $('wdone-btn').style.display='none';
-        if(wr)wr.textContent='';
-      }
-      break;}
+    case 'WHEEL_NEXT':
+      // Passe au spinner suivant — tout le monde rouvre pour le nouveau
+      openWheelFor(data.nextSpinner);
+      break;
     case 'SHAME_UPDATE':
       // Show hall of shame banner on player screen
       showPlayerShame(data.name, data.adj);
@@ -1946,8 +1901,7 @@ function handlePData(data){
       break;
     case 'CHAT':
       appendChatMsg(data.nick,data.msg);
-      // chatUnread removed
-      break;
+          break;
     case 'DEATH_SPIN':
       // Spectators see death wheel spinning
       if(!dIsSpinner){
@@ -1961,6 +1915,9 @@ function handlePData(data){
       if(dr) dr.textContent='☠️ '+data.segment;
       break;
     }
+    case 'DEATH_WHEEL_OPEN':
+      showDeathWheelSection(data.champion);
+      break;
     case 'GAME_OVER':
       clearPTimers();
       if(data.scores) pScores=data.scores;
@@ -2253,7 +2210,8 @@ function doReveal(data){
         },2200);
       }
 
-      if(iAmWinner){
+      // C'est l'HÔTE qui déclenche et orchestre la roue après le reveal
+      if(isHost && winners.length>0){
         pt(()=>startWheelQueue(winners),2800);
       }
     },650);
@@ -2273,34 +2231,43 @@ function playerAskNext(){
 // when done: wQueue.shift(), if more → next, else close overlay
 
 function startWheelQueue(winners){
+  // Appelée uniquement par l'HÔTE après le reveal. L'hôte orchestre tout.
   wQueue=[...winners];
   wAngle=0;wSpinning=false;
-  showWheelForTurn();
+  if(wQueue.length===0){
+    const bfn=$('btn-fn');if(bfn)bfn.disabled=false;
+    return;
+  }
+  // L'hôte ouvre sa propre roue ET dit à tout le monde d'ouvrir
+  openWheelFor(wQueue[0]);
+  if(isHost) hBcast({type:'WHEEL_OPEN',spinner:wQueue[0]});
+}
+
+// Ouvre l'overlay roue chez n'importe qui, en désignant qui tourne
+function openWheelFor(spinner){
+  wAngle=0;wSpinning=false;
+  wIsSpinner=(spinner===pName && pName!=='');
+  const wt=$('wt'),ws=$('ws');
+  if(wt)wt.textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
+  if(ws)ws.textContent=wIsSpinner?'Tu as été désigné(e) !':'Regarde en direct !';
+  const sb=$('wspin-btn');if(sb)sb.style.display=wIsSpinner?'':'none';
+  if(sb)sb.disabled=false;
+  const db=$('wdone-btn');if(db)db.style.display='none';
+  const wr=$('w-result');if(wr)wr.textContent='';
+  drawWheel(wAngle);
+  const ov=$('wheel-ov');if(ov)ov.style.display='flex';
+  // Bouton skip visible seulement pour l'hôte (au cas où le gagnant est déconnecté)
+  const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display=isHost?'':'none';
 }
 
 function hostSkipSpinner(){
-  // Host can skip the current spinner if they disconnected or are unresponsive
   if(wQueue.length===0) return;
   const skipped=wQueue[0];
   toast('⏭ '+skipped+' passé');
   wheelNext();
-  // Broadcast skip to all
-  if(isHost) hBcast({type:'WHEEL_QUEUE_DONE'});
 }
 
-function showWheelForTurn(){
-  if(wQueue.length===0){do{const _elt=$('wheel-ov');if(_elt)_elt.style.display='none';}while(0);return;}
-  const spinner=wQueue[0];
-  wIsSpinner=(spinner===pName);
-  $('wt').textContent=wIsSpinner?'🎰 À TOI ! Tourne la roue !':('🎰 '+spinner+' tourne la roue !');
-  $('ws').textContent=wIsSpinner?'Tu as été désigné(e) !':'Regarde en direct !';
-  $('wspin-btn').style.display=wIsSpinner?'':'none';
-  $('wdone-btn').style.display='none';
-  $('w-result').textContent='';
-  drawWheel(wAngle);
-  const _wo1=$('wheel-ov');if(_wo1)_wo1.style.display='flex';
-  const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='';
-}
+// Conservée pour compat — redirige vers openWheelFor
 
 function spinWheel(){
   if(wSpinning||!wIsSpinner)return;
@@ -2328,7 +2295,8 @@ function spinWheel(){
       const wFun=seg.fun||seg.l;
       $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+seg.l+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun+'</div>';
       $('wspin-btn').style.display='none';
-      $('wdone-btn').style.display='';
+      // Seul l'hôte orchestre l'avancement
+      $('wdone-btn').style.display=isHost?'':'none';
       wSpinning=false;return;
     }
     const progress=el/dur;
@@ -2351,24 +2319,35 @@ function spinWheel(){
   requestAnimationFrame(frame);
 }
 
+// Appelée quand on clique "OK !" après que la roue a atterri
 function wheelNext(){
+  if(isHost){
+    // L'hôte fait avancer la queue directement
+    wheelAdvance();
+  } else if(pConn&&pConn.open){
+    // Un joueur-gagnant signale à l'hôte qu'il a fini
+    pConn.send({type:'WHEEL_DONE'});
+    // Masque son bouton en attendant la suite
+    const db=$('wdone-btn');if(db)db.style.display='none';
+    const wr=$('w-result');if(wr)wr.textContent='⏳ …';
+  }
+}
+
+// Logique d'avancement de la queue — HÔTE UNIQUEMENT
+function wheelAdvance(){
+  if(!isHost) return;
   wQueue.shift();
   wAngle=0;wSpinning=false;
-  const done=wQueue.length===0;
-  if(isHost){
-    hBcast(done?{type:'WHEEL_QUEUE_DONE'}:{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
-    if(done){const bfn=$('btn-fn');if(bfn)bfn.disabled=false;}
-  } else if(pConn&&pConn.open){
-    pConn.send(done?{type:'WHEEL_QUEUE_DONE'}:{type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
-  }
-  if(done){
-    // All spins complete — close overlay and reveal next-round button
-    do{const _elt=$('wheel-ov');if(_elt)_elt.style.display='none';}while(0);
-    // Show rev-ctrl if reveal is still open (it may have arrived via NEXT_ALLOWED already)
-    const revCtrl=$('rev-ctrl');
-    if(revCtrl) revCtrl.style.display='block';
+  if(wQueue.length===0){
+    // Toutes les roues terminées
+    hBcast({type:'WHEEL_QUEUE_DONE'});
+    const bfn=$('btn-fn');if(bfn)bfn.disabled=false;
+    const ov=$('wheel-ov');if(ov)ov.style.display='none';
+    const revCtrl=$('rev-ctrl');if(revCtrl)revCtrl.style.display='block';
   } else {
-    showWheelForTurn();
+    // Spinner suivant — tout le monde rouvre
+    hBcast({type:'WHEEL_NEXT',nextSpinner:wQueue[0]});
+    openWheelFor(wQueue[0]);
   }
 }
 
@@ -2389,8 +2368,11 @@ function updateWheelDisplay(angle,spinner){
 
 function spectatorWheelLanded(segment,spinner){
   const wFun2=WS.find(s=>s.l===segment)?.fun||'Bonne chance 😈';
-  $('w-result').innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+segment+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun2+'</div>';
-  $('wt').textContent='🎰 '+spinner+' a eu : '+segment;
+  const wr=$('w-result');
+  if(wr)wr.innerHTML='<div style="font-size:1rem;font-weight:900;">👉 '+segment+'</div><div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic;">'+wFun2+'</div>';
+  const wt=$('wt');if(wt)wt.textContent='🎰 '+spinner+' a eu : '+segment;
+  // L'hôte voit le bouton OK pour faire avancer la queue (il orchestre)
+  if(isHost){const db=$('wdone-btn');if(db)db.style.display='';}
 }
 
 function anyoneDismissWheel(){
@@ -2399,7 +2381,6 @@ function anyoneDismissWheel(){
   const rc=$('rev-ctrl');
   if(rc) rc.style.display='block';
 }
-// Keep old name as alias
 
 // ═══════════════════ DRAW WHEEL ═══════════════════
 function drawWheel(angle){
@@ -2442,23 +2423,6 @@ function drawWheel(angle){
   ctx.fillStyle='#fff';ctx.fill();
   ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
 }
-
-// chat removed
-function toggleChat(){}
-function sendChat(){const inp=$('chat-inp');const msg=inp?inp.value.trim().substring(0,200):'';
-  if(!msg)return;
-  inp.value='';
-  if(isHost){
-    // Host broadcasts directly
-    hBcast({type:'CHAT',nick,msg,ts:Date.now()});
-    appendChatMsg(nick,msg,true);
-  } else if(pConn&&pConn.open){
-    pConn.send({type:'CHAT',nick,msg});
-    appendChatMsg(nick,msg,true);
-  }
-}
-
-const _sentKeys=new Set();
 
 function escHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2549,15 +2513,43 @@ function setupDeathWheel(scores,photos){
   const maxPts=sorted[0][1];
   const champs=sorted.filter(([,p])=>p===maxPts).map(([n])=>n);
   const champion=champs[0];
-  // Is current player the champion?
-  dIsSpinner=(pName===champion);
+  window._deathChampion=champion;
+  dIsSpinner=(pName===champion && pName!=='');
+  const sec=$('go-death-wheel-section');
+  if(!sec) return;
+  // La section roue de l'enfer reste cachée jusqu'à ce que l'hôte la lance
+  // (laisse le temps de regarder le classement final)
+  if(isHost){
+    // L'hôte voit un bouton pour lancer la roue de l'enfer quand il veut
+    const launchBtn=$('host-launch-death');
+    if(launchBtn){
+      launchBtn.style.display='block';
+      launchBtn.textContent="☠️ Lancer la Roue de l'Enfer sur "+champion;
+    }
+  }
+  drawDeathWheel(0);
+}
+
+// Appelée par l'hôte quand il décide de lancer la roue finale
+function hostLaunchDeathWheel(){
+  if(!isHost) return;
+  const launchBtn=$('host-launch-death');
+  if(launchBtn) launchBtn.style.display='none';
+  hBcast({type:'DEATH_WHEEL_OPEN',champion:window._deathChampion});
+  showDeathWheelSection(window._deathChampion);
+}
+
+// Affiche la section roue de l'enfer chez tout le monde
+function showDeathWheelSection(champion){
+  dIsSpinner=(pName===champion && pName!=='');
   const sec=$('go-death-wheel-section');
   if(!sec) return;
   sec.style.display='block';
+  sec.scrollIntoView({behavior:'smooth',block:'center'});
   const whoEl=$('go-death-who');
   if(whoEl){
     if(dIsSpinner) whoEl.textContent="☠️ C'EST TOI ! Tourne la roue de la mort…";
-    else whoEl.textContent=`☠️ ${champion} va tourner la roue de la mort pour tout le monde…`;
+    else whoEl.textContent='☠️ '+champion+' va tourner la roue de la mort…';
   }
   const spinBtn=$('death-spin-btn');
   if(spinBtn) spinBtn.style.display=dIsSpinner?'':'none';
@@ -2818,7 +2810,6 @@ function attemptReconnect(){
   });
   peer.on('error',()=>toast('❌ Serveur inaccessible'));
 }
-function appendChatMsg(){} // chat removed
-</script>
+function appendChatMsg(){} </script>
 </body>
 </html>
