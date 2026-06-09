@@ -177,7 +177,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 @keyframes hintFade{from{opacity:.3;}to{opacity:.7;}}
 /* Reveal card replacing the ? */
 .rev-card{
-  width:min(52vw,220px);aspect-ratio:4/5;
+  flex:0 0 auto;width:var(--card-w,200px);aspect-ratio:4/5;
   border-radius:22px;border:5px solid var(--ye);
   background:var(--pu-c);
   display:flex;flex-direction:column;
@@ -186,12 +186,19 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
   position:relative;z-index:2;
   animation:winnerG .55s ease infinite alternate;
 }
-/* Compact winner cards when 3+ ex-aequo so they fit on screen */
-.rev-winners-wrap.many .rev-card{width:min(28vw,130px);border-width:3px;}
-.rev-winners-wrap.many .rev-card-photo .ri{font-size:clamp(1.4rem,5vw,2rem);}
-.rev-winners-wrap.many .rev-card-name{font-size:clamp(.7rem,2.5vw,.9rem);}
-.rev-winners-wrap.many .rev-card-votes{font-size:.75rem;}
-.rev-winners-wrap.many .rev-card-nb{padding:5px 6px;}
+/* Compact winner cards when 2+ ex-aequo so they fit on screen */
+.rev-winners-wrap.many .rev-card{width:min(42vw,160px);border-width:3px;}
+.rev-winners-wrap.many .rev-card-photo .ri{font-size:clamp(1.8rem,6vw,2.8rem);}
+.rev-winners-wrap.many .rev-card-name{font-size:clamp(.75rem,2.8vw,1rem);}
+.rev-winners-wrap.many .rev-card-votes{font-size:.8rem;}
+.rev-winners-wrap.many .rev-card-nb{padding:5px 8px;}
+/* 4+ gagnants: encore plus compact */
+.rev-winners-wrap.crowd .rev-card{width:min(26vw,110px);border-width:2px;}
+.rev-winners-wrap.three{justify-content:center;}
+.rev-winners-wrap.three .rev-card{width:min(28vw,115px);}
+.rev-winners-wrap.crowd .rev-card-photo .ri{font-size:1.4rem;}
+.rev-winners-wrap.crowd .rev-card-name{font-size:.7rem;}
+.rev-winners-wrap.crowd .rev-card-votes{font-size:.65rem;}
 @keyframes winnerG{from{box-shadow:0 0 40px rgba(251,191,36,.5),0 10px 0 var(--ye-d);}to{box-shadow:0 0 100px rgba(251,191,36,1),0 0 200px rgba(251,191,36,.3),0 10px 0 var(--ye-d);}}
 .rev-card-photo{flex:1;overflow:hidden;position:relative;}
 .rev-card-photo img,.rev-card-photo .ri{width:100%;height:100%;object-fit:cover;display:block;}
@@ -200,15 +207,15 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .rev-card-name{font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3vw,1.2rem);font-weight:900;color:var(--tx);text-transform:uppercase;}
 .rev-card-votes{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:900;color:var(--pu);}
 /* Reveal adj label on theatre */
-.rev-adj{font-family:'Baloo 2',cursive;font-size:clamp(1rem,3.5vw,1.8rem);font-weight:900;color:rgba(255,255,255,.85);text-transform:uppercase;text-align:center;margin-bottom:18px;letter-spacing:1px;position:relative;z-index:2;}
+.rev-adj{font-family:'Baloo 2',cursive;font-size:clamp(.9rem,3.2vw,1.5rem);font-weight:900;color:rgba(255,255,255,.85);text-transform:uppercase;text-align:center;margin-bottom:10px;letter-spacing:1px;position:relative;z-index:2;}
 .rev-adj-lbl{font-size:.65rem;letter-spacing:6px;color:var(--pu-l);text-transform:uppercase;font-weight:900;margin-bottom:4px;}
 /* Winner label */
-.rev-winner-lbl{font-family:'Baloo 2',cursive;font-size:clamp(1rem,3vw,1.5rem);font-weight:900;color:var(--ye);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-top:14px;position:relative;z-index:2;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
+.rev-winner-lbl{font-family:'Baloo 2',cursive;font-size:clamp(.9rem,2.8vw,1.3rem);font-weight:900;color:var(--ye);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-top:8px;position:relative;z-index:2;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
 /* Others grid during reveal */
-.others-section{width:100%;max-width:700px;margin-top:22px;position:relative;z-index:2;}
-.others-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:center;margin-bottom:10px;}
+.others-section{width:100%;max-width:700px;margin-top:10px;position:relative;z-index:2;}
+.others-lbl{font-size:.6rem;font-weight:900;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:center;margin-bottom:6px;}
 /* Controls on reveal */
-.rev-controls{margin-top:20px;position:relative;z-index:2;text-align:center;padding-bottom:max(16px,calc(env(safe-area-inset-bottom)+12px));}
+.rev-controls{margin-top:10px;position:relative;z-index:2;text-align:center;padding-bottom:max(10px,calc(env(safe-area-inset-bottom)+8px));}
 /* ═══════ WHEEL OVERLAY ═══════ */
 .wheel-ov{position:fixed;top:0;left:0;right:0;bottom:0;
   background:rgba(30,5,70,.95);
@@ -1066,6 +1073,7 @@ button.game-only.game-active,
   <button class="btn ye big" id="wspin-btn" onclick="spinWheel()" style="margin-top:18px;">🎰 Tourner !</button>
   <div class="wheel-result" id="w-result"></div>
   <button class="btn gr big" id="wnext-btn" style="display:none;margin-top:12px;width:100%;" onclick="wheelNextSpinner()">➡ Suivant</button>
+  <button class="btn" id="wclose-btn" style="margin-top:8px;width:100%;background:transparent;color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.2);box-shadow:none;font-size:.82rem;" onclick="playerCloseWheel()">✕ Fermer la roue</button>
 </div>
 
 <script>
@@ -2185,13 +2193,30 @@ function doReveal(data){
 
       const wrap=$('rev-winners-wrap');
       wrap.style.display='flex';
-      wrap.classList.toggle('many',winners.length>=3);
+      wrap.style.flexWrap='nowrap';
+      wrap.style.justifyContent='center';
+      wrap.style.alignItems='flex-start';
+      wrap.style.gap='5px';
+      // Adapter la taille des cartes — appliqué après création via CSS variable
+      const wn=winners.length;
+      const availW=Math.min(window.innerWidth,600)-24;
+      const gap=5;
+      const maxW=Math.min(200, Math.floor((availW-(wn-1)*gap)/wn));
+      const cardW=Math.max(60,maxW);
+      wrap.style.setProperty('--card-w', cardW+'px');
       winners.forEach((wname,wi)=>{
         const wp=players.find(p=>p.name===wname);if(!wp)return;
         const c=acol(wname);
+        // Calculer la largeur directement : toute la largeur disponible divisée par nb gagnants
+        const availW=Math.min(window.innerWidth,600)-24;
+        const gap=5;
+        const rawW=Math.floor((availW-(winners.length-1)*gap)/winners.length);
+        const cardW=Math.min(200,Math.max(62,rawW));
+        const bw=cardW<80?2:cardW<120?3:5;
+        const br=cardW<80?10:cardW<120?16:22;
         const d=document.createElement('div');
-        d.style.cssText='opacity:0;transform:scale(.4) translateY(30px);';
-        d.innerHTML=`<div class="rev-card">
+        d.style.cssText='opacity:0;transform:scale(.4) translateY(30px);flex-shrink:0;';
+        d.innerHTML=`<div class="rev-card" style="width:${cardW}px;border-width:${bw}px;border-radius:${br}px;">
           <div class="rev-card-photo">
             ${wp.photo?`<img src="${wp.photo}" alt="">`:`<div class="ri" style="background:${c};">${ini(wname)}</div>`}
           </div>
@@ -2416,6 +2441,15 @@ function closeWheelAll(){
   hBcast({type:'WHEEL_CLOSE'});
   closeWheelLocal();
   const bfn=$('btn-fn'); if(bfn)bfn.disabled=false;
+}
+
+// [JOUEUR/VAINQUEUR] Ferme la roue sur son propre écran pour voir les votes
+function playerCloseWheel(){
+  const ov=$('wheel-ov'); if(ov)ov.style.display='none';
+  const rt=$('rev-theatre'); if(rt)rt.style.pointerEvents='';
+  // Réafficher le reveal s'il était visible
+  const rc=$('rev-ctrl');
+  if(rc && $('rev-theatre') && $('rev-theatre').classList.contains('visible')) rc.style.display='block';
 }
 
 // [TOUS] Ferme l'overlay roue localement
