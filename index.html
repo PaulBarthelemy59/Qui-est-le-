@@ -101,13 +101,13 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .vb-lbl{font-size:.65rem;font-weight:900;letter-spacing:5px;color:var(--pu-l);text-transform:uppercase;margin-bottom:4px;}
 .vb-txt{font-family:'Baloo 2',cursive;font-size:clamp(1rem,4vw,1.5rem);font-weight:900;color:#fff;line-height:1.2;}
 .vote-grid{display:flex;flex-direction:column;gap:6px;width:100%;}
-.vote-btn{background:#fff;border:2px solid var(--pu-l);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;box-shadow:0 2px 0 var(--pu-l);}
+.vote-btn{background:#fff;border:2px solid var(--pu-l);border-radius:14px;padding:8px 12px 8px 8px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:transform .1s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;user-select:none;box-shadow:0 2px 0 var(--pu-l);width:auto;max-width:100%;}
 .vote-btn:hover{border-color:var(--pu);box-shadow:0 3px 0 var(--pu-d);}
 .vote-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--pu);}
 .vote-btn.cast{background:var(--pu-s);opacity:.5;pointer-events:none;}
 .vb-ph{width:36px;height:36px;border-radius:8px;object-fit:cover;border:2px solid var(--pu-l);flex-shrink:0;}
 .vb-in{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:900;color:#fff;flex-shrink:0;}
-.vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:.85rem;text-transform:uppercase;color:var(--tx);}
+.vb-name{font-family:'Baloo 2',cursive;font-weight:900;font-size:.85rem;text-transform:uppercase;color:var(--tx);white-space:nowrap;}
 /* PHOTO PICKER */
 .ph-circle{width:84px;height:84px;border-radius:18px;margin:0 auto 12px;border:3px dashed var(--pu-l);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;background:var(--pu-s);overflow:hidden;position:relative;transition:border-color .2s,transform .15s;}
 .ph-circle img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:14px;}
@@ -889,7 +889,7 @@ button.game-only.game-active,
 <div id="s-pjoin" class="screen hidden">
   <div class="lw">
     <div class="lb" style="font-size:clamp(1.4rem,5vw,2.2rem);transform:rotate(-1deg);padding:6px 20px 8px;">
-      QUI EST LA <span class="plus">+</span> GROSSE PUTE ?
+      QUI EST LA <span class="plus">+</span> GROSSE PUTE DE ROUEN ?
     </div>
   </div>
   <div class="card" style="max-width:420px;margin:0 auto;">
@@ -922,12 +922,24 @@ button.game-only.game-active,
       <input type="file" id="fi-selfie" style="display:none;" accept="image/*" capture="user" onchange="handlePhoto(event)">
       <input type="file" id="fi-gallery" style="display:none;" accept="image/*" onchange="handlePhoto(event)">
       <input type="text" id="pni" class="inp" placeholder="Ton prénom…" maxlength="12"
-        autocomplete="off" style="margin-bottom:8px;"
-        onkeyup="if(event.key==='Enter')onboardFinish()">
-      <div style="font-size:.75rem;color:var(--pu-l);font-weight:700;margin-bottom:12px;text-align:left;">
-        🗳️ Vote anonyme · ☠️ Roue diabolique finale · 🔊 Son activé
+        autocomplete="off" style="margin-bottom:12px;"
+        onkeyup="if(event.key==='Enter')onboardToRules()">
+      <button class="btn big ye w-full" onclick="onboardToRules()">Suivant →</button>
+    </div>
+
+    <div id="step-rules" style="display:none;">
+      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu-d);margin-bottom:12px;">Avant de commencer 🍺</div>
+      <div style="text-align:left;font-size:.85rem;color:var(--pu-d);font-weight:700;line-height:1.5;margin-bottom:16px;">
+        🗳️ Tu votes pour la personne qui correspond le mieux à chaque adjectif.<br>
+        👑 La plus votée tourne la roue de l'infortune.<br>
+        ☠️ Le grand gagnant affronte la Roue Diabolique des Enfers à la fin.<br>
+        🕵️ Les votes sont 100% anonymes. Reste souple, c'est un jeu.
       </div>
-      <button class="btn big ye w-full" onclick="onboardFinish()">Rejoindre 🚀</button>
+      <label style="display:flex;align-items:flex-start;gap:10px;background:rgba(124,58,237,.08);border:2px solid var(--pu-l);border-radius:12px;padding:12px;cursor:pointer;margin-bottom:14px;text-align:left;">
+        <input type="checkbox" id="rules-check" style="width:22px;height:22px;flex-shrink:0;accent-color:var(--pu);cursor:pointer;margin-top:1px;">
+        <span style="font-size:.82rem;font-weight:800;color:var(--pu-d);line-height:1.35;">Je reconnais avoir pris connaissance de la biture qui m'attend 🍻</span>
+      </label>
+      <button class="btn big ye w-full" onclick="onboardFinish()">Allons-y 🚀</button>
     </div>
 
     <div id="jstat" style="margin-top:10px;color:var(--pu-l);font-size:.82rem;min-height:18px;font-weight:700;text-align:center;"></div>
@@ -1200,7 +1212,7 @@ let hConns={};   // peerId → {name,conn,photo}
 let hScores={};  // name → points
 let hVotes={};   // name → votes this round
 let hWhoVoted=new Set();
-let hQs=[],hQi=-1,hRevealed=false,hAdj='';
+let hQs=[],hQi=-1,hRevealed=false,hAdj='',hRevealPhrase='';
 let hExpectedVoters=0;
 let hWinHistory=[];
 let hLastHistoryLen=0; // track sent history length // [{name,adjective}]
@@ -1222,20 +1234,21 @@ const roomP=urlP.get('room');
 const baseUrl=window.location.href.split('?')[0];
 
 window.addEventListener('load',()=>{
-  if(roomP){pRoomId=roomP;$('step-name').style.display='block';$('step-code').style.display='none';showGameUI();show('s-pjoin');}
+  if(roomP){pRoomId=roomP;$('step-name').style.display='block';$('step-code').style.display='none';$('step-rules').style.display='none';showGameUI();show('s-pjoin');}
   else show('s-land');
 });
 
 // Chat
 
 // ═══════════════════ NAV ═══════════════════
-function gotoCodeEntry(){$('step-code').style.display='block';$('step-name').style.display='none';showGameUI();show('s-pjoin');}
+function gotoCodeEntry(){$('step-code').style.display='block';$('step-name').style.display='none';$('step-rules').style.display='none';showGameUI();show('s-pjoin');}
 function validateCode(){
   const c=$('code-inp').value.trim().toUpperCase();
   if(c.length!==4){toast('⚠️ Code de 4 lettres !');return;}
   pRoomId=c;
   $('step-name').style.display='block';
   $('step-code').style.display='none';
+  $('step-rules').style.display='none';
   $('pni').focus();
   $('pni').focus();
 }
@@ -1267,18 +1280,6 @@ function handlePhoto(e){
 // Web Audio fallback for iOS when HTMLAudioElement is still blocked
 function _playBase64ViaWebAudio(n,url){
   try{
-    const ctx=getAudioCtx();if(!ctx)return;
-    const b64=url.split(',')[1];
-    const bin=atob(b64);
-    const buf=new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
-    ctx.decodeAudioData(buf.buffer.slice(0),decoded=>{
-      const src=ctx.createBufferSource();
-      src.buffer=decoded;
-      const g=ctx.createGain();g.gain.value=0.85;
-      src.connect(g);g.connect(ctx.destination);
-      src.start(ctx.currentTime);
-    },()=>{});
   }catch(e){}
 }
 
@@ -1289,12 +1290,20 @@ function showPhotoChoice(){
   if(c) c.style.display=c.style.display==='flex'?'none':'flex';
 }
 
-function onboardFinish(){
+function onboardToRules(){
   const raw=$('pni');
   if(!raw||!raw.value.trim()){toast('✏️ Entre ton prénom !');return;}
+  pName=raw.value.trim().substring(0,12);
+  $('step-name').style.display='none';
+  $('step-rules').style.display='block';
+}
+
+function onboardFinish(){
+  if(!pName){toast('✏️ Entre ton prénom !');return;}
+  const chk=$('rules-check');
+  if(chk&&!chk.checked){toast('☑️ Coche la case pour continuer !');return;}
   if(!pRoomId){toast('⚠️ Code manquant !');return;}
   if(typeof Peer==='undefined'){toast('❌ Recharge la page');return;}
-  pName=raw.value.trim().substring(0,12);
   const stat=$('jstat');if(stat)stat.textContent='🔄 Connexion…';
   if(peer&&!isHost){try{peer.destroy();}catch(e){}}
   peer=new Peer(undefined,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});
@@ -1307,7 +1316,6 @@ function onboardFinish(){
     pConn.on('error',()=>{clearTimeout(to2);if(stat)stat.textContent='❌ Connexion refusée.';});
     pConn.on('open',()=>{
       clearTimeout(to2);
-      try{getOrCreateAudioCtx();}catch(e){}
       pConn.send({type:'JOIN',name:pName,photo:pPhoto});
       startHeartbeat();
     });
@@ -1463,6 +1471,7 @@ function cfgBuildList(){
     window.cfgQuestions = QUESTIONS.map(q=>({
       prefix: (typeof q==='object'&&q.p)?q.p:'Qui est le +',
       text:   (typeof q==='object'&&q.t)?q.t:String(q),
+      reveal: (typeof q==='object'&&q.r)?q.r:'',
       active: true
     }));
   }
@@ -1511,6 +1520,16 @@ function renderCfgList(){
     ta.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].text=this.value;};})(i));
     inner.appendChild(ta);
 
+    // Phrase de victoire personnalisée (optionnelle)
+    const rev=document.createElement('input');
+    rev.type='text';
+    rev.className='cfg-q-reveal-inp';
+    rev.value=q.reveal||'';
+    rev.placeholder='💬 Phrase de victoire (ex: {nom} est vraiment radin 😬)';
+    rev.style.cssText='width:100%;background:rgba(251,191,36,.1);border:1.5px solid var(--ye-d);border-radius:8px;padding:6px 8px;font-size:16px;font-weight:700;color:var(--pu-d);outline:none;font-family:Nunito,sans-serif;';
+    rev.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].reveal=this.value;};})(i));
+    inner.appendChild(rev);
+
     row.appendChild(inner);
 
     // Move up/down + delete
@@ -1554,7 +1573,7 @@ function cfgAddQuestion(){
   const txt=$('cfg-new-q-inp').value.trim();
   if(!txt){toast('✏️ Entre la question !');return;}
   const prefix=$('cfg-new-q-prefix')?$('cfg-new-q-prefix').value:'Qui est le +';
-  window.cfgQuestions.push({prefix,text:txt,active:true});
+  window.cfgQuestions.push({prefix,text:txt,reveal:'',active:true});
   $('cfg-new-q-inp').value='';
   $('cfg-add-q').style.display='none';
   renderCfgList();updateCfgInfo();
@@ -1573,7 +1592,7 @@ function hostLaunchFromConfig(){
   const activeQs=(window.cfgQuestions||[]).filter(q=>q.active);
   if(activeQs.length===0){toast('⚠️ Sélectionne au moins une question !');return;}
   MAX_ROUNDS=parseInt($('cfg-rounds').value)||10;
-  const pool=activeQs.map(q=>(q.prefix+' '+q.text).trim());
+  const pool=activeQs.map(q=>({q:(q.prefix+' '+q.text).trim(), r:(q.reveal||'').trim()}));
   hQs=shuffle(pool).slice(0,MAX_ROUNDS);hQi=-1;
   $('h-lobby').style.display='none';$('h-game').style.display='block';
   $('rth').textContent=Math.min(MAX_ROUNDS,pool.length);
@@ -1694,7 +1713,8 @@ function hostNext(){
   hWhoVoted.clear();hVotes={};hRevealed=false;
   Object.values(hConns).forEach(p=>hVotes[p.name]=0);
   hExpectedVoters=Object.keys(hConns).length; // snapshot
-  hAdj=hQs[hQi];
+  hAdj=hQs[hQi].q;
+  hRevealPhrase=hQs[hQi].r||'';
   $('rnh').textContent=hQi+1;
   const bfr=$('btn-fr');if(bfr)bfr.disabled=false;
   const bfn=$('btn-fn');if(bfn)bfn.disabled=wQueue.length>0;
@@ -1725,8 +1745,9 @@ function hostReveal(){
   // Only send new history entries (delta) to reduce payload size
   const historyDelta=hWinHistory.slice(hLastHistoryLen);
   hLastHistoryLen=hWinHistory.length;
-  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,players:hPList(),scores:{...hScores},historyDelta});
+  hBcast({type:'REVEAL',votes:{...hVotes},winners,adjective:hAdj,revealPhrase:hRevealPhrase,players:hPList(),scores:{...hScores},historyDelta});
   // Update host's own score pin
+  window._revealPhrase=hRevealPhrase||'';
   pScores={...hScores};
   pHistory=[...hWinHistory];
   Object.values(hConns).forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
@@ -1865,6 +1886,7 @@ function handlePData(data){
       // if we already voted, we're on s-pvoted
       break;
     case 'REVEAL':
+      window._revealPhrase=data.revealPhrase||'';
       clearPTimers();
       if(data.scores) pScores=data.scores;
       // Store last winner for between-screen
@@ -1958,17 +1980,14 @@ function updateVoteCounter(done,total){
 
 function buildVoteGrid(players){
   const grid=$('v-grid');grid.innerHTML='';
-  // Switch to 2-column grid on many players
+  // Flex-wrap centré : chaque bouton fait la largeur de son contenu (nom+photo)
   if(grid){
-    if(players.length>8){
-      grid.style.display='grid';
-      grid.style.gridTemplateColumns='1fr 1fr';
-      grid.style.gap='6px';
-    } else {
-      grid.style.display='flex';
-      grid.style.flexDirection='column';
-      grid.style.gap='6px';
-    }
+    grid.style.display='flex';
+    grid.style.flexWrap='wrap';
+    grid.style.flexDirection='row';
+    grid.style.justifyContent='center';
+    grid.style.alignItems='flex-start';
+    grid.style.gap='8px';
   }
   players.forEach(p=>{
     const btn=document.createElement('button');btn.className='vote-btn';
@@ -1977,7 +1996,6 @@ function buildVoteGrid(players){
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
       try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
-        try{_unlockAudio();const ctx=getAudioCtx();if(ctx)playFart(ctx,ctx.currentTime,0.4,60+Math.random()*40);}catch(e){}
         if(pConn&&pConn.open)pConn.send({type:'SUBMIT_VOTE',target:p.name});
         const vfl=$('voted-for-lbl');if(vfl)vfl.textContent='Tu as voté pour '+p.name+' 👉';
         show('s-pvoted');
@@ -2043,180 +2061,19 @@ function runSlotMachine(players, duration, onDone){
   nextFrame();
 }
 
-// ═══════════════════ 🔊 SOUND ENGINE (Web Audio API) ═══════════════════
 // Sons absurdes générés procéduralement — aucun fichier externe.
 
-let _audioCtx = null;
-
-function getAudioCtx(){
-  // Never auto-create — context must be created by _unlockAudio (user gesture)
-  if(!_audioCtx || _audioCtx.state==='closed') return null;
-  if(_audioCtx.state==='suspended') _audioCtx.resume();
-  return _audioCtx;
-}
-
-function getOrCreateAudioCtx(){
-  // Only call this from direct user gesture handlers
-  if(!_audioCtx || _audioCtx.state==='closed'){
-    _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if(_audioCtx.state==='suspended') _audioCtx.resume();
-  return _audioCtx;
-}
-
 // 💨 PROUT — the classic
-function playFart(ctx, startTime, duration=0.6, pitch=80){
-  const bufSize = Math.floor(ctx.sampleRate * duration);
-  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  // Low-frequency turbulence: noise modulated by a slow sine
-  for(let i=0;i<bufSize;i++){
-    const t = i/ctx.sampleRate;
-    const decay = Math.exp(-t * (3.5 / duration));
-    // Modulate frequency slightly downward as it "releases"
-    const freqMod = Math.sin(2*Math.PI*pitch*(t - t*t*1.2));
-    const noise = (Math.random()*2-1) * 0.3;
-    data[i] = (freqMod * 0.7 + noise) * decay;
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  // Bandpass to keep it in the right register
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.value = pitch * 2;
-  filter.Q.value = 0.8;
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(1.0, startTime);
-  src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
-  src.start(startTime);
-  src.stop(startTime + duration + 0.1);
-}
 
 // 🤮 VOMI — wet gurgling splat
-function playVomit(ctx, startTime){
-  const now = startTime;
-  // Phase 1: pré-vomi (retching burble)
-  for(let i=0;i<4;i++){
-    const t = now + i * 0.09;
-    const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(120 - i*8, t);
-    osc.frequency.linearRampToValueAtTime(60, t + 0.07);
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.5 - i*0.05, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-    const f = ctx.createBiquadFilter();
-    f.type = 'lowpass'; f.frequency.value = 500;
-    osc.connect(f); f.connect(g); g.connect(ctx.destination);
-    osc.start(t); osc.stop(t+0.1);
-  }
-  // Phase 2: le SPLAT final (bruit de fond humide)
-  const splatTime = now + 0.4;
-  const bufSize = Math.floor(ctx.sampleRate * 0.35);
-  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  for(let i=0;i<bufSize;i++){
-    const t = i/ctx.sampleRate;
-    data[i] = (Math.random()*2-1) * Math.exp(-t*8) * (1 + Math.sin(2*Math.PI*80*t)*0.5);
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  const f2 = ctx.createBiquadFilter(); f2.type='lowpass'; f2.frequency.value=400;
-  const g2 = ctx.createGain(); g2.gain.setValueAtTime(1.2, splatTime);
-  src.connect(f2); f2.connect(g2); g2.connect(ctx.destination);
-  src.start(splatTime); src.stop(splatTime + 0.4);
-}
 
 // 🫧 ROT — gros renvoi
-function playBurp(ctx, startTime){
-  const now = startTime;
-  const dur = 0.5;
-  const osc = ctx.createOscillator();
-  osc.type = 'sawtooth';
-  // Frequency wobble = classic burp
-  osc.frequency.setValueAtTime(140, now);
-  osc.frequency.linearRampToValueAtTime(95, now + 0.15);
-  osc.frequency.linearRampToValueAtTime(115, now + 0.28);
-  osc.frequency.linearRampToValueAtTime(70, now + dur);
-  const dist = ctx.createWaveShaper();
-  const k = 80;
-  const curve = new Float32Array(256);
-  for(let i=0;i<256;i++){ const x=i*2/255-1; curve[i]=((Math.PI+k)*x)/(Math.PI+k*Math.abs(x)); }
-  dist.curve = curve;
-  const g = ctx.createGain();
-  g.gain.setValueAtTime(0.7, now);
-  g.gain.linearRampToValueAtTime(0, now + dur);
-  const f = ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=300; f.Q.value=1.5;
-  osc.connect(dist); dist.connect(f); f.connect(g); g.connect(ctx.destination);
-  osc.start(now); osc.stop(now + dur + 0.05);
-}
 
 // 🎺 TROMPETTE PÉTARADANTE — "wah wah" loser horn
-function playLoserHorn(ctx, startTime){
-  const now = startTime;
-  const notes = [466, 415, 370, 311]; // descending minor
-  notes.forEach((freq, i)=>{
-    const t = now + i * 0.18;
-    const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(freq, t);
-    // Slight portamento
-    if(i < notes.length-1) osc.frequency.linearRampToValueAtTime(notes[i+1], t+0.17);
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.45, t+0.03);
-    g.gain.setValueAtTime(0.45, t+0.14);
-    g.gain.linearRampToValueAtTime(0, t+0.18);
-    const f = ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1200;
-    osc.connect(f); f.connect(g); g.connect(ctx.destination);
-    osc.start(t); osc.stop(t+0.22);
-  });
-}
 
 // 🥁 DRUM ROLL suspense (garde ça pour le build-up)
-function playSuspenseDrumRoll(duration=3.0){
-  const ctx = getAudioCtx();
-  if(!ctx) return;
-  const start = ctx.currentTime + 0.05;
-  const startRate = 3, endRate = 18;
-  let t = start, elapsed = 0;
-  while(elapsed < duration){
-    const progress = elapsed/duration;
-    const rate = startRate + (endRate-startRate)*Math.pow(progress,2);
-    const gap = 1/rate;
-    const vol = 0.2 + 0.5*progress;
-    // Snare hit
-    const bufSize = Math.floor(ctx.sampleRate * 0.07);
-    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for(let i=0;i<bufSize;i++) data[i]=(Math.random()*2-1)*Math.exp(-i/(bufSize*0.25));
-    const src = ctx.createBufferSource(); src.buffer=buf;
-    const g = ctx.createGain(); g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.07);
-    src.connect(g); g.connect(ctx.destination);
-    src.start(t); src.stop(t+0.08);
-    t += gap; elapsed += gap;
-  }
-  // Final big drum hit
-  const bufF = ctx.createBuffer(1, Math.floor(ctx.sampleRate*0.1), ctx.sampleRate);
-  const dF = bufF.getChannelData(0);
-  for(let i=0;i<dF.length;i++) dF[i]=(Math.random()*2-1)*Math.exp(-i/(dF.length*0.2));
-  const srcF=ctx.createBufferSource();srcF.buffer=bufF;
-  const gF=ctx.createGain();gF.gain.setValueAtTime(1.0,t);gF.gain.exponentialRampToValueAtTime(0.001,t+0.1);
-  srcF.connect(gF);gF.connect(ctx.destination);srcF.start(t);srcF.stop(t+0.12);
-}
 
 // 🎲 Choisit un son absurde aléatoire pour le reveal
-function playRevealSound(){
-  try{
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const roll = Math.random();
-    if(roll < 0.35)      playFart(ctx, now, 0.55 + Math.random()*0.3, 70 + Math.random()*40);
-    else if(roll < 0.60) playVomit(ctx, now);
-    else if(roll < 0.82) playBurp(ctx, now);
-    else                 playLoserHorn(ctx, now);
-  }catch(e){}
-}
 
 // Vote ding (petit son quand quelqu'un vote)
 
@@ -2314,7 +2171,6 @@ function doReveal(data){
   window._revealHintTimer=hintTimer;
 
   // 🥁 drum roll synced to the 4s slot machine
-  try{ playSuspenseDrumRoll(4.0); }catch(e){}
 
   // Slot machine runs ~4s, then reveals the winner
   runSlotMachine(players, 4000, ()=>{
@@ -2322,7 +2178,6 @@ function doReveal(data){
     window._revealHintTimer=null;
 
     // 🎉 reveal moment
-    try{ playRevealSound(); }catch(e){}
     theatre.classList.remove('phase-suspense');
     theatre.classList.add('phase-reveal');
 
@@ -2370,7 +2225,13 @@ function doReveal(data){
         const lbl=$('rev-winner-lbl');
         const adjLow=adjective.replace(/^Qui est le \+\s*/i,'').replace(/^Qui est la \+\s*/i,'').replace(/^Qui a le \+\s*/i,'').replace(/^Qui a la \+\s*/i,'').replace(/^Qui a l'air le \+\s*/i,'').replace(/^Qui est le -\s*/i,'').replace(/^Qui est celui qui\s*/i,'');
         const w2=adjLow.split(' ').slice(0,6).join(' ');
-        lbl.textContent='👑 '+winners.join(' & ')+' est vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
+        const names=winners.join(' & ');
+        // Phrase custom de la question si définie (via {custom})
+        if(window._revealPhrase){
+          lbl.textContent=window._revealPhrase.replace(/\{nom\}/gi,names).replace(/\{nom_gagnant\}/gi,names);
+        } else {
+          lbl.textContent='👑 '+names+' est vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
+        }
         lbl.style.display='block';
         confetti();
       },450);
@@ -2441,45 +2302,6 @@ function showWheelForTurn(){
   const skipBtn=$('btn-skip-spin');if(skipBtn)skipBtn.style.display='';
 }
 
-// 🎰 SON DE ROUE — cliquetis rythmés synchronisés avec la vitesse
-function playWheelSound(totalDur){
-  try{
-    const ctx=getAudioCtx();
-    const startT=ctx.currentTime+0.05;
-    // On programme des "ticks" dont l'espacement suit la même courbe ease-out que la roue
-    // Au début: ~12 ticks/s → à la fin: ~1.5 ticks/s
-    let t=startT;
-    const endT=startT+totalDur/1000;
-    while(t<endT){
-      const prog=(t-startT)/(endT-startT);
-      // ease-out: vitesse diminue progressivement
-      const speed=12-10.5*Math.pow(prog,0.6); // 12 → 1.5 ticks/s
-      const gap=1/Math.max(speed,1.5);
-      // Son de tick : bruit bref filtré (wood-block style)
-      const buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.022),ctx.sampleRate);
-      const d=buf.getChannelData(0);
-      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.18));
-      const src=ctx.createBufferSource();src.buffer=buf;
-      const flt=ctx.createBiquadFilter();flt.type='bandpass';flt.frequency.value=1200;flt.Q.value=4;
-      const g=ctx.createGain();
-      // Volume diminue aussi légèrement vers la fin
-      g.gain.setValueAtTime(0.18+0.12*(1-prog),t);
-      src.connect(flt);flt.connect(g);g.connect(ctx.destination);
-      src.start(t);src.stop(t+0.025);
-      t+=gap;
-    }
-    // Dernier tick fort pour marquer l'arrêt
-    const buf2=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.04),ctx.sampleRate);
-    const d2=buf2.getChannelData(0);
-    for(let i=0;i<d2.length;i++) d2[i]=(Math.random()*2-1)*Math.exp(-i/(d2.length*0.22));
-    const src2=ctx.createBufferSource();src2.buffer=buf2;
-    const flt2=ctx.createBiquadFilter();flt2.type='bandpass';flt2.frequency.value=900;flt2.Q.value=3;
-    const g2=ctx.createGain();g2.gain.setValueAtTime(0.45,endT);
-    src2.connect(flt2);flt2.connect(g2);g2.connect(ctx.destination);
-    src2.start(endT);src2.stop(endT+0.045);
-  }catch(e){}
-}
-
 function spinWheel(){
   if(wSpinning||!wIsSpinner)return;
   wSpinning=true;
@@ -2487,7 +2309,6 @@ function spinWheel(){
   const totalRot=2*Math.PI*(6+Math.random()*6);
   const dur=4000+Math.random()*1000;
   // 🔊 Son de roue synchronisé avec la durée réelle
-  playWheelSound(dur);
   const t0=performance.now(),a0=wAngle;
   function frame(now){
     const el=now-t0;
@@ -2761,7 +2582,6 @@ function spinDeathWheel(){
       const seg=DEATH_SEGMENTS[idx];
       const dFun=seg.fun||'Bonne chance 😈';
       $('death-result').innerHTML='<div style="font-size:1.1rem;font-weight:900;color:var(--pk);">☠️ '+seg.l+'</div><div style="font-size:.85rem;color:rgba(255,255,255,.6);margin-top:4px;font-style:italic;">'+dFun+'</div>';
-      try{playRevealSound();}catch(e){}
       dSpinning=false;
       // Broadcast result
       if(pConn&&pConn.open) pConn.send({type:'DEATH_WHEEL_RESULT',segment:seg.l.replace('\n',' ')});
@@ -2999,23 +2819,6 @@ function attemptReconnect(){
   peer.on('error',()=>toast('❌ Serveur inaccessible'));
 }
 function appendChatMsg(){} // chat removed
-// ═══════════════════ KEYBOARD ═══════════════════
-// Unlock AudioContext on first touch/click (required by iOS Safari)
-// Unlock AudioContext on ANY user interaction (required by Chrome/Safari)
-
-// Audio context unlocked on user interaction
-function _unlockAudio(){try{getOrCreateAudioCtx();}catch(e){}}
-document.addEventListener('touchstart', _unlockAudio, {passive:true});
-document.addEventListener('mousedown',  _unlockAudio);
-document.addEventListener('keydown',    _unlockAudio);
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Enter')return;
-  const j=$('s-pjoin');
-  if(j&&!j.classList.contains('hidden')){
-    if($('step-code').style.display!=='none')validateCode();
-    else if($('step-name').style.display!=='none')onboardFinish();
-  }
-});
 </script>
 </body>
 </html>
