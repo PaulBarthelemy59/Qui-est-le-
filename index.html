@@ -1050,6 +1050,7 @@ button.game-only.game-active,
   <!-- Controls — only shown when host sends NEXT_ALLOWED -->
   <div class="rev-controls" id="rev-ctrl" style="display:none;">
     <button class="btn ye big" id="host-launch-wheel" style="display:none;margin-bottom:8px;width:100%;" onclick="hostLaunchWheel()">🎰 Lancer la roue</button>
+    <button class="btn ye big" id="winner-launch-wheel" style="display:none;margin-bottom:8px;width:100%;font-size:1.1rem;" onclick="winnerRequestWheel()">🎰 LANCE LA ROUE !</button>
     <button class="btn gr big" onclick="playerAskNext()">Manche suivante ➡</button>
   </div>
 </div>
@@ -1399,6 +1400,12 @@ function handleHConn(conn){
       if(!hRevealed&&hWhoVoted.size>=expected){
         setTimeout(hostReveal,600);
       }
+      return;
+    }
+    if(data.type==='WINNER_WANTS_WHEEL'){
+      // Le vainqueur veut tourner la roue — l'hôte déclenche
+      const winner=data.winner||hConns[conn.peer]?.name;
+      if(winner) startWheelQueue([winner]);
       return;
     }
     if(data.type==='PLAYER_READY'){
@@ -2246,9 +2253,25 @@ function doReveal(data){
       }
 
       // L'HÔTE voit un bouton pour lancer la roue manuellement (push)
+      // Si je suis le vainqueur (joueur, pas hôte), afficher le bouton "Lance la roue"
+      if(iAmWinner && !isHost){
+        pt(()=>{
+          const wb=$('winner-launch-wheel');
+          if(wb) wb.style.display='block';
+          const rc=$('rev-ctrl');
+          if(rc) rc.style.display='block';
+        },1200);
+      }
       // _revealWinners est stocké par hostReveal() directement
     },650);
   });
+}
+
+// [VAINQUEUR] Bouton "Lance la roue !" sur l'écran de reveal
+function winnerRequestWheel(){
+  const wb=$('winner-launch-wheel');
+  if(wb) wb.style.display='none';
+  if(pConn&&pConn.open) pConn.send({type:'WINNER_WANTS_WHEEL',winner:pName});
 }
 
 // [HÔTE] Bouton "Lancer la roue" sur s-host — cache le bouton et ouvre la roue pour tous
