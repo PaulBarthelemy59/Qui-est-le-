@@ -216,21 +216,6 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .others-lbl{font-size:.6rem;font-weight:900;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:center;margin-bottom:6px;}
 /* Controls on reveal */
 .rev-controls{margin-top:10px;position:relative;z-index:2;text-align:center;padding-bottom:max(10px,calc(env(safe-area-inset-bottom)+8px));}
-/* ═══════ WHEEL OVERLAY ═══════ */
-.wheel-ov{position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(30,5,70,.95);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:1500;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-  padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));}
-.wheel-title{font-family:'Baloo 2',cursive;font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;color:var(--ye);margin-bottom:6px;text-align:center;text-transform:uppercase;letter-spacing:2px;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
-.wheel-sub{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:700;margin-bottom:14px;text-align:center;}
-.wheel-wrap{position:relative;width:min(78vw,300px);height:min(78vw,300px);}
-#wcanvas{border-radius:50%;border:5px solid #fff;box-shadow:0 0 40px rgba(251,191,36,.5);display:block;}
-.wheel-ptr{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:28px solid #fff;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6));}
-.wheel-result{font-family:'Baloo 2',cursive;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:900;color:#fff;text-align:center;margin-top:14px;min-height:2.4rem;text-shadow:2px 2px 0 rgba(0,0,0,.4);}
 /* WINNER VIDEO CLIP */
 
   to{box-shadow:0 0 50px rgba(251,191,36,.9),0 4px 0 var(--ye-d);}
@@ -568,19 +553,6 @@ button.game-only.game-active,
 /* ═══ CHAT (kept for relay logic, no UI) ═══ */
 .chat-msg-bubble,.chat-msg-nick{display:none;}
 
-/* ═══ DEATH WHEEL ═══ */
-.death-wheel-banner{
-  background:linear-gradient(135deg,#1a0030,#3b0060,#1a0030);
-  border:3px solid var(--pk);border-radius:18px;
-  padding:16px;margin:16px 0;text-align:center;
-  box-shadow:0 0 30px rgba(236,72,153,.3);
-}
-.death-wheel-title{
-  font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:900;
-  color:var(--pk);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;
-}
-.death-wheel-sub{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.55);}
-
 /* ═══ EMERGENCY BOX ═══ */
 .emergency-box{background:var(--pu-s);border:2px solid var(--pu-l);border-radius:14px;padding:14px 16px;margin-top:14px;text-align:center;}
 
@@ -824,12 +796,6 @@ button.game-only.game-active,
           <button class="btn" onclick="openConfigDuringGame()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">⚙️ Manches</button>
           <button class="btn" onclick="hostEndGameNow()" style="font-size:.88rem;padding:9px 16px;background:var(--pu-s);color:var(--pu-d);border-color:var(--pu-l);box-shadow:0 3px 0 var(--pu-l);">🏁 Terminer</button>
         </div>
-        <!-- Bouton roue — apparaît après le reveal, remplacé par "Manche suivante" après -->
-        <button class="btn ye big" id="btn-launch-wheel"
-          onclick="hostLaunchWheel()"
-          style="display:none;width:100%;margin-top:10px;font-size:1rem;">
-          🎰 Lancer la roue de l'infortune
-        </button>
         <div style="font-size:.78rem;color:var(--pu-l);margin-top:8px;font-weight:700;">Manche <span id="rnh">0</span>/<span id="rth">10</span></div>
       </div>
     </div>
@@ -943,8 +909,7 @@ button.game-only.game-active,
       <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:var(--pu-d);margin-bottom:12px;">Avant de commencer 🍺</div>
       <div style="text-align:left;font-size:.85rem;color:var(--pu-d);font-weight:700;line-height:1.5;margin-bottom:16px;">
         🗳️ Tu votes pour la personne qui correspond le mieux à chaque adjectif.<br>
-        👑 La plus votée tourne la roue de l'infortune.<br>
-        ☠️ Le grand gagnant affronte la Roue Diabolique des Enfers à la fin.<br>
+        👑 On révèle qui a gagné chaque manche.<br>
         🕵️ Les votes sont 100% anonymes. Reste souple, c'est un jeu.
       </div>
       <label style="display:flex;align-items:flex-start;gap:10px;background:rgba(124,58,237,.08);border:2px solid var(--pu-l);border-radius:12px;padding:12px;cursor:pointer;margin-bottom:14px;text-align:left;">
@@ -1014,19 +979,6 @@ button.game-only.game-active,
   <div class="card" style="max-width:700px;margin:0 auto;">
     <div id="go-final-winner"></div>
     <ul class="sb-list" id="go-sb"></ul>
-    <button class="btn pk big" id="host-launch-death" style="display:none;margin-top:14px;width:100%;" onclick="hostLaunchDeathWheel()">☠️ Lancer la Roue de l'Enfer</button>
-    <div id="go-death-wheel-section" style="display:none;">
-      <div class="death-wheel-banner">
-        <div class="death-wheel-title">☠️ LA ROUE ABSOLUE DE LA MORT</div>
-        <div class="death-wheel-sub" id="go-death-who"></div>
-      </div>
-      <div id="death-wheel-wrap" class="wheel-wrap" style="margin:0 auto;">
-        <div class="wheel-ptr"></div>
-        <canvas id="death-wcanvas"></canvas>
-      </div>
-      <button class="btn pk big" id="death-spin-btn" style="margin-top:16px;width:100%;display:none;" onclick="spinDeathWheel()">☠️ TOURNER LA ROUE DE LA MORT</button>
-      <div class="wheel-result" id="death-result" style="color:var(--pk);margin-top:12px;"></div>
-    </div>
     <button class="btn ye" onclick="location.reload()" style="margin-top:12px;width:100%;">🔄 Rejouer</button>
   </div>
 </div>
@@ -1056,24 +1008,8 @@ button.game-only.game-active,
   </div>
   <!-- Controls — only shown when host sends NEXT_ALLOWED -->
   <div class="rev-controls" id="rev-ctrl" style="display:none;">
-    <button class="btn ye big" id="host-launch-wheel" style="display:none;margin-bottom:8px;width:100%;" onclick="hostLaunchWheel()">🎰 Lancer la roue</button>
-    <button class="btn ye big" id="winner-launch-wheel" style="display:none;margin-bottom:8px;width:100%;font-size:1.1rem;" onclick="winnerRequestWheel()">🎰 LANCE LA ROUE !</button>
     <button class="btn gr big" onclick="playerAskNext()">Manche suivante ➡</button>
   </div>
-</div>
-
-<!-- WHEEL OVERLAY (full-screen, fixed) -->
-<div id="wheel-ov" class="wheel-ov" style="display:none;">
-  <div class="wheel-title" id="wt">🎰 Tourne la roue !</div>
-  <div class="wheel-sub" id="ws">...</div>
-  <div class="wheel-wrap">
-    <div class="wheel-ptr"></div>
-    <canvas id="wcanvas"></canvas>
-  </div>
-  <button class="btn ye big" id="wspin-btn" onclick="spinWheel()" style="margin-top:18px;">🎰 Tourner !</button>
-  <div class="wheel-result" id="w-result"></div>
-  <button class="btn gr big" id="wnext-btn" style="display:none;margin-top:12px;width:100%;" onclick="wheelNextSpinner()">➡ Suivant</button>
-  <button class="btn" id="wclose-btn" style="margin-top:8px;width:100%;background:transparent;color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.2);box-shadow:none;font-size:.82rem;" onclick="playerCloseWheel()">✕ Fermer la roue</button>
 </div>
 
 <script>
@@ -1089,7 +1025,7 @@ button.game-only.game-active,
 const PREFIXES = ["Qui est le +", "Qui est la +", "Qui a le +", "Qui a la +", "Qui est le -", "Qui a l'air le +"];
 const QUESTIONS = [
   {p:"Qui est le +", t:"susceptible de parler en voix de bébé avec sa meuf"},
-  {p:"Qui est le +", t:"débile, QI négatif (100 + 60 ça fait 200)"},
+  {p:"Qui est le +", t:"débile, QI négatif"},
   {p:"Qui est le +", t:"super sympa"},
   {p:"Qui", t:"pue de la bite même après la douche"},
   {p:"Qui est le +", t:"inculte (le vide astral)"},
@@ -1100,24 +1036,24 @@ const QUESTIONS = [
   {p:"Qui est le +", t:"aigri de service / rabat-joie"},
   {p:"Qui est le +", t:"capable de se la prendre dans le petit"},
   {p:"Qui est le +", t:"d'extrême droite (nazi)"},
-  {p:"Qui est le +", t:"beau (trop beau trop merveilleux)"},
+  {p:"Qui est le +", t:"beau"},
   {p:"Qui est le -", t:"bien sapé"},
   {p:"Qui est le +", t:"têtu / borné"},
   {p:"Qui est le +", t:"fan de porno gay"},
   {p:"Qui a la", t:"malveillance max"},
-  {p:"Qui", t:"dit que de la merde (allez ferme ta gueule)"},
+  {p:"Qui", t:"dit que de la merde"},
   {p:"Qui est le +", t:"courageux"},
-  {p:"Qui est le +", t:"épanoui (je suis épanoui)"},
+  {p:"Qui est le +", t:"épanoui"},
   {p:"Qui est le +", t:"susceptible de s'être déjà branlé aujourd'hui"},
   {p:"Qui est le +", t:"incompétent"},
   {p:"Qui est le +", t:"radin"},
   {p:"Qui a une", t:"hygiène de cloporte (hygiène de clébard)"},
-  {p:"Qui a des", t:"poumons en goudron (pompier)"},
+  {p:"Qui a les", t:"poumons en goudron (pompier)"},
   {p:"Qui est le +", t:"hétéro"},
   {p:"Qui est le +", t:"casse-couilles"},
   {p:"Qui a le", t:"rire le plus contagieux"},
   {p:"Qui est le +", t:"misogyne"},
-  {p:"Qui", t:"pue de la gueule en sah (t'as ramené ta merde avec toi)"},
+  {p:"Qui", t:"pue de la gueule en sah"},
   {p:"Qui", t:"pense être plus malin que les autres"},
   {p:"Qui est le +", t:"drôle"},
   {p:"Qui est le +", t:"peureux"},
@@ -1127,59 +1063,50 @@ const QUESTIONS = [
   {p:"Qui est le +", t:"canard"},
   {p:"Qui est le +", t:"woke"},
   {p:"Qui est le +", t:"condescendant"},
-  {p:"Qui a un", t:"palais de doberman (mini burger)"},
+  {p:"Qui a un", t:"palais de doberman"},
   {p:"Qui est le +", t:"ingrat"},
   {p:"Qui est le +", t:"taré (bébé secoué)"},
   {p:"Qui est le +", t:"homo"},
-  {p:"Qui est le +", t:"intelligent (j'suis trop intelligent potatoz)"},
+  {p:"Qui est le +", t:"intelligent"},
   {p:"Qui est le +", t:"moche"},
   {p:"Qui est le +", t:"coureur de jupons"},
-  {p:"Qui est le +", t:"pleurnicheur / passe son temps à se plaindre"},
-  {p:"Qui a le +", t:"d'auto-dérision / le moins susceptible"},
+  {p:"Qui est le +", t:"pleurnicheur / que se plaindre"},
+  {p:"Qui a le +", t:"d'auto-dérision / le - susceptible"},
   {p:"Qui est le +", t:"généreux"},
   {p:"Qui a", t:"l'ex la plus moche"},
   {p:"Qui est le +", t:"coupeur de parole"},
   {p:"Qui est le +", t:"naïf / crédule"},
-  {p:"Qui a la", t:"plus petite bite (fah)"},
+  {p:"Qui a la +", t:"petite bite"},
   {p:"Qui est le +", t:"sage"},
-  {p:"Qui est le +", t:"vénal (kiffe trop la thune)"},
+  {p:"Qui est le +", t:"vénal (kiff trop la thune)"},
   {p:"Qui est le +", t:"susceptible de s'être mis un doigt dans le cul pour le kiff"},
   {p:"Qui est le +", t:"honnête"},
   {p:"Qui est le +", t:"mythomane professionnel"},
   {p:"Qui est le +", t:"poissard légendaire"},
-  {p:"Qui est le +", t:"assisté respiratoire (réveille-toi srx)"},
+  {p:"Qui est l'", t:"assisté respiratoire (réveille-toi srx)"},
   {p:"Qui est le +", t:"vulgaire"},
-  {p:"Qui a la", t:"plus grosse estime de soi / le plus d'ego"},
+  {p:"Qui a la +", t:"grosse estime de soi / le + d'égo"},
   {p:"Qui est le +", t:"colérique"},
   {p:"Qui est le +", t:"vieux mentalement"},
   {p:"Qui est le +", t:"raciste"},
   {p:"Qui est le +", t:"vicelard"},
   {p:"Qui est le +", t:"bienveillant"},
   {p:"Qui est le +", t:"alcoolique"},
-  {p:"Qui est le +", t:"fatigué h24"},
-  {p:"Qui", t:"en a le plus rien à foutre de ce que les gens pensent de lui"},
-  {p:"Qui est le +", t:"désagréable avec les inconnus"}
+  {p:"Qui est", t:"fatigué h24"},
+  {p:"Qui est le +", t:"musclé"},
+  {p:"Qui a un", t:"corps de lâche"},
+  {p:"Qui a les", t:"pires tatouages"},
+  {p:"Qui a le + de chances de", t:"finir clochard"},
+  {p:"Qui a le + de chances de", t:"finir riche"},
+  {p:"Qui", t:"fait le chaud mais se fait souffler par le vent"},
+  {p:"Qui", t:"ressemble le plus à Oli de Bigflo et Oli"},
+  {p:"Qui", t:"en a le + rien à foutre de ce que les gens pensent de lui"},
+  {p:"Qui est le +", t:"désagréable avec les inconnus"},
 ];
 
 // ════════════════════════════════════════════════
 
 // ctx.arc draws CW from `start` angle. 0 = 3 o'clock (right).
-// Pointer is fixed at TOP = -PI/2.
-// Segment under pointer at wheel angle A:
-//   ptr = (-Math.PI/2 - A % (2*PI) + 4*PI) % (2*PI)
-//   idx = Math.floor(ptr / ARC) % WS.length
-// This is consistent with drawWheel which draws seg i from A + i*ARC.
-const WS=[
-  {l:"1 gorgée",        c:"#7c3aed", fun:"Une petite pour la route 🥂"},
-  {l:"Cul sec 🔥",      c:"#dc2626", fun:"Arrière-gorge, tu connais la chanson 🫡"},
-  {l:"3 gorgées",       c:"#db2777", fun:"Compte pas tes calories ce soir 🍷"},
-  {l:"Donne 4 gorgées", c:"#d97706", fun:"Partage c'est aimer, mais là t'es pas sympa 😈"},
-  {l:"Cul rouge 🍑",    c:"#059669", fun:"Sans commentaire. On t'avait prévenu 🍑"},
-  {l:"2 gorgées",       c:"#2563eb", fun:"Deux petites, tranquille 😌"},
-  {l:"Cul sec pour toi",c:"#9333ea", fun:"Pour toi. Bon courage mon grand 🫠"},
-  {l:"Cul sec pour moi",c:"#0891b2", fun:"Auto-punition, respect 🤝"},
-];
-let ARC=2*Math.PI/WS.length;
 
 const COLORS=['#7c3aed','#db2777','#d97706','#059669','#2563eb','#dc2626','#0891b2','#65a30d','#9333ea','#b45309','#be185d','#065f46'];
 let MAX_ROUNDS=10; // overridden by config UI
@@ -1234,11 +1161,6 @@ let pScores={}; // live scores from server
 let pHistory=[]; // live win history from server
 let pPhotosMap={}; // name→photo, updated on LOBBY_UPDATE/START_ROUND
 let pTimers=[];  // reveal timers
-// Wheel state
-let wQueue=[];   // array of player names waiting to spin
-let wAngle=0;    // current wheel angle
-let wSpinning=false;
-let wIsSpinner=false; // am I the one spinning right now?
 
 const urlP=new URLSearchParams(window.location.search);
 const roomP=urlP.get('room');
@@ -1410,10 +1332,9 @@ function handleHConn(conn){
       }
       return;
     }
-    if(data.type==='WINNER_WANTS_WHEEL'){
-      // Le vainqueur veut tourner la roue — l'hôte déclenche
-      const winner=data.winner||hConns[conn.peer]?.name;
-      if(winner) startWheelQueue([winner]);
+    if(data.type==='REQUEST_SYNC'){
+      // Joueur reconnecté demande l'état actuel
+      try{ conn.send({type:'LOBBY_UPDATE',players:hPList()}); }catch(e){}
       return;
     }
     if(data.type==='PLAYER_READY'){
@@ -1426,37 +1347,6 @@ function handleHConn(conn){
         window._hReadySet=new Set();
         setTimeout(()=>hostNext(),600);
       }
-      return;
-    }
-    if(data.type==='WHEEL_TURN'){
-      // Un gagnant-joueur tourne → l'hôte relaie + affiche
-      hBcast({type:'WHEEL_TURNING',angle:data.angle});
-      wAngle=data.angle; drawWheel(data.angle);
-      return;
-    }
-    if(data.type==='WHEEL_RESULT'){
-      // Un gagnant-joueur a fait atterrir → l'hôte relaie + affiche le résultat + montre "Suivant"
-      hBcast({type:'WHEEL_LANDED',segment:data.segment,angle:data.angle,spinner:data.spinner});
-      wAngle=data.angle; drawWheel(data.angle);
-      const seg=WS.find(s=>s.l===data.segment)||{l:data.segment,fun:''};
-      wheelShowResult(seg);
-      return;
-    }
-
-    if(data.type==='DEATH_SPIN'){
-      hBcast({type:'DEATH_SPIN',angle:data.angle});
-      return;
-    }
-    if(data.type==='DEATH_WHEEL_RESULT'){
-      hBcast({type:'DEATH_WHEEL_RESULT',segment:data.segment});
-      return;
-    }
-    if(data.type==='CHAT'){
-      if(!data.nick||!data.msg)return;
-      const _m=String(data.msg).substring(0,200);
-      hBcast({type:'CHAT',nick:data.nick,msg:_m,ts:Date.now()});
-      // Also display on host screen if host has chat open
-      appendChatMsg(data.nick, data.msg);
       return;
     }
   });
@@ -1487,8 +1377,6 @@ function hostLobbyUI(){
 }
 
 // ═══════════════════ HOST GAME ═══════════════════
-
-// WS.length est une const — on utilise une ref
 
 function openConfig(){
   cfgBuildList();
@@ -1727,10 +1615,6 @@ function hostNext(){
   $('rnh').textContent=hQi+1;
   const bfr=$('btn-fr');if(bfr)bfr.disabled=false;
   const bfn=$('btn-fn');if(bfn)bfn.disabled=false;
-  // Cacher le bouton roue si encore visible
-  const bw=$('btn-launch-wheel');if(bw)bw.style.display='none';
-  window._revealWinners=[];
-  wQueue=[];wAngle=0;wSpinning=false;wIsSpinner=false;
   updateRemainingRounds();
   hBcast({type:'FORCE_NEXT'});
   setTimeout(()=>hBcast({type:'START_ROUND',adjective:hAdj,players:hPList()}),600);
@@ -1763,22 +1647,6 @@ function hostReveal(){
   pHistory=[...hWinHistory];
   Object.values(hConns).forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
   updateScorePin();
-  // Stocker les gagnants pour la roue
-  window._revealWinners = winners;
-  // Afficher le bouton roue sur s-host après 1s (laisse le temps de voir les votes)
-  if(winners.length>0){
-    setTimeout(()=>{
-      const b=$('btn-launch-wheel');
-      if(!b) return;
-      b.textContent = winners.length>1
-        ? '🎰 Lancer la roue ('+winners.length+' gagnants)'
-        : '🎰 Lancer la roue pour '+winners[0];
-      b.style.display='block';
-      const fn=$('btn-fn');if(fn)fn.disabled=true;
-    }, 1000);
-  } else {
-    setTimeout(()=>{const b=$('btn-fn');if(b)b.disabled=false;},1500);
-  }
 }
 
 function hostFinal(){
@@ -1863,8 +1731,6 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
 // ═══════════════════ PLAYER DATA ═══════════════════
 function handlePData(data){
   switch(data.type){
-    case 'NAME_TAKEN':
-      $('jstat').textContent='❌ Ce prénom est déjà pris !';break;
     case 'LOBBY_UPDATE':
       pList=data.players;
       pList.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
@@ -1903,62 +1769,11 @@ function handlePData(data){
       if(data.players) data.players.forEach(p=>{pPhotosMap[p.name]=p.photo||'';});
       updateScorePin();
       doReveal(data);break;
-    case 'WHEEL_OPEN':
-      // L'hôte ouvre la roue pour le spinner désigné
-      showWheel(data.spinner);
-      break;
-    case 'WHEEL_TURNING':
-      // Tout le monde suit l'angle (même le spinner désigné quand c'est l'hôte qui tourne en backup)
-      wAngle=data.angle; drawWheel(data.angle);
-      break;
-    case 'WHEEL_LANDED':
-      // L'hôte a fait atterrir — afficher le résultat
-      if(!wIsSpinner){
-        wAngle=data.angle; drawWheel(data.angle);
-        const seg=WS.find(s=>s.l===data.segment)||{l:data.segment,fun:''};
-        wheelShowResult(seg);
-      }
-      break;
-    case 'WHEEL_CLOSE':
-      closeWheelLocal();
-      break;
-    case 'SHAME_UPDATE':
-      // Show hall of shame banner on player screen
-      showPlayerShame(data.name, data.adj);
-      break;
+
     case 'FORCE_NEXT':
       clearPTimers();
       hideRev();
-      {const wo=$('wheel-ov');if(wo)wo.style.display='none';}
-      // Reset wheel state for next round
-      wQueue=[];wAngle=0;wSpinning=false;wIsSpinner=false;
       show('s-pbetween');
-      break;
-    case 'NEXT_ALLOWED':
-      if($('rev-theatre')&&$('rev-theatre').classList.contains('visible')){
-        $('rev-ctrl').style.display='block';
-      } else {
-        show('s-pbetween');
-      }
-      break;
-    case 'CHAT':
-      appendChatMsg(data.nick,data.msg);
-          break;
-    case 'DEATH_SPIN':
-      // Spectators see death wheel spinning
-      if(!dIsSpinner){
-        const dov=$('go-death-wheel-section');
-        if(dov) dov.style.display='block';
-        drawDeathWheel(data.angle);
-      }
-      break;
-    case 'DEATH_WHEEL_RESULT':{
-      const dr=$('death-result');
-      if(dr) dr.textContent='☠️ '+data.segment;
-      break;
-    }
-    case 'DEATH_WHEEL_OPEN':
-      showDeathWheelSection(data.champion);
       break;
     case 'GAME_OVER':
       clearPTimers();
@@ -1967,7 +1782,6 @@ function handlePData(data){
       renderFinalSB('go-sb','go-final-winner',data.scores,data.photos||{},data.history||[]);
       confetti();
       show('s-gameover');
-      setupDeathWheel(data.scores,data.photos||{});
       break;
   }
 }
@@ -2277,228 +2091,16 @@ function doReveal(data){
         },2200);
       }
 
-      // L'HÔTE voit un bouton pour lancer la roue manuellement (push)
-      // Si je suis le vainqueur (joueur, pas hôte), afficher le bouton "Lance la roue"
-      if(iAmWinner && !isHost){
-        pt(()=>{
-          const wb=$('winner-launch-wheel');
-          if(wb) wb.style.display='block';
-          const rc=$('rev-ctrl');
-          if(rc) rc.style.display='block';
-        },1200);
-      }
-      // _revealWinners est stocké par hostReveal() directement
     },650);
   });
-}
-
-// [VAINQUEUR] Bouton "Lance la roue !" sur l'écran de reveal
-function winnerRequestWheel(){
-  const wb=$('winner-launch-wheel');
-  if(wb) wb.style.display='none';
-  if(pConn&&pConn.open) pConn.send({type:'WINNER_WANTS_WHEEL',winner:pName});
-}
-
-// [HÔTE] Bouton "Lancer la roue" sur s-host — cache le bouton et ouvre la roue pour tous
-function hostLaunchWheel(){
-  if(!isHost) return;
-  const b=$('btn-launch-wheel');
-  if(b) b.style.display='none';
-  const winners=window._revealWinners||[];
-  if(winners.length===0){
-    const fn=$('btn-fn');if(fn)fn.disabled=false;
-    return;
-  }
-  startWheelQueue(winners);
 }
 
 function playerAskNext(){
   clearPTimers();
   hideRev();
-  const _wo2=$('wheel-ov');if(_wo2)_wo2.style.display='none';
   show('s-pbetween');
   // Signaler à l'hôte que ce joueur est prêt
   if(pConn&&pConn.open) pConn.send({type:'PLAYER_READY'});
-}
-
-// ═══════════════════ ROUE DE L'INFORTUNE (réécrite, simple) ═══════════════════
-// État : wQueue = liste des gagnants à faire tourner, dans l'ordre.
-// L'HÔTE orchestre tout. Les joueurs ne font qu'afficher ce que l'hôte dit.
-
-// [HÔTE] Lance la séquence de roue après avoir cliqué le bouton
-function startWheelQueue(winners){
-  if(!isHost) return;
-  wQueue=[...winners];
-  if(wQueue.length===0){ closeWheelAll(); return; }
-  wheelOpenCurrent();
-}
-
-// [HÔTE] Ouvre la roue pour le gagnant courant (wQueue[0]) chez tout le monde
-function wheelOpenCurrent(){
-  if(!isHost) return;
-  const spinner=wQueue[0];
-  wAngle=0; wSpinning=false;
-  hBcast({type:'WHEEL_OPEN',spinner:spinner});
-  showWheel(spinner);   // l'hôte affiche aussi
-}
-
-// [TOUS] Affiche l'overlay roue, désigne qui tourne
-function showWheel(spinner){
-  wAngle=0; wSpinning=false;
-  wIsSpinner=(spinner===pName && pName!=='');
-  const wt=$('wt'); if(wt)wt.textContent=wIsSpinner?`🎰 C'est TON TOUR !`:('🎰 '+spinner+' tourne la roue !');
-  const ws=$('ws'); if(ws)ws.textContent=wIsSpinner?'Lance la roue, tout le monde regarde 👇':'Regarde en direct !';
-  // Bouton "Tourner" : visible pour le spinner (avec texte différent) + hôte en backup
-  const canSpin = wIsSpinner || isHost;
-  const sb=$('wspin-btn');
-  if(sb){
-    sb.style.display=canSpin?'block':'none';
-    sb.disabled=false;
-    // Le gagnant voit un bouton plus engageant
-    sb.textContent=wIsSpinner?'🎰 LANCE LA ROUE !':'🎰 Tourner (backup hôte)';
-    sb.style.fontSize=wIsSpinner?'1.1rem':'0.85rem';
-  }
-  const wr=$('w-result'); if(wr)wr.textContent='';
-  const nb=$('wnext-btn'); if(nb)nb.style.display='none';
-  drawWheel(0);
-  const ov=$('wheel-ov'); if(ov)ov.style.display='flex';
-  // S'assurer que le reveal ne bloque pas les touches sur la roue
-  const rt=$('rev-theatre'); if(rt)rt.style.pointerEvents='none';
-}
-
-// [SPINNER ou HÔTE] Fait tourner la roue
-function spinWheel(){
-  if(wSpinning) return;
-  if(!wIsSpinner && !isHost) return;
-  wSpinning=true;
-  const sb=$('wspin-btn'); if(sb)sb.disabled=true;
-  const totalRot=2*Math.PI*(6+Math.random()*6);
-  const dur=4000+Math.random()*800;
-  const t0=performance.now(), a0=wAngle;
-  let lastBcast=0;
-  function frame(now){
-    const el=now-t0;
-    if(el>=dur){
-      wAngle=(a0+totalRot)%(2*Math.PI);
-      drawWheel(wAngle);
-      const ptr=((-Math.PI/2 - wAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
-      const idx=Math.floor(ptr/ARC)%WS.length;
-      const seg=WS[idx];
-      wSpinning=false;
-      // Annonce le résultat à l'hôte (qui relaie) ou directement si on est l'hôte
-      if(isHost){
-        hBcast({type:'WHEEL_LANDED',segment:seg.l,angle:wAngle,spinner:pName});
-        wheelShowResult(seg);
-      } else if(pConn&&pConn.open){
-        pConn.send({type:'WHEEL_RESULT',segment:seg.l,angle:wAngle,spinner:pName});
-        wheelShowResult(seg);
-      }
-      return;
-    }
-    const eased=1-Math.pow(1-el/dur,3);
-    wAngle=(a0+totalRot*eased)%(2*Math.PI);
-    drawWheel(wAngle);
-    if(now-lastBcast>66){
-      lastBcast=now;
-      if(isHost) hBcast({type:'WHEEL_TURNING',angle:wAngle});
-      else if(pConn&&pConn.open) pConn.send({type:'WHEEL_TURN',angle:wAngle});
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-
-// [TOUS] Affiche le résultat de la roue + le bouton Suivant (hôte)
-function wheelShowResult(seg){
-  const wr=$('w-result');
-  const fun=seg.fun||seg.l;
-  if(wr)wr.innerHTML='<div style="font-size:1.1rem;font-weight:900;">👉 '+seg.l+'</div><div style="font-size:.82rem;color:rgba(255,255,255,.7);margin-top:4px;font-style:italic;">'+fun+'</div>';
-  const sb=$('wspin-btn'); if(sb)sb.style.display='none';
-  // L'hôte voit le bouton pour passer au suivant / fermer
-  if(isHost){
-    const nb=$('wnext-btn');
-    if(nb){
-      nb.style.display='';
-      nb.textContent=(wQueue.length>1)?'➡ Gagnant suivant':'✅ Terminer';
-    }
-  }
-}
-
-// [HÔTE] Passe au gagnant suivant ou ferme tout
-function wheelNextSpinner(){
-  if(!isHost) return;
-  wQueue.shift();
-  if(wQueue.length>0){
-    wheelOpenCurrent();
-  } else {
-    closeWheelAll();
-  }
-}
-
-// [HÔTE] Ferme la roue partout et réaffiche le contrôle manche
-function closeWheelAll(){
-  if(!isHost) return;
-  hBcast({type:'WHEEL_CLOSE'});
-  closeWheelLocal();
-  const bfn=$('btn-fn'); if(bfn)bfn.disabled=false;
-}
-
-// [JOUEUR/VAINQUEUR] Ferme la roue sur son propre écran pour voir les votes
-function playerCloseWheel(){
-  const ov=$('wheel-ov'); if(ov)ov.style.display='none';
-  const rt=$('rev-theatre'); if(rt)rt.style.pointerEvents='';
-  // Réafficher le reveal s'il était visible
-  const rc=$('rev-ctrl');
-  if(rc && $('rev-theatre') && $('rev-theatre').classList.contains('visible')) rc.style.display='block';
-}
-
-// [TOUS] Ferme l'overlay roue localement
-function closeWheelLocal(){
-  const ov=$('wheel-ov'); if(ov)ov.style.display='none';
-  const rt=$('rev-theatre'); if(rt)rt.style.pointerEvents='';
-  const rc=$('rev-ctrl'); if(rc && $('rev-theatre') && $('rev-theatre').classList.contains('visible')) rc.style.display='block';
-}
-
-// ═══════════════════ DRAW WHEEL ═══════════════════
-function drawWheel(angle){
-  ARC=2*Math.PI/WS.length;
-  const canvas=$('wcanvas');if(!canvas)return;
-  const SZ=Math.min(window.innerWidth*0.78,300);
-  canvas.width=SZ;canvas.height=SZ;
-  const ctx=canvas.getContext('2d');
-  const cx=SZ/2,cy=SZ/2,r=SZ/2-3;
-  const fs=Math.max(10,SZ*0.052);
-  WS.forEach((seg,i)=>{
-    const sa=angle+i*ARC,ea=sa+ARC;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();
-    ctx.fillStyle=seg.c;ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
-    // Label — draw text radially, centered in segment
-    ctx.save();
-    ctx.translate(cx,cy);
-    ctx.rotate(sa+ARC/2);
-    ctx.textAlign='center';
-    ctx.fillStyle='#fff';
-    ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=4;
-    ctx.font=`900 ${fs}px 'Nunito',sans-serif`;
-    // Place text at 65% of radius from center
-    const tr=r*0.65;
-    ctx.translate(tr,0);
-    ctx.rotate(Math.PI/2); // rotate text upright relative to segment
-    const lines=seg.l.split(' ');
-    // Pack into max 2 lines
-    const maxChars=10;
-    const wrapped=[];let cur='';
-    lines.forEach(w=>{if((cur+' '+w).trim().length>maxChars&&cur){wrapped.push(cur);cur=w;}else cur=(cur+' '+w).trim();});
-    if(cur)wrapped.push(cur);
-    const lh=fs*1.15;
-    wrapped.forEach((line,li)=>ctx.fillText(line,0,(li-(wrapped.length-1)/2)*lh));
-    ctx.restore();
-  });
-  // Center disc
-  ctx.beginPath();ctx.arc(cx,cy,SZ*0.09,0,2*Math.PI);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
 }
 
 function escHtml(s){
@@ -2568,152 +2170,6 @@ function _doUpdateBgCards(players){
     }
     bg.appendChild(card);
   });
-}
-
-// ═══════════════════ ☠️ ROUE ABSOLUE DE LA MORT ═══════════════════
-const DEATH_SEGMENTS = [
-  {l:"Cul sec pour tout le monde", c:"#dc2626"},
-  {l:"Le perdant offre le shot",    c:"#9333ea"},
-  {l:"Tous en jugement",            c:"#db2777"},
-  {l:"Strip-tease obligatoire",     c:"#d97706"},
-  {l:"Vérité ou défi collectif",    c:"#059669"},
-  {l:"Cul sec pour deux",           c:"#2563eb"},
-  {l:"Le champion ouvre bouteille", c:"#7c3aed"},
-  {l:"Règle maison",                c:"#0891b2"},
-];
-const D_ARC = 2*Math.PI/DEATH_SEGMENTS.length;
-let dAngle=0, dSpinning=false, dIsSpinner=false;
-
-function setupDeathWheel(scores,photos){
-  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  if(!sorted.length || sorted[0][1]===0) return;
-  const maxPts=sorted[0][1];
-  const champs=sorted.filter(([,p])=>p===maxPts).map(([n])=>n);
-  const champion=champs[0];
-  window._deathChampion=champion;
-  dIsSpinner=(pName===champion && pName!=='');
-  const sec=$('go-death-wheel-section');
-  if(!sec) return;
-  // La section roue de l'enfer reste cachée jusqu'à ce que l'hôte la lance
-  // (laisse le temps de regarder le classement final)
-  if(isHost){
-    // L'hôte voit un bouton pour lancer la roue de l'enfer quand il veut
-    const launchBtn=$('host-launch-death');
-    if(launchBtn){
-      launchBtn.style.display='block';
-      launchBtn.textContent="☠️ Lancer la Roue de l'Enfer sur "+champion;
-    }
-  }
-  drawDeathWheel(0);
-}
-
-// Appelée par l'hôte quand il décide de lancer la roue finale
-function hostLaunchDeathWheel(){
-  if(!isHost) return;
-  const launchBtn=$('host-launch-death');
-  if(launchBtn) launchBtn.style.display='none';
-  hBcast({type:'DEATH_WHEEL_OPEN',champion:window._deathChampion});
-  showDeathWheelSection(window._deathChampion);
-}
-
-// Affiche la section roue de l'enfer chez tout le monde
-function showDeathWheelSection(champion){
-  dIsSpinner=(pName===champion && pName!=='');
-  const sec=$('go-death-wheel-section');
-  if(!sec) return;
-  sec.style.display='block';
-  sec.scrollIntoView({behavior:'smooth',block:'center'});
-  const whoEl=$('go-death-who');
-  if(whoEl){
-    if(dIsSpinner) whoEl.textContent="☠️ C'EST TOI ! Tourne la roue de la mort…";
-    else whoEl.textContent='☠️ '+champion+' va tourner la roue de la mort…';
-  }
-  const spinBtn=$('death-spin-btn');
-  if(spinBtn) spinBtn.style.display=dIsSpinner?'':'none';
-  drawDeathWheel(0);
-}
-
-function spinDeathWheel(){
-  if(dSpinning||!dIsSpinner) return;
-  dSpinning=true;
-  $('death-spin-btn').disabled=true;
-  $('death-result').textContent='';
-  const totalRot=2*Math.PI*(5+Math.random()*6);
-  const dur=4500+Math.random()*1000;
-  const t0=performance.now(), a0=dAngle;
-  function frame(now){
-    const el=now-t0;
-    if(el>=dur){
-      dAngle=(a0+totalRot)%(2*Math.PI);
-      drawDeathWheel(dAngle);
-      const ptr=((-Math.PI/2-dAngle%(2*Math.PI))+4*Math.PI)%(2*Math.PI);
-      const idx=Math.floor(ptr/D_ARC)%DEATH_SEGMENTS.length;
-      const seg=DEATH_SEGMENTS[idx];
-      const dFun=seg.fun||'Bonne chance 😈';
-      $('death-result').innerHTML='<div style="font-size:1.1rem;font-weight:900;color:var(--pk);">☠️ '+seg.l+'</div><div style="font-size:.85rem;color:rgba(255,255,255,.6);margin-top:4px;font-style:italic;">'+dFun+'</div>';
-      dSpinning=false;
-      // Broadcast result
-      if(pConn&&pConn.open) pConn.send({type:'DEATH_WHEEL_RESULT',segment:seg.l.replace('\n',' ')});
-      if(isHost) hBcast({type:'DEATH_WHEEL_RESULT',segment:seg.l.replace('\n',' ')});
-      return;
-    }
-    const eased=1-Math.pow(1-(el/dur),3);
-    const cur=(a0+totalRot*eased)%(2*Math.PI);
-    dAngle=cur;
-    drawDeathWheel(cur);
-    // Broadcast to spectators (throttled)
-    const nowMs2=performance.now();
-    if(!frame._lb||nowMs2-frame._lb>66){
-      frame._lb=nowMs2;
-      if(isHost) hBcast({type:'DEATH_SPIN',angle:cur});
-      else if(pConn&&pConn.open) pConn.send({type:'DEATH_SPIN',angle:cur});
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-
-function drawDeathWheel(angle){
-  const canvas=$('death-wcanvas');
-  if(!canvas) return;
-  const SZ=Math.min(window.innerWidth*0.78,300);
-  canvas.width=SZ;canvas.height=SZ;
-  const ctx=canvas.getContext('2d');
-  const cx=SZ/2,cy=SZ/2,r=SZ/2-3;
-  const fs=Math.max(9,SZ*0.048);
-  DEATH_SEGMENTS.forEach((seg,i)=>{
-    const sa=angle+i*D_ARC,ea=sa+D_ARC;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();
-    ctx.fillStyle=seg.c;ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(sa+D_ARC/2);
-    ctx.textAlign='center';ctx.fillStyle='#fff';
-    ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;
-    ctx.font=`900 ${fs}px 'Nunito',sans-serif`;
-    // Draw text along the segment, readable
-    ctx.rotate(Math.PI/2);
-    const txt=seg.l.replace('\n',' ');
-    const maxW=r*0.72;
-    // Word wrap
-    const words=txt.split(' ');
-    let lines2=[],cur='';
-    for(const w of words){
-      const test=cur?cur+' '+w:w;
-      if(ctx.measureText(test).width>maxW&&cur){lines2.push(cur);cur=w;}
-      else cur=test;
-    }
-    if(cur)lines2.push(cur);
-    const lh2=fs*1.15;
-    const totalH=lines2.length*lh2;
-    lines2.forEach((line,li)=>{
-      const y=(li-(lines2.length-1)/2)*lh2+2;
-      ctx.fillText(line,r*0.55,y);
-    });
-    ctx.restore();
-  });
-  ctx.beginPath();ctx.arc(cx,cy,SZ*0.08,0,2*Math.PI);
-  ctx.fillStyle='#fff';ctx.fill();
-  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=2;ctx.stroke();
 }
 
 // ═══════════════════ 🏆 SCORE PIN ═══════════════════
@@ -2819,18 +2275,6 @@ function updateScorePin(){
   });
 }
 
-function showPlayerShame(name, adj){
-  // Show a brief shame banner on player screens
-  const existing=$('player-shame-banner');
-  if(existing) existing.remove();
-  const banner=document.createElement('div');
-  banner.id='player-shame-banner';
-  banner.style.cssText='position:fixed;bottom:max(70px,calc(env(safe-area-inset-bottom)+64px));left:50%;transform:translateX(-50%);background:var(--pu);color:#fff;border-radius:50px;padding:8px 20px;font-family:"Baloo 2",cursive;font-size:.85rem;font-weight:900;white-space:nowrap;z-index:1100;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:shameIn .3s ease;pointer-events:none;';
-  banner.textContent='🏆 '+name+' est le + '+adj;
-  document.body.appendChild(banner);
-  setTimeout(()=>{banner.style.opacity='0';banner.style.transition='opacity .5s';setTimeout(()=>banner.remove(),500);},4000);
-}
-
 function requestSync(){
   if(pConn&&pConn.open){
     pConn.send({type:'REQUEST_SYNC'});
@@ -2887,6 +2331,6 @@ function attemptReconnect(){
   });
   peer.on('error',()=>toast('❌ Serveur inaccessible'));
 }
-function appendChatMsg(){} </script>
+</script>
 </body>
 </html>
