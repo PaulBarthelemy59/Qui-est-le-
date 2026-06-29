@@ -1352,7 +1352,7 @@ function handleHConn(conn){
   });
   conn.on('close',()=>{
     const info=hConns[conn.peer];
-    if(info){toast(`${info.name} a quitté`);delete hConns[conn.peer];hostLobbyUI();hBcast({type:'LOBBY_UPDATE',players:hPList()});}
+    if(info){toast(`${escHtml(info.name)} a quitté`);delete hConns[conn.peer];hostLobbyUI();hBcast({type:'LOBBY_UPDATE',players:hPList()});}
   });
   conn.on('error',()=>{delete hConns[conn.peer];hostLobbyUI();});
 }
@@ -1372,7 +1372,7 @@ function hostLobbyUI(){
   const txt=`${n} joueur${n>1?'s':''} connecté${n>1?'s':''}`;
   [$('lstat'),$('lstat2')].forEach(el=>{if(el)el.textContent=txt;});
   $('btn-launch').disabled=false; // config always accessible
-  const html=ps.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${p.name}</span></div>`).join('');
+  const html=ps.map(p=>`<div class="chip"><span class="dot"></span><span style="color:${acol(p.name)};font-weight:900;">${escHtml(p.name)}</span></div>`).join('');
   $('lchips').innerHTML=html;const c2=$('lchips2');if(c2)c2.innerHTML=html;
 }
 
@@ -1687,7 +1687,7 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
   if(ws && champions.length>0 && maxPts>0){
     const ch=champions[0];
     const ph=photos[ch]||'';
-    const phEl=ph?`<img class="final-winner-photo" src="${ph}" alt="${ch}">`:`<div class="final-winner-init" style="background:${acol(ch)};">${ini(ch)}</div>`;
+    const phEl=ph?`<img class="final-winner-photo" src="${ph}" alt="">`:`<div class="final-winner-init" style="background:${acol(ch)};">${ini(ch)}</div>`;
     const FS_SHAMES=["C'est vraiment pas un flex d'être là 😬","Champion de la honte 🏆","La plus grosse pute de Rouen 👑","Ce titre personne le voulait 💀","Vraiment, t'es fier là ?"];
     const tags=(tagMap[ch]||[]).map(t=>`<span class="win-tag">${escHtml(t)}</span>`).join('');
     ws.innerHTML=`
@@ -1712,7 +1712,7 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
     const li=document.createElement('li');
     li.className='sb-row '+(cls[i]||'');li.style.animationDelay=i*.08+'s';
     const ph=photos[name]||'';
-    const pe=ph?`<img class="sb-ph" src="${ph}" alt="${name}">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
+    const pe=ph?`<img class="sb-ph" src="${ph}" alt="">`:`<div class="sb-in" style="background:${acol(name)};">${ini(name)}</div>`;
     const allTags=tagMap[name]||[];
     const visibleTags=allTags.slice(0,2);
     const hiddenTags=allTags.slice(2);
@@ -1720,7 +1720,7 @@ function renderFinalSB(sbId, winnerSectionId, scores, photos={}, history=[]){
       +(hiddenTags.length>0?`<span class="sb-win-tag sb-tag-more" onclick="this.parentElement.querySelectorAll('.sb-tag-hidden').forEach(e=>e.style.display='inline');this.style.display='none';">+${hiddenTags.length} de plus</span>`+''+hiddenTags.map(t=>`<span class="sb-win-tag sb-tag-hidden" style="display:none;">${escHtml(t)}</span>`).join(''):'');
     li.innerHTML=`<div class="sb-rank">${medals[i]||i+1}</div>${pe}
       <div style="flex:1;min-width:0;">
-        <div class="sb-name">${name}</div>
+        <div class="sb-name">${escHtml(name)}</div>
         ${myTags?`<div class="sb-win-tags">${myTags}</div>`:''}
       </div>
       <div style="text-align:right;flex-shrink:0;"><div class="sb-pts">${pts}</div><div class="sb-sub">pt${pts>1?'s':''}</div></div>`;
@@ -1805,7 +1805,7 @@ function buildVoteGrid(players){
   players.forEach(p=>{
     const btn=document.createElement('button');btn.className='vote-btn';
     const c=acol(p.name);
-    btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="${p.name}">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${p.name}</div>`;
+    btn.innerHTML=`${p.photo?`<img class="vb-ph" src="${p.photo}" alt="">`:`<div class="vb-in" style="background:${c};">${ini(p.name)}</div>`}<div class="vb-name">${escHtml(p.name)}</div>`;
     btn.onclick=()=>{
       grid.querySelectorAll('.vote-btn').forEach(b=>b.disabled=true);
       try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}
@@ -2035,7 +2035,7 @@ function doReveal(data){
             ${wp.photo?`<img src="${wp.photo}" alt="">`:`<div class="ri" style="background:${c};">${ini(wname)}</div>`}
           </div>
           <div class="rev-card-nb">
-            <div class="rev-card-name">${wname}</div>
+            <div class="rev-card-name">${escHtml(wname)}</div>
             <div class="rev-card-votes">${votes[wname]} vote${votes[wname]!==1?'s':''}</div>
           </div>
         </div>`;
@@ -2084,7 +2084,7 @@ function doReveal(data){
             const d=document.createElement('div');
             d.className='pcard';d.style.cssText='opacity:0;transition:opacity .6s ease;';
             const ph=p.photo?`<img src="${p.photo}" alt="" style="width:100%;height:100%;object-fit:cover;">`:`<div class="pcard-init" style="background:${c};">${ini(p.name)}</div>`;
-            d.innerHTML=`<div class="pcard-pa">${ph}</div><div class="pcard-nb"><div class="pcard-name">${p.name}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
+            d.innerHTML=`<div class="pcard-pa">${ph}</div><div class="pcard-nb"><div class="pcard-name">${escHtml(p.name)}</div><div class="pcard-votes" style="display:block;">${votes[p.name]} vote${votes[p.name]!==1?'s':''}</div></div>`;
             grid.appendChild(d);
             pt(()=>d.style.opacity='1',40+idx*200);
           });
@@ -2163,7 +2163,7 @@ function _doUpdateBgCards(players){
     if(pos.bottom) posStyle += `bottom:${pos.bottom};`;
     card.style.cssText = `${posStyle}--r:${rot}deg;animation-duration:${dur}s;animation-delay:${delay}s;`;
     if(p.photo){
-      card.innerHTML = `<img src="${p.photo}" alt="${p.name}">`;
+      card.innerHTML = `<img src="${p.photo}" alt="">`;
     } else {
       const color = acol(p.name);
       card.innerHTML = `<div class="fbg-init" style="background:${color};">${ini(p.name)}</div>`;
