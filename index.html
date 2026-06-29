@@ -84,7 +84,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.7rem,2.5vw,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
 .pcard-votes{display:none;font-family:'Baloo 2',cursive;font-size:clamp(.7rem,.82rem,.95rem);font-weight:900;color:var(--pu);margin-top:1px;}
 /* SCOREBOARD */
-.sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;}
+.sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;max-height:48vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:2px;}
 .sb-row{display:flex;align-items:center;gap:12px;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:16px;padding:11px 15px;animation:slideIn .35s ease both;}
 .sb-row.gold{border-color:var(--ye);background:#fffbeb;}
 .sb-row.silver{border-color:#9ca3af;background:#f9fafb;}
@@ -212,7 +212,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 /* Winner label */
 .rev-winner-lbl{font-family:'Baloo 2',cursive;font-size:clamp(.9rem,2.8vw,1.3rem);font-weight:900;color:var(--ye);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-top:8px;position:relative;z-index:2;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
 /* Others grid during reveal */
-.others-section{width:100%;max-width:700px;margin-top:10px;position:relative;z-index:2;}
+.others-section{width:100%;max-width:700px;margin-top:10px;position:relative;z-index:2;max-height:30vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .others-lbl{font-size:.6rem;font-weight:900;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:center;margin-bottom:6px;}
 /* Controls on reveal */
 .rev-controls{margin-top:10px;position:relative;z-index:2;text-align:center;padding-bottom:max(10px,calc(env(safe-area-inset-bottom)+8px));}
@@ -1559,8 +1559,11 @@ function updateRemainingRounds(){
     row.style.cssText='display:flex;align-items:center;gap:4px;background:var(--pu-s);border-radius:8px;padding:5px 8px;';
     // Editable text
     const inp=document.createElement('input');
-    inp.type='text';inp.value=q;inp.style.cssText='flex:1;background:none;border:none;font-size:.75rem;font-weight:700;color:var(--pu-d);outline:none;font-family:Nunito,sans-serif;min-width:0;';
-    inp.addEventListener('change',(function(ai){return function(){hQs[ai]=this.value;};})(absIdx));
+    inp.type='text';inp.value=(typeof q==='string'?q:(q.q||''));inp.style.cssText='flex:1;background:none;border:none;font-size:.75rem;font-weight:700;color:var(--pu-d);outline:none;font-family:Nunito,sans-serif;min-width:0;';
+    inp.addEventListener('change',(function(ai){return function(){
+      if(typeof hQs[ai]==='string') hQs[ai]=this.value;
+      else hQs[ai]={...hQs[ai],q:this.value};
+    };})(absIdx));
     row.appendChild(inp);
     // Up
     if(ri>0){
@@ -1588,7 +1591,7 @@ function updateRemainingRounds(){
 function midGameAddRound(){
   const inp=$('mid-add-inp');
   if(!inp||!inp.value.trim())return;
-  hQs.push(inp.value.trim());
+  hQs.push({q:inp.value.trim(),r:''});
   MAX_ROUNDS=hQs.length;
   $('rth').textContent=MAX_ROUNDS;
   inp.value='';
@@ -2011,21 +2014,20 @@ function doReveal(data){
       wrap.style.justifyContent='center';
       wrap.style.alignItems='flex-start';
       wrap.style.gap='5px';
+      wrap.style.overflowX='auto';
+      wrap.style.justifyContent=winners.length>=7?'flex-start':'center';
       // Adapter la taille des cartes — appliqué après création via CSS variable
       const wn=winners.length;
-      const availW=Math.min(window.innerWidth,600)-24;
       const gap=5;
-      const maxW=Math.min(200, Math.floor((availW-(wn-1)*gap)/wn));
-      const cardW=Math.max(60,maxW);
+      // Largeur dispo : on retire le padding du theatre (32px) + une marge de sécurité pour les bordures
+      const availW=Math.min(window.innerWidth,600)-40;
+      const maxW=Math.min(200, Math.floor((availW-(wn-1)*gap-wn*4)/wn));
+      const cardW=Math.max(56,maxW);
       wrap.style.setProperty('--card-w', cardW+'px');
       winners.forEach((wname,wi)=>{
         const wp=players.find(p=>p.name===wname);if(!wp)return;
         const c=acol(wname);
-        // Calculer la largeur directement : toute la largeur disponible divisée par nb gagnants
-        const availW=Math.min(window.innerWidth,600)-24;
-        const gap=5;
-        const rawW=Math.floor((availW-(winners.length-1)*gap)/winners.length);
-        const cardW=Math.min(200,Math.max(62,rawW));
+        // Largeur calculée pour que toutes les cartes tiennent sur une ligne
         const bw=cardW<80?2:cardW<120?3:5;
         const br=cardW<80?10:cardW<120?16:22;
         const d=document.createElement('div');
@@ -2089,6 +2091,14 @@ function doReveal(data){
             pt(()=>d.style.opacity='1',40+idx*200);
           });
         },2200);
+      }
+
+      // Afficher le bouton "Manche suivante" pour les joueurs (pas l'hôte)
+      if(!isHost){
+        pt(()=>{
+          const rc=$('rev-ctrl');
+          if(rc) rc.style.display='block';
+        },1200);
       }
 
     },650);
