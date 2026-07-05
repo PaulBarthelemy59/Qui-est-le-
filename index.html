@@ -807,16 +807,7 @@ button.game-only.game-active,
   <div class="lw"><div class="lb" style="font-size:clamp(1.3rem,3.5vw,2rem);transform:rotate(0);padding:6px 20px 8px;">⚙️ CONFIGURATION DE LA PARTIE</div></div>
   <div class="card" style="max-width:720px;margin:0 auto;">
 
-    <!-- Rounds count -->
-    <div style="margin-bottom:20px;">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:var(--pu-d);margin-bottom:8px;">🔢 Nombre de manches</div>
-      <div style="display:flex;align-items:center;gap:14px;">
-        <input type="range" id="cfg-rounds" min="3" max="25" value="10" step="1"
-          style="flex:1;height:8px;border-radius:99px;accent-color:var(--pu);cursor:pointer;"
-          oninput="$('cfg-rounds-val').textContent=this.value">
-        <div id="cfg-rounds-val" style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:var(--pu);min-width:40px;text-align:center;">10</div>
-      </div>
-    </div>
+    <!-- Le nombre de manches = nombre de questions actives -->
 
     <hr class="div">
 
@@ -1006,7 +997,7 @@ button.game-only.game-active,
     <div class="others-lbl">Les autres votes</div>
     <div class="pgrid" id="rev-others-grid"></div>
   </div>
-  <!-- Controls — only shown when host sends NEXT_ALLOWED -->
+  <!-- Controls — le bouton apparaît après l'animation du reveal -->
   <div class="rev-controls" id="rev-ctrl" style="display:none;">
     <button class="btn gr big" onclick="playerAskNext()">Manche suivante ➡</button>
   </div>
@@ -1499,20 +1490,19 @@ function cfgAddQuestion(){
 
 function updateCfgInfo(){
   const active=window.cfgQuestions.filter(q=>q.active).length;
-  const rounds=parseInt($('cfg-rounds').value)||10;
-  const will=Math.min(active,rounds);
-  $('cfg-count-info').textContent=`${active} question${active>1?'s':''} sélectionnée${active>1?'s':''} · ${will} manche${will>1?'s':''} seront jouées`;
+  $('cfg-count-info').textContent=`${active} question${active>1?'s':''} sélectionnée${active>1?'s':''} · ${active} manche${active>1?'s':''} seront jouées`;
 }
 
 function hostLaunchFromConfig(){
   if(Object.keys(hConns).length===0){toast("⚠️ Attends qu'au moins un joueur rejoigne !");return;}
   const activeQs=(window.cfgQuestions||[]).filter(q=>q.active);
   if(activeQs.length===0){toast('⚠️ Sélectionne au moins une question !');return;}
-  MAX_ROUNDS=parseInt($('cfg-rounds').value)||10;
   const pool=activeQs.map(q=>({q:(q.prefix+' '+q.text).trim(), r:(q.reveal||'').trim()}));
-  hQs=shuffle(pool).slice(0,MAX_ROUNDS);hQi=-1;
+  // Autant de manches que de questions actives
+  hQs=shuffle(pool);hQi=-1;
+  MAX_ROUNDS=hQs.length;
   $('h-lobby').style.display='none';$('h-game').style.display='block';
-  $('rth').textContent=Math.min(MAX_ROUNDS,pool.length);
+  $('rth').textContent=MAX_ROUNDS;
   show('s-host');showScorePin();updateScorePin();updateRemainingRounds();hostNext();
 }
 
@@ -2120,11 +2110,6 @@ function escHtml(s){
 // Show chat nick once player is connected
 
 // ═══════════════════ 😂 EMOJI REACTIONS ═══════════════════
-
-// Update cfg info when slider changes
-document.addEventListener('input',e=>{
-  if(e.target.id==='cfg-rounds') updateCfgInfo();
-});
 
 // ═══════════════════ FLOATING PLAYER PHOTO CARDS ═══════════════════
 let _bgPlayers = []; // cached player list for background cards
