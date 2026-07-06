@@ -952,8 +952,7 @@ button.game-only.game-active,
   <div class="card" style="max-width:420px;margin:0 auto;">
     <span class="big-emoji" id="pbetween-emoji">⏳</span>
     <div class="m-title" id="pbetween-title">MANCHE TERMINÉE</div>
-    <p id="pbetween-winner" style="color:var(--pu);font-weight:800;margin-bottom:4px;font-size:1.1rem;"></p>
-    <p id="pbetween-adj" style="color:var(--pu-l);font-size:.85rem;font-weight:700;margin-bottom:8px;font-style:italic;"></p>
+    <p id="pbetween-winner" style="color:var(--pu);font-weight:800;margin-bottom:8px;font-size:1.1rem;"></p>
     <p style="color:var(--pu-l);font-weight:700;font-size:.85rem;">Prochaine manche<span class="wdots"></span></p>
   </div>
 </div>
@@ -1422,16 +1421,6 @@ function renderCfgList(){
     ta.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].text=this.value;};})(i));
     inner.appendChild(ta);
 
-    // Phrase de victoire personnalisée (optionnelle)
-    const rev=document.createElement('input');
-    rev.type='text';
-    rev.className='cfg-q-reveal-inp';
-    rev.value=q.reveal||'';
-    rev.placeholder='💬 Phrase de victoire (ex: {nom} est vraiment radin 😬)';
-    rev.style.cssText='width:100%;background:rgba(251,191,36,.1);border:1.5px solid var(--ye-d);border-radius:8px;padding:6px 8px;font-size:16px;font-weight:700;color:var(--pu-d);outline:none;font-family:Nunito,sans-serif;';
-    rev.addEventListener('input',(function(idx){return function(){window.cfgQuestions[idx].reveal=this.value;};})(i));
-    inner.appendChild(rev);
-
     row.appendChild(inner);
 
     // Move up/down + delete
@@ -1749,7 +1738,6 @@ function handlePData(data){
       // Store last winner for between-screen
       if(data.winners&&data.winners.length>0){
         const pw=$('pbetween-winner');if(pw)pw.textContent='👑 '+data.winners.join(' & ')+(data.winners.length>1?' ont gagné !':' a gagné !');
-        const pa=$('pbetween-adj');if(pa&&data.adjective)pa.textContent=stripPrefix(data.adjective);
         const pe=$('pbetween-emoji');if(pe)pe.textContent=data.winners.length>1?'🏆':'😬';
       }
       if(data.historyDelta&&data.historyDelta.length>0) pHistory=[...pHistory,...data.historyDelta];
@@ -2038,17 +2026,6 @@ function doReveal(data){
 
       // Winner label + media
       pt(()=>{
-        const lbl=$('rev-winner-lbl');
-        const iWon = pName!=='' && winners.includes(pName);
-        // Liste des gagnants, "TOI" en premier si je suis dedans
-        const list = iWon ? ['TOI', ...winners.filter(w=>w!==pName)] : [...winners];
-        const names = list.length===1 ? list[0] : (list.slice(0,-1).join(', ')+' et '+list[list.length-1]);
-        if(window._revealPhrase){
-          lbl.textContent=window._revealPhrase.replace(/\{nom\}/gi,names).replace(/\{nom_gagnant\}/gi,names);
-        } else {
-          lbl.textContent='👑 C\'est '+names+' ! 😬';
-        }
-        lbl.style.display='block';
         confetti();
       },450);
 
