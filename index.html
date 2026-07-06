@@ -14,7 +14,8 @@
   --gr:#10b981;--gr-d:#065f46;--tx:#1e1b4b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;}
+html{-webkit-text-size-adjust:100%;}
+body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-x:hidden;}
 .screen{width:100%;max-width:600px;position:relative;z-index:2;}
 #s-land{z-index:5;}
 .screen.hidden{display:none!important;}
@@ -84,7 +85,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .pcard-name{font-family:'Baloo 2',cursive;font-size:clamp(.7rem,2.5vw,1rem);font-weight:900;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
 .pcard-votes{display:none;font-family:'Baloo 2',cursive;font-size:clamp(.7rem,.82rem,.95rem);font-weight:900;color:var(--pu);margin-top:1px;}
 /* SCOREBOARD */
-.sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;max-height:48vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:2px;}
+.sb-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:14px 0;max-height:48vh;max-height:44dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:2px;}
 .sb-row{display:flex;align-items:center;gap:12px;background:var(--pu-s);border:3px solid var(--pu-l);border-radius:16px;padding:11px 15px;animation:slideIn .35s ease both;}
 .sb-row.gold{border-color:var(--ye);background:#fffbeb;}
 .sb-row.silver{border-color:#9ca3af;background:#f9fafb;}
@@ -177,14 +178,13 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 @keyframes hintFade{from{opacity:.3;}to{opacity:.7;}}
 /* Reveal card replacing the ? */
 .rev-card{
-  flex:0 0 auto;width:var(--card-w,200px);aspect-ratio:4/5;
+  flex:0 0 auto;width:var(--card-w,200px);
   border-radius:22px;border:5px solid var(--ye);
   background:var(--pu-c);
   display:flex;flex-direction:column;
   overflow:hidden;
-  box-shadow:0 0 80px rgba(251,191,36,.8),0 10px 0 var(--ye-d);
+  box-shadow:0 0 26px rgba(251,191,36,.35),0 8px 0 var(--ye-d);
   position:relative;z-index:2;
-  animation:winnerG .55s ease infinite alternate;
 }
 /* Compact winner cards when 2+ ex-aequo so they fit on screen */
 .rev-winners-wrap.many .rev-card{width:min(42vw,160px);border-width:3px;}
@@ -199,8 +199,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 .rev-winners-wrap.crowd .rev-card-photo .ri{font-size:1.4rem;}
 .rev-winners-wrap.crowd .rev-card-name{font-size:.7rem;}
 .rev-winners-wrap.crowd .rev-card-votes{font-size:.65rem;}
-@keyframes winnerG{from{box-shadow:0 0 40px rgba(251,191,36,.5),0 10px 0 var(--ye-d);}to{box-shadow:0 0 100px rgba(251,191,36,1),0 0 200px rgba(251,191,36,.3),0 10px 0 var(--ye-d);}}
-.rev-card-photo{flex:1;overflow:hidden;position:relative;}
+.rev-card-photo{width:100%;aspect-ratio:1;overflow:hidden;position:relative;flex-shrink:0;}
 .rev-card-photo img,.rev-card-photo .ri{width:100%;height:100%;object-fit:cover;display:block;}
 .rev-card-photo .ri{display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,8vw,4rem);font-weight:900;color:#fff;}
 .rev-card-nb{background:#fff;padding:8px 10px;text-align:center;flex-shrink:0;}
@@ -212,7 +211,7 @@ body{font-family:'Nunito',sans-serif;background:var(--pu-d);color:var(--tx);min-
 /* Winner label */
 .rev-winner-lbl{font-family:'Baloo 2',cursive;font-size:clamp(.9rem,2.8vw,1.3rem);font-weight:900;color:var(--ye);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-top:8px;position:relative;z-index:2;text-shadow:2px 2px 0 rgba(0,0,0,.5);}
 /* Others grid during reveal */
-.others-section{width:100%;max-width:700px;margin-top:10px;position:relative;z-index:2;max-height:30vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.others-section{width:100%;max-width:700px;margin-top:10px;position:relative;z-index:2;max-height:30vh;max-height:28dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .others-lbl{font-size:.6rem;font-weight:900;letter-spacing:4px;color:rgba(255,255,255,.4);text-transform:uppercase;text-align:center;margin-bottom:6px;}
 /* Controls on reveal */
 .rev-controls{margin-top:10px;position:relative;z-index:2;text-align:center;padding-bottom:max(10px,calc(env(safe-area-inset-bottom)+8px));}
@@ -564,13 +563,8 @@ button.game-only.game-active,
   background:linear-gradient(135deg,var(--pu-d),var(--pu));
   border:4px solid var(--ye);border-radius:22px;
   padding:20px;margin-bottom:20px;
-  box-shadow:0 0 40px rgba(251,191,36,.3),0 8px 0 var(--ye-d);
+  box-shadow:0 0 30px rgba(251,191,36,.35),0 8px 0 var(--ye-d);
   text-align:center;
-  animation:winnerGlow2 .7s ease infinite alternate;
-}
-@keyframes winnerGlow2{
-  from{box-shadow:0 0 20px rgba(251,191,36,.3),0 8px 0 var(--ye-d);}
-  to{box-shadow:0 0 60px rgba(251,191,36,.8),0 8px 0 var(--ye-d);}
 }
 .final-winner-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;border:4px solid var(--ye);margin:0 auto 10px;display:block;}
 .final-winner-init{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:2rem;font-weight:900;color:#fff;border:4px solid var(--ye);margin:0 auto 10px;}
@@ -2004,7 +1998,8 @@ function doReveal(data){
       wrap.style.justifyContent='center';
       wrap.style.alignItems='flex-start';
       wrap.style.gap='5px';
-      wrap.style.overflowX='auto';
+      wrap.style.overflowX=winners.length>=7?'auto':'visible';
+      wrap.style.overflowY='visible';
       wrap.style.justifyContent=winners.length>=7?'flex-start':'center';
       // Adapter la taille des cartes — appliqué après création via CSS variable
       const wn=winners.length;
@@ -2044,23 +2039,14 @@ function doReveal(data){
       // Winner label + media
       pt(()=>{
         const lbl=$('rev-winner-lbl');
-        const adjLow=adjective.replace(/^Qui est le \+\s*/i,'').replace(/^Qui est la \+\s*/i,'').replace(/^Qui a le \+\s*/i,'').replace(/^Qui a la \+\s*/i,'').replace(/^Qui a l'air le \+\s*/i,'').replace(/^Qui est le -\s*/i,'').replace(/^Qui est celui qui\s*/i,'');
-        const w2=adjLow.split(' ').slice(0,6).join(' ');
         const iWon = pName!=='' && winners.includes(pName);
-        // Si c'est MOI le gagnant → "TU es le +..."
-        let names;
-        if(iWon){
-          names = winners.length>1 ? ('TOI & '+winners.filter(w=>w!==pName).join(' & ')) : 'TOI';
-        } else {
-          names = winners.join(' & ');
-        }
+        // Liste des gagnants, "TOI" en premier si je suis dedans
+        const list = iWon ? ['TOI', ...winners.filter(w=>w!==pName)] : [...winners];
+        const names = list.length===1 ? list[0] : (list.slice(0,-1).join(', ')+' et '+list[list.length-1]);
         if(window._revealPhrase){
-          let phrase=window._revealPhrase.replace(/\{nom\}/gi,names).replace(/\{nom_gagnant\}/gi,names);
-          lbl.textContent=phrase;
-        } else if(iWon && winners.length===1){
-          lbl.textContent='👑 TU es vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
+          lbl.textContent=window._revealPhrase.replace(/\{nom\}/gi,names).replace(/\{nom_gagnant\}/gi,names);
         } else {
-          lbl.textContent='👑 '+names+(iWon?' êtes':' est')+' vraiment '+(adjLow?('le + '+w2):'le grand gagnant')+' 😬';
+          lbl.textContent='👑 C\'est '+names+' ! 😬';
         }
         lbl.style.display='block';
         confetti();
